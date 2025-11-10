@@ -146,6 +146,15 @@
        Reportar Fallos
       </span>
      </a>
+     
+     <a class="flex items-center p-2 rounded-lg hover:bg-fuchsia-600" href="#" id="btn-dark-mode">
+      <i class="fa-solid fa-moon fa-lg sidebar-icon" id="icon-dark-mode">
+      </i>
+      <span class="sidebar-text text-lg ml-4">
+       Tema
+      </span>
+     </a>
+     
      <a class="flex items-center p-2 rounded-lg hover:bg-fuchsia-600 nav-link" data-view="view-nosotros" href="#">
       <img alt="Icono Marian Crochet" class="w-6 h-6 rounded-full sidebar-icon" src="icono.jpg"/>
       <span class="sidebar-text text-lg ml-4">
@@ -156,10 +165,6 @@
    </nav>
    
    <div class="mt-auto p-4 flex flex-col items-center border-t border-fuchsia-500">
-    <button class="text-fuchsia-200 hover:text-white mb-3" id="btn-dark-mode">
-     <i class="fa-solid fa-moon fa-lg" id="icon-dark-mode"></i>
-    </button>
-    
     <img alt="VivirApp Logo" class="h-8 mb-2" src="vivirapp.png"/>
     <span class="sidebar-text text-xs text-fuchsia-300 text-center">
      By VivirApp • 2025 • Colombia
@@ -248,8 +253,10 @@
         </div>
        </label>
       </div>
-      <div class="grid grid-cols-5 sm:grid-cols-10 lg:grid-cols-10 gap-2 md:gap-3" id="cuadricula-numeros-publica">
-      </div>
+      
+      <div class="grid grid-cols-[repeat(auto-fill,minmax(40px,1fr))] gap-2" id="cuadricula-numeros-publica">
+       </div>
+      
      </div>
      <div class="w-full lg:w-96 bg-white p-6 rounded-2xl shadow-xl h-fit sticky top-10 dark:bg-gray-800">
       <h2 class="text-2xl font-bold text-gray-800 mb-4 flex items-center justify-between dark:text-white">
@@ -315,8 +322,10 @@
        Pagados
       </button>
      </div>
-     <div class="grid grid-cols-5 sm:grid-cols-10 lg:grid-cols-10 xl:grid-cols-12 gap-2" id="cuadricula-numeros-admin">
-     </div>
+     
+     <div class="grid grid-cols-[repeat(auto-fill,minmax(40px,1fr))] gap-2" id="cuadricula-numeros-admin">
+      </div>
+     
     </div>
    </div>
    
@@ -682,7 +691,7 @@
    </div>
   </div>
   
-  <div classShow-lg" id="toast-notificacion" role="alert">
+  <div class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50 opacity-0 transition-opacity duration-300 ease-in-out items-center w-full max-w-xs p-4 text-gray-500 bg-white rounded-lg shadow-lg dark:text-gray-400 dark:bg-gray-800" id="toast-notificacion" role="alert">
    <div class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-lime-500 bg-lime-100 rounded-lg dark:bg-lime-800 dark:text-lime-200">
     <i class="fa-solid fa-check">
     </i>

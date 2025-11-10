@@ -186,7 +186,8 @@ function registrarEventListeners() {
     });
   });
 
-  toastCloseBtn?.addEventListener('click', () => toastEl.classList.add('hidden'));
+  // CAMBIO: Lógica de Toast actualizada
+  toastCloseBtn?.addEventListener('click', () => toastEl.classList.remove('opacity-100'));
 
   cuadriculaPublica?.addEventListener('click', handleSeleccionPublica);
   switchOcultarComprados?.addEventListener('change', renderCuadriculaPublica);
@@ -208,7 +209,6 @@ function registrarEventListeners() {
   btnAnadirNumero?.addEventListener('click', () => anadirCampoNumero(null));
   btnMasInfo?.addEventListener('click', () => modalMasInfo?.classList.add('flex'));
 
-  // Event listener para todos los botones de cerrar modal
   modalCloseBtns.forEach(btn => {
     btn.addEventListener('click', () => {
       const modalId = btn.getAttribute('data-modal-id');
@@ -222,13 +222,11 @@ function registrarEventListeners() {
     }
   });
 
-  /* CAMBIO E: Event listener de Compartir actualizado */
   btnCompartir?.addEventListener('click', (e) => {
     e.preventDefault();
     handleCompartir();
   });
 
-  /* CAMBIO F: Event listeners para Modal de Reporte */
   btnReportarFallo?.addEventListener('click', (e) => {
     e.preventDefault();
     modalReportarFallo?.classList.add('flex');
@@ -239,16 +237,13 @@ function registrarEventListeners() {
     const body = document.getElementById('reporte-textarea').value;
     const subject = 'Reporte de Fallo - Rifa Navideña';
     const to = 'viviraplicaciones@gmail.com';
-    // Construir y abrir el cliente de correo
     window.location.href = `mailto:${to}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
     modalReportarFallo?.classList.remove('flex');
     mostrarToast('Gracias por tu reporte.');
   });
 
-  /* CAMBIO G: Event listeners para Modal de Admin */
   btnAdminLogin?.addEventListener('click', (e) => {
     e.preventDefault();
-    // Si ya está logueado, no hacer nada (o toggle, si se prefiere)
     if (!adminLinksContainer?.classList.contains('hidden')) return;
     modalAdminLogin?.classList.add('flex');
   });
@@ -267,8 +262,9 @@ function registrarEventListeners() {
     formAdminLogin.reset();
   });
 
-  /* Event listener para Modo Oscuro */
-  btnDarkMode?.addEventListener('click', () => {
+  // CAMBIO: Event listener de Modo Oscuro actualizado con e.preventDefault()
+  btnDarkMode?.addEventListener('click', (e) => {
+    e.preventDefault(); // <-- AÑADIDO
     const isDark = document.documentElement.classList.toggle('dark');
     if (isDark) {
       localStorage.setItem('theme', 'dark');
@@ -311,6 +307,7 @@ function actualizarVistaActiva(viewId) {
 /* =========================================================
    Toasts
    ========================================================= */
+// CAMBIO: Lógica de Toast actualizada a modal central
 function mostrarToast(mensaje, esError = false) {
   if (!toastEl || !toastMsg) return;
 
@@ -329,8 +326,13 @@ function mostrarToast(mensaje, esError = false) {
     icon?.classList.add('fa-solid', 'fa-check');
   }
 
-  toastEl.classList.remove('hidden');
-  setTimeout(() => { toastEl.classList.add('hidden'); }, 3000);
+  // Usar opacidad en lugar de 'hidden'
+  toastEl.classList.add('opacity-100');
+  
+  // Ocultar después de 2 segundos
+  setTimeout(() => { 
+    toastEl.classList.remove('opacity-100'); 
+  }, 2000);
 }
 
 /* =========================================================
@@ -342,7 +344,6 @@ async function handleCompartir() {
   const shareUrl = window.location.href;
 
   try {
-    // 1. Intentar fetchear la imagen
     const response = await fetch('banner.jpg');
     const blob = await response.blob();
     const file = new File([blob], 'banner.jpg', { type: 'image/jpeg' });
@@ -353,12 +354,10 @@ async function handleCompartir() {
       files: [file]
     };
 
-    // 2. Comprobar si se pueden compartir archivos
     if (navigator.canShare && navigator.canShare(shareData)) {
       await navigator.share(shareData);
       mostrarToast('¡Gracias por compartir!');
     } else {
-      // 3. Fallback si no se pueden compartir archivos (ej. Firefox)
       await navigator.share({
         title: shareTitle,
         text: shareText,
@@ -367,7 +366,6 @@ async function handleCompartir() {
       mostrarToast('¡Gracias por compartir!');
     }
   } catch (err) {
-    // 4. Fallback si todo falla (ej. PC, o no soporta navigator.share)
     navigator.clipboard.writeText(shareUrl);
     mostrarToast('Enlace copiado al portapapeles.');
   }
@@ -401,8 +399,8 @@ function renderCuadriculaPublica() {
     if (esSeleccionado && !esOcupado) claseEstado = 'seleccionado';
 
     const divBoleto = document.createElement('div');
-    // CAMBIO C: Números más pequeños (text-xs y p-0.5)
-    divBoleto.className = `numero-rifa-publico w-full aspect-square flex items-center justify-center font-bold text-xs border-2 rounded-xl p-0.5 cursor-pointer ${claseEstado}`;
+    // CAMBIO C: Padding a 0 para que el contenedor sea más pequeño
+    divBoleto.className = `numero-rifa-publico w-full aspect-square flex items-center justify-center font-bold text-xs border-2 rounded-xl p-0 cursor-pointer ${claseEstado}`;
     divBoleto.textContent = boleto.numero;
     divBoleto.dataset.numero = boleto.numero;
     divBoleto.dataset.estado = boleto.estado;
@@ -432,7 +430,6 @@ function handleSeleccionPublica(e) {
   actualizarSeleccionPublica();
 }
 
-/* CAMBIO C: 'actualizarSeleccionPublica' con botón 'x' siempre visible */
 function actualizarSeleccionPublica() {
   if (!listaSeleccionPublica || !badgeCantidad || !subtotalEl || !btnProcederPago) return;
 
@@ -445,13 +442,11 @@ function actualizarSeleccionPublica() {
   } else {
     numerosSeleccionadosPublica.sort().forEach(numero => {
       const tiquet = document.createElement('div');
-      // Se añade 'pr-5' para dar espacio al botón 'x'
       tiquet.className = "relative bg-blue-600 text-white text-sm font-bold pl-3 pr-5 py-1 rounded-md flex items-center";
       tiquet.textContent = numero;
       tiquet.dataset.numero = numero;
 
       const closeBtn = document.createElement('button');
-      // Botón 'x' ahora es más grande y siempre visible
       closeBtn.className = "absolute top-0 right-0 bg-red-500 text-white rounded-full w-5 h-5 text-xs flex items-center justify-center -m-1 transition-transform hover:scale-110";
       closeBtn.innerHTML = '<i class="fa-solid fa-xmark"></i>';
       
@@ -494,8 +489,8 @@ function renderCuadriculaAdmin(filtro) {
     }
 
     const divBoleto = document.createElement('div');
-    // CAMBIO C: Números más pequeños (text-xs y p-0.5)
-    divBoleto.className = `w-full aspect-square flex items-center justify-center font-medium text-xs border rounded-md p-0.5 ${claseColor}`;
+    // CAMBIO C: Padding a 0 para que el contenedor sea más pequeño
+    divBoleto.className = `w-full aspect-square flex items-center justify-center font-medium text-xs border rounded-md p-0 ${claseColor}`;
     divBoleto.textContent = boleto.numero;
     cuadriculaAdmin.appendChild(divBoleto);
   });
@@ -616,7 +611,7 @@ function actualizarSelectsDinamicos() {
 
   selects.forEach(select => {
     const valorActual = select.value;
-    let optionsHTML = '<option value="" disabled>Selecciona un número</option>';
+    let optionsHTML = '<option value="" disabled>Selecciona un número</coption>';
     if (valorActual) optionsHTML += `<option value="${valorActual}" selected>${valorActual}</option>`;
 
     numerosDisponibles.forEach(num => {
@@ -646,12 +641,11 @@ function handleGuardarVenta(e) {
     return;
   }
   
-  // Validar que no se seleccionen números ya ocupados (doble chequeo)
   for (const numero of numerosSeleccionados) {
     const boleto = boletosRifa.find(b => b.numero === numero);
     if (boleto.estado !== 'disponible') {
         mostrarToast(`El número ${numero} ya no está disponible.`, true);
-        actualizarSelectsDinamicos(); // Refrescar listas
+        actualizarSelectsDinamicos();
         return;
     }
   }
@@ -701,7 +695,7 @@ function handleGuardarVenta(e) {
     /* Estilos para modo oscuro en filtros */
     .dark .filtro-btn-admin[data-filtro="todos"] { border-color: #9CA3AF; color: #E5E7EB; }
     .dark .filtro-btn-admin[data-filtro="disponible"] { border-color: #4B5563; color: #D1D5DB; }
-    .dark .filtro-btn-admin.filtro-admin-activo[data-filtro="todos"], .dark .filtro-btn-admin:hover[data-filtro="todos"] { background-color: #9CA3AF; color: white !important; }
+    .dark .filtro-btn-admin.filtro-admin-activo[data-filtro="todos"], .dark .filtro-btn-admin:hover[data-filtro="todos"] { background-color: #9CA3AF; color: white !impor! }
     .dark .filtro-btn-admin.filtro-admin-activo[data-filtro="disponible"], .dark .filtro-btn-admin:hover[data-filtro="disponible"] { background-color: #6B7280; color: white !important; }
   `;
   document.head.appendChild(style);

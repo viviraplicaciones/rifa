@@ -1,6 +1,5 @@
 /* =========================================================
-   script.js (desminificado, mismo nombres de funciones/vars)
-   Mantiene todo el comportamiento original.
+   script.js (Con todas las nuevas funciones)
    ========================================================= */
 
 let boletosRifa = [];
@@ -8,10 +7,10 @@ let participantes = [];
 const PRECIO_BOLETO = 6000;
 
 /* ---------------------------------------------------------
-   Variables DOM (se cachean en cachearElementosDOM)
+   Variables DOM
    --------------------------------------------------------- */
 let sidebar;
-let toggleSidebarGlobalBtn; // Renombrado para diferenciar
+let toggleSidebarGlobalBtn;
 let navLinks;
 let views;
 let toastEl;
@@ -21,7 +20,7 @@ let cuadriculaPublica;
 let numerosSeleccionadosPublica = [];
 let listaSeleccionPublica;
 let badgeCantidad;
-let subtotalEl; // Sigue siendo 'subtotalEl' por consistencia en la lógica, aunque el texto sea 'Total'
+let subtotalEl;
 let precioNumeroEl;
 let btnProcederPago;
 let switchOcultarComprados;
@@ -37,6 +36,18 @@ let listaNumerosModal;
 let btnMasInfo;
 let modalMasInfo;
 let modalCloseBtns;
+let btnCompartir;
+
+/* Nuevas variables (F, G, Modo Oscuro) */
+let btnReportarFallo;
+let modalReportarFallo;
+let formReportarFallo;
+let btnAdminLogin;
+let modalAdminLogin;
+let formAdminLogin;
+let adminLinksContainer;
+let btnDarkMode;
+let iconDarkMode;
 
 /* Slider */
 let currentSlide = 0;
@@ -50,6 +61,22 @@ document.addEventListener('DOMContentLoaded', () => {
   inicializarBoletos();
   cachearElementosDOM();
   registrarEventListeners();
+  
+  // Inicialización de Modo Oscuro
+  if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+    document.documentElement.classList.add('dark');
+    iconDarkMode?.classList.remove('fa-moon');
+    iconDarkMode?.classList.add('fa-sun');
+  } else {
+    document.documentElement.classList.remove('dark');
+    iconDarkMode?.classList.remove('fa-sun');
+    iconDarkMode?.classList.add('fa-moon');
+  }
+  
+  // Inicialización de Login Admin (G)
+  if (sessionStorage.getItem('isAdmin') === 'true') {
+    adminLinksContainer?.classList.remove('hidden');
+  }
 
   // Inicializaciones visuales
   actualizarVistaActiva('view-inicio');
@@ -62,11 +89,10 @@ document.addEventListener('DOMContentLoaded', () => {
     precioNumeroEl.textContent = `$ ${PRECIO_BOLETO.toLocaleString('es-CO')}`;
   }
 
-  // Slider: seleccionar imágenes y arrancar
+  // Slider
   slides = document.querySelectorAll('.slider-image');
   slideCount = slides.length;
   if (slideCount > 0) {
-    // Asegurarse de que solo la primera imagen sea visible inicialmente
     slides.forEach((slide, index) => {
       if (index === 0) {
         slide.classList.remove('hidden', 'opacity-0');
@@ -74,18 +100,16 @@ document.addEventListener('DOMContentLoaded', () => {
         slide.classList.add('hidden', 'opacity-0');
       }
     });
-
     setInterval(() => {
-      // esconder el actual y mostrar el siguiente
-      slides[currentSlide].classList.add('hidden', 'opacity-0');
+      if (slides[currentSlide]) slides[currentSlide].classList.add('hidden', 'opacity-0');
       currentSlide = (currentSlide + 1) % slideCount;
-      slides[currentSlide].classList.remove('hidden', 'opacity-0');
+      if (slides[currentSlide]) slides[currentSlide].classList.remove('hidden', 'opacity-0');
     }, 4000);
   }
 });
 
 /* =========================================================
-   Datos de ejemplo: inicializar boletos y participantes
+   Datos
    ========================================================= */
 function inicializarBoletos() {
   boletosRifa = [];
@@ -93,7 +117,6 @@ function inicializarBoletos() {
     const numero = String(i).padStart(2, '0');
     boletosRifa.push({ id: numero, numero: numero, estado: 'disponible', participanteId: null });
   }
-
   participantes = [];
 }
 
@@ -102,7 +125,7 @@ function inicializarBoletos() {
    ========================================================= */
 function cachearElementosDOM() {
   sidebar = document.getElementById('sidebar');
-  toggleSidebarGlobalBtn = document.getElementById('toggle-sidebar-global'); // Nuevo ID
+  toggleSidebarGlobalBtn = document.getElementById('toggle-sidebar-global');
   navLinks = document.querySelectorAll('.nav-link');
   views = document.querySelectorAll('.view');
   toastEl = document.getElementById('toast-notificacion');
@@ -127,6 +150,18 @@ function cachearElementosDOM() {
   btnMasInfo = document.getElementById('btn-mas-info');
   modalMasInfo = document.getElementById('modal-mas-info');
   modalCloseBtns = document.querySelectorAll('.modal-close');
+  btnCompartir = document.getElementById('btn-compartir');
+  
+  /* Nuevos caches (F, G, Modo Oscuro) */
+  btnReportarFallo = document.getElementById('btn-reportar-fallo');
+  modalReportarFallo = document.getElementById('modal-reportar-fallo');
+  formReportarFallo = document.getElementById('form-reportar-fallo');
+  btnAdminLogin = document.getElementById('btn-admin-login');
+  modalAdminLogin = document.getElementById('modal-admin-login');
+  formAdminLogin = document.getElementById('form-admin-login');
+  adminLinksContainer = document.getElementById('admin-links-container');
+  btnDarkMode = document.getElementById('btn-dark-mode');
+  iconDarkMode = document.getElementById('icon-dark-mode');
 }
 
 /* =========================================================
@@ -141,11 +176,11 @@ function registrarEventListeners() {
       const viewId = link.getAttribute('data-view');
       if (viewId) {
         actualizarVistaActiva(viewId);
-        // Colapsar sidebar en móvil y al cambiar de vista en cualquier tamaño
-        if (sidebar && !sidebar.classList.contains('collapsed')) {
+        // CAMBIO A: Lógica de colapso solo en móvil
+        if (window.innerWidth < 768 && sidebar && !sidebar.classList.contains('collapsed')) {
           sidebar.classList.add('collapsed');
-          toggleSidebarGlobalBtn?.classList.remove('md:left-4');
-          toggleSidebarGlobalBtn?.classList.add('left-4'); // Asegura que vuelva a la posición inicial al colapsar
+          toggleSidebarGlobalBtn?.classList.remove('md:left-64');
+          toggleSidebarGlobalBtn?.classList.add('left-4');
         }
       }
     });
@@ -159,7 +194,6 @@ function registrarEventListeners() {
   btnProcederPago?.addEventListener('click', () => {
     if (numerosSeleccionadosPublica.length > 0) {
       mostrarToast(`Simulación de pago para ${numerosSeleccionadosPublica.length} números.`);
-      // Limpiar selección después de simular el pago
       numerosSeleccionadosPublica = [];
       renderCuadriculaPublica();
       actualizarSeleccionPublica();
@@ -169,15 +203,12 @@ function registrarEventListeners() {
   });
 
   filtrosAdminContainer?.addEventListener('click', handleFiltroAdmin);
-
   btnRegistrarVentaGlobal?.addEventListener('click', () => abrirModalRegistro());
-
   formRegistrarVenta?.addEventListener('submit', handleGuardarVenta);
-
   btnAnadirNumero?.addEventListener('click', () => anadirCampoNumero(null));
-
   btnMasInfo?.addEventListener('click', () => modalMasInfo?.classList.add('flex'));
 
+  // Event listener para todos los botones de cerrar modal
   modalCloseBtns.forEach(btn => {
     btn.addEventListener('click', () => {
       const modalId = btn.getAttribute('data-modal-id');
@@ -191,22 +222,62 @@ function registrarEventListeners() {
     }
   });
 
-  const btnCompartir = document.getElementById('btn-compartir');
+  /* CAMBIO E: Event listener de Compartir actualizado */
   btnCompartir?.addEventListener('click', (e) => {
     e.preventDefault();
-    if (navigator.share) {
-      navigator.share({
-        title: 'Rifa Amigurumi',
-        text: '¡Participa en esta increíble rifa!',
-        url: window.location.href
-      }).then(() => {
-        mostrarToast('¡Gracias por compartir!');
-      }).catch((err) => {
-        mostrarToast('No se pudo compartir.', true);
-      });
+    handleCompartir();
+  });
+
+  /* CAMBIO F: Event listeners para Modal de Reporte */
+  btnReportarFallo?.addEventListener('click', (e) => {
+    e.preventDefault();
+    modalReportarFallo?.classList.add('flex');
+  });
+  
+  formReportarFallo?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const body = document.getElementById('reporte-textarea').value;
+    const subject = 'Reporte de Fallo - Rifa Navideña';
+    const to = 'viviraplicaciones@gmail.com';
+    // Construir y abrir el cliente de correo
+    window.location.href = `mailto:${to}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    modalReportarFallo?.classList.remove('flex');
+    mostrarToast('Gracias por tu reporte.');
+  });
+
+  /* CAMBIO G: Event listeners para Modal de Admin */
+  btnAdminLogin?.addEventListener('click', (e) => {
+    e.preventDefault();
+    // Si ya está logueado, no hacer nada (o toggle, si se prefiere)
+    if (!adminLinksContainer?.classList.contains('hidden')) return;
+    modalAdminLogin?.classList.add('flex');
+  });
+  
+  formAdminLogin?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const pass = document.getElementById('admin-password').value;
+    if (pass === 'VivirApp2025') {
+      sessionStorage.setItem('isAdmin', 'true');
+      adminLinksContainer?.classList.remove('hidden');
+      modalAdminLogin?.classList.remove('flex');
+      mostrarToast('Acceso concedido.');
     } else {
-      navigator.clipboard.writeText(window.location.href);
-      mostrarToast('Enlace copiado al portapapeles.');
+      mostrarToast('Contraseña incorrecta.', true);
+    }
+    formAdminLogin.reset();
+  });
+
+  /* Event listener para Modo Oscuro */
+  btnDarkMode?.addEventListener('click', () => {
+    const isDark = document.documentElement.classList.toggle('dark');
+    if (isDark) {
+      localStorage.setItem('theme', 'dark');
+      iconDarkMode?.classList.remove('fa-moon');
+      iconDarkMode?.classList.add('fa-sun');
+    } else {
+      localStorage.setItem('theme', 'light');
+      iconDarkMode?.classList.remove('fa-sun');
+      iconDarkMode?.classList.add('fa-moon');
     }
   });
 }
@@ -216,13 +287,12 @@ function registrarEventListeners() {
    ========================================================= */
 function toggleSidebarGlobal() {
   sidebar?.classList.toggle('collapsed');
-  // Ajustar la posición del botón de toggle
   if (sidebar?.classList.contains('collapsed')) {
     toggleSidebarGlobalBtn?.classList.remove('md:left-64');
-    toggleSidebarGlobalBtn?.classList.add('left-4', 'md:left-4'); // Vuelve a la izquierda cuando está colapsado
+    toggleSidebarGlobalBtn?.classList.add('left-4', 'md:left-4');
   } else {
     toggleSidebarGlobalBtn?.classList.remove('left-4');
-    toggleSidebarGlobalBtn?.classList.add('md:left-64'); // Se mueve con el sidebar cuando está expandido
+    toggleSidebarGlobalBtn?.classList.add('md:left-64');
   }
 }
 
@@ -249,18 +319,58 @@ function mostrarToast(mensaje, esError = false) {
   const icon = iconContainer?.querySelector('i');
 
   iconContainer?.classList.remove('text-lime-500', 'bg-lime-100', 'text-red-500', 'bg-red-100');
-  if (icon) icon.classList.remove('fa-check', 'fa-triangle-exclamation');
+  icon?.classList.remove('fa-check', 'fa-triangle-exclamation');
 
   if (esError) {
     iconContainer?.classList.add('text-red-500', 'bg-red-100');
-    if (icon) icon.classList.add('fa-solid', 'fa-triangle-exclamation');
+    icon?.classList.add('fa-solid', 'fa-triangle-exclamation');
   } else {
     iconContainer?.classList.add('text-lime-500', 'bg-lime-100');
-    if (icon) icon.classList.add('fa-solid', 'fa-check');
+    icon?.classList.add('fa-solid', 'fa-check');
   }
 
   toastEl.classList.remove('hidden');
   setTimeout(() => { toastEl.classList.add('hidden'); }, 3000);
+}
+
+/* =========================================================
+   Función Compartir (E)
+   ========================================================= */
+async function handleCompartir() {
+  const shareTitle = 'Fabulosa Rifa de Navidad';
+  const shareText = '¡Participa en esta increíble rifa y gánate 9 adornos navideños Amigurumi!';
+  const shareUrl = window.location.href;
+
+  try {
+    // 1. Intentar fetchear la imagen
+    const response = await fetch('banner.jpg');
+    const blob = await response.blob();
+    const file = new File([blob], 'banner.jpg', { type: 'image/jpeg' });
+    const shareData = {
+      title: shareTitle,
+      text: shareText,
+      url: shareUrl,
+      files: [file]
+    };
+
+    // 2. Comprobar si se pueden compartir archivos
+    if (navigator.canShare && navigator.canShare(shareData)) {
+      await navigator.share(shareData);
+      mostrarToast('¡Gracias por compartir!');
+    } else {
+      // 3. Fallback si no se pueden compartir archivos (ej. Firefox)
+      await navigator.share({
+        title: shareTitle,
+        text: shareText,
+        url: shareUrl,
+      });
+      mostrarToast('¡Gracias por compartir!');
+    }
+  } catch (err) {
+    // 4. Fallback si todo falla (ej. PC, o no soporta navigator.share)
+    navigator.clipboard.writeText(shareUrl);
+    mostrarToast('Enlace copiado al portapapeles.');
+  }
 }
 
 /* =========================================================
@@ -274,21 +384,15 @@ function renderCuadriculaPublica() {
   boletosRifa.forEach(boleto => {
     let claseEstado = '';
     let esOcupado = false;
-
     switch (boleto.estado) {
       case 'apartado':
       case 'pagado':
-        claseEstado = 'ocupado';
-        esOcupado = true;
-        break;
+        claseEstado = 'ocupado'; esOcupado = true; break;
       case 'revisando':
-        claseEstado = 'revisando';
-        esOcupado = true;
-        break;
+        claseEstado = 'revisando'; esOcupado = true; break;
       case 'disponible':
       default:
-        claseEstado = '';
-        break;
+        claseEstado = ''; break;
     }
 
     if (ocultar && esOcupado) return;
@@ -297,10 +401,8 @@ function renderCuadriculaPublica() {
     if (esSeleccionado && !esOcupado) claseEstado = 'seleccionado';
 
     const divBoleto = document.createElement('div');
-
-    // CAMBIO: Divs de números aún más pequeños (text-sm y padding ajustado)
-    divBoleto.className = `numero-rifa-publico w-full aspect-square flex items-center justify-center font-bold text-sm border-2 rounded-xl p-0.5 cursor-pointer ${claseEstado}`;
-
+    // CAMBIO C: Números más pequeños (text-xs y p-0.5)
+    divBoleto.className = `numero-rifa-publico w-full aspect-square flex items-center justify-center font-bold text-xs border-2 rounded-xl p-0.5 cursor-pointer ${claseEstado}`;
     divBoleto.textContent = boleto.numero;
     divBoleto.dataset.numero = boleto.numero;
     divBoleto.dataset.estado = boleto.estado;
@@ -330,6 +432,7 @@ function handleSeleccionPublica(e) {
   actualizarSeleccionPublica();
 }
 
+/* CAMBIO C: 'actualizarSeleccionPublica' con botón 'x' siempre visible */
 function actualizarSeleccionPublica() {
   if (!listaSeleccionPublica || !badgeCantidad || !subtotalEl || !btnProcederPago) return;
 
@@ -337,25 +440,29 @@ function actualizarSeleccionPublica() {
   listaSeleccionPublica.innerHTML = '';
 
   if (cantidad === 0) {
-    listaSeleccionPublica.innerHTML = '<span class="text-gray-500 text-sm">Selecciona tus números...</span>';
+    listaSeleccionPublica.innerHTML = '<span class="text-gray-500 text-sm dark:text-gray-400">Selecciona tus números...</span>';
     btnProcederPago.disabled = true;
   } else {
     numerosSeleccionadosPublica.sort().forEach(numero => {
-      const tiquet = document.createElement('div'); // Cambiado a div para mejor control del layout
-      tiquet.className = "relative bg-blue-600 text-white text-sm font-bold px-3 py-1 rounded-md flex items-center group";
+      const tiquet = document.createElement('div');
+      // Se añade 'pr-5' para dar espacio al botón 'x'
+      tiquet.className = "relative bg-blue-600 text-white text-sm font-bold pl-3 pr-5 py-1 rounded-md flex items-center";
       tiquet.textContent = numero;
-      tiquet.dataset.numero = numero; // Para identificarlo al eliminar
+      tiquet.dataset.numero = numero;
 
       const closeBtn = document.createElement('button');
-      closeBtn.className = "absolute -top-1 -right-1 bg-red-500 text-white rounded-full w-4 h-4 text-xs flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200";
+      // Botón 'x' ahora es más grande y siempre visible
+      closeBtn.className = "absolute top-0 right-0 bg-red-500 text-white rounded-full w-5 h-5 text-xs flex items-center justify-center -m-1 transition-transform hover:scale-110";
       closeBtn.innerHTML = '<i class="fa-solid fa-xmark"></i>';
+      
       closeBtn.onclick = (e) => {
-        e.stopPropagation(); // Evitar que el clic se propague al div si se agrega otra función
+        e.stopPropagation();
         const numAEliminar = tiquet.dataset.numero;
         numerosSeleccionadosPublica = numerosSeleccionadosPublica.filter(n => n !== numAEliminar);
         renderCuadriculaPublica();
         actualizarSeleccionPublica();
       };
+      
       tiquet.appendChild(closeBtn);
       listaSeleccionPublica.appendChild(tiquet);
     });
@@ -387,7 +494,8 @@ function renderCuadriculaAdmin(filtro) {
     }
 
     const divBoleto = document.createElement('div');
-    divBoleto.className = `w-full aspect-square flex items-center justify-center font-medium text-sm border rounded-md p-0.5 ${claseColor}`; // Ajuste de padding
+    // CAMBIO C: Números más pequeños (text-xs y p-0.5)
+    divBoleto.className = `w-full aspect-square flex items-center justify-center font-medium text-xs border rounded-md p-0.5 ${claseColor}`;
     divBoleto.textContent = boleto.numero;
     cuadriculaAdmin.appendChild(divBoleto);
   });
@@ -410,13 +518,13 @@ function renderTablaParticipantes() {
 
   if (participantes.length === 0) {
     tablaParticipantes.innerHTML = `
-      <tr class="no-participantes"><td colspan="4" class="p-6 text-center text-gray-500">Aún no hay participantes registrados.</td></tr>
+      <tr class="no-participantes"><td colspan="4" class="p-6 text-center text-gray-500 dark:text-gray-400">Aún no hay participantes registrados.</td></tr>
     `;
     return;
   }
 
   participantes.forEach(p => {
-    let colorEstado = 'text-gray-700';
+    let colorEstado = 'text-gray-700 dark:text-gray-300';
     switch (p.estado) {
       case 'apartado': colorEstado = 'text-blue-600 font-medium'; break;
       case 'revisando': colorEstado = 'text-amber-600 font-medium'; break;
@@ -425,9 +533,9 @@ function renderTablaParticipantes() {
 
     const fila = document.createElement('tr');
     fila.innerHTML = `
-      <td class="p-4 text-sm text-gray-800">${p.nombre}</td>
-      <td class="p-4 text-sm text-gray-600">${p.telefono}</td>
-      <td class="p-4 text-sm text-gray-600">${p.numeros.join(', ')}</td>
+      <td class="p-4 text-sm text-gray-800 dark:text-gray-200">${p.nombre}</td>
+      <td class="p-4 text-sm text-gray-600 dark:text-gray-300">${p.telefono}</td>
+      <td class="p-4 text-sm text-gray-600 dark:text-gray-300">${p.numeros.join(', ')}</td>
       <td class="p-4 text-sm ${colorEstado}">${p.estado.charAt(0).toUpperCase() + p.estado.slice(1)}</td>
     `;
     tablaParticipantes.appendChild(fila);
@@ -473,7 +581,7 @@ function anadirCampoNumero(numeroSeleccionado) {
   divCampo.className = 'flex items-center gap-2';
 
   const select = document.createElement('select');
-  select.className = 'w-full p-3 border border-gray-300 rounded-lg text-gray-900 bg-white select-numero-dinamico';
+  select.className = 'w-full p-3 border border-gray-300 rounded-lg text-gray-900 bg-white dark:bg-gray-700 dark:border-gray-600 dark:text-white select-numero-dinamico';
   select.required = true;
 
   let optionsHTML = '<option value="" disabled>Selecciona un número</option>';
@@ -537,6 +645,16 @@ function handleGuardarVenta(e) {
     mostrarToast("Debes seleccionar al menos un número.", true);
     return;
   }
+  
+  // Validar que no se seleccionen números ya ocupados (doble chequeo)
+  for (const numero of numerosSeleccionados) {
+    const boleto = boletosRifa.find(b => b.numero === numero);
+    if (boleto.estado !== 'disponible') {
+        mostrarToast(`El número ${numero} ya no está disponible.`, true);
+        actualizarSelectsDinamicos(); // Refrescar listas
+        return;
+    }
+  }
 
   const nuevoParticipante = { id: `p${participantes.length + 1}`, nombre: nombre, telefono: telefono, numeros: numerosSeleccionados, estado: estado };
   participantes.push(nuevoParticipante);
@@ -562,7 +680,7 @@ function handleGuardarVenta(e) {
 }
 
 /* ---------------------------------------------------------
-   Estilo dinámico (se inyecta al final como en el original)
+   Estilo dinámico
    --------------------------------------------------------- */
 (function insertarEstiloFiltroAdmin() {
   const style = document.createElement('style');
@@ -579,6 +697,12 @@ function handleGuardarVenta(e) {
     .filtro-btn-admin.filtro-admin-activo[data-filtro="apartado"], .filtro-btn-admin:hover[data-filtro="apartado"] { background-color: #3B82F6; }
     .filtro-btn-admin.filtro-admin-activo[data-filtro="revisando"], .filtro-btn-admin:hover[data-filtro="revisando"] { background-color: #F59E0B; }
     .filtro-btn-admin.filtro-admin-activo[data-filtro="pagado"], .filtro-btn-admin:hover[data-filtro="pagado"] { background-color: #EF4444; }
+
+    /* Estilos para modo oscuro en filtros */
+    .dark .filtro-btn-admin[data-filtro="todos"] { border-color: #9CA3AF; color: #E5E7EB; }
+    .dark .filtro-btn-admin[data-filtro="disponible"] { border-color: #4B5563; color: #D1D5DB; }
+    .dark .filtro-btn-admin.filtro-admin-activo[data-filtro="todos"], .dark .filtro-btn-admin:hover[data-filtro="todos"] { background-color: #9CA3AF; color: white !important; }
+    .dark .filtro-btn-admin.filtro-admin-activo[data-filtro="disponible"], .dark .filtro-btn-admin:hover[data-filtro="disponible"] { background-color: #6B7280; color: white !important; }
   `;
   document.head.appendChild(style);
 })();

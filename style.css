@@ -47,7 +47,14 @@ body {font-family: 'Roboto', sans-serif;}
   width: 100%; height: 100%;
   background-color: rgba(255, 255, 255, 0.4);
   z-index: -1;
+  transition: background-color 0.3s;
 }
+
+/* 2b. Superposición para Modo Oscuro */
+.dark .body-con-fondo::before {
+  background-color: rgba(17, 24, 39, 0.7); /* Un fondo oscuro (bg-gray-900 con opacidad) */
+}
+
 
 /* 3. Iconos del sidebar más vivos */
 .nav-link .sidebar-icon {
@@ -61,40 +68,18 @@ body {font-family: 'Roboto', sans-serif;}
   transform: scale(1.1);
 }
 
-/* Nuevos estilos para el botón de toggle flotante */
+/* 4. Estilos para el botón de toggle flotante (A) */
 .toggle-sidebar-btn {
   top: 1rem; /* 16px */
   left: 1rem; /* 16px */
   transition: all 0.3s ease-in-out;
-  /* El md:left-64 se aplicará por JS */
 }
 
-/* Estilos para el sidebar cuando está colapsado */
-#sidebar.collapsed ~ .main-content .toggle-sidebar-btn {
-  left: 1rem; /* Asegura que esté en 1rem cuando colapsado */
+/* 5. Clases para los números en modo oscuro */
+.dark .status-disponible {
+  background-color: #374151; /* bg-gray-700 */
+  color: #E5E7EB; /* text-gray-200 */
+  border-color: #4B5563; /* border-gray-600 */
 }
 
-/* Estilos para el sidebar cuando está expandido (por defecto para escritorio) */
-#sidebar:not(.collapsed) ~ .main-content .toggle-sidebar-btn {
-  left: 16rem; /* Se mueve con el sidebar (16rem = 256px) */
-}
-
-/* Media query para ajustar en pantallas grandes, para que el botón no se mueva tanto en escritorio */
-@media (min-width: 768px) {
-  .toggle-sidebar-btn {
-    left: 1rem; /* Fija la posición en escritorio */
-    top: 1rem;
-  }
-  #sidebar:not(.collapsed) ~ .main-content .toggle-sidebar-btn {
-    left: 1rem; /* Permanece fijo incluso si el sidebar está expandido */
-  }
-  #sidebar.collapsed ~ .main-content .toggle-sidebar-btn {
-    left: 1rem; /* Permanece fijo si está colapsado */
-  }
-}
-
-/* Asegurar que el contenido principal no se superponga al botón flotante */
-main {
-  position: relative;
-  z-index: 10;
-}
+/* --- FIN DE NUEVOS ESTILOS --- */

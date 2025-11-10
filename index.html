@@ -1,11 +1,28 @@
 <!DOCTYPE html>
-<html class="h-full bg-gray-100" lang="es">
+<html class="h-full" lang="es">
  <head>
   <meta charset="utf-8"/>
   <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
   <title>
-   Rifa Amigurumi
+   Rifa Navideña Amigurumi
   </title>
+  
+  <meta content="Participa en nuestra Fabulosa Rifa de Navidad y gana 9 espectaculares adornos navideños tejidos en crochet estilo Amigurumi. Juega con la Lotería de Risaralda." name="description"/>
+  <meta content="rifa, navidad, amigurumi, crochet, sorteo, lotería, pereira, marian crochet" name="keywords"/>
+  <meta content="VivirApp" name="author"/>
+  
+  <meta content="Rifa Navideña Amigurumi" property="og:title"/>
+  <meta content="¡Participa y gana 9 espectaculares adornos navideños tejidos a mano!" property="og:description"/>
+  <meta content="https://tu-sitio-web.com/banner.jpg" property="og:image"/>
+  <meta content="https://tu-sitio-web.com/" property="og:url"/>
+  <meta content="website" property="og:type"/>
+  
+  <meta content="summary_large_image" name="twitter:card"/>
+  <meta content="Rifa Navideña Amigurumi" name="twitter:title"/>
+  <meta content="¡Participa y gana 9 espectaculares adornos navideños tejidos a mano!" name="twitter:description"/>
+  <meta content="https://tu-sitio-web.com/banner.jpg" name="twitter:image"/>
+  
+  <link href="icono.jpg" rel="icon" type="image/jpeg"/>
   <script src="https://cdn.tailwindcss.com">
   </script>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet"/>
@@ -13,8 +30,15 @@
   <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
   <link href="style.css" rel="stylesheet"/>
+  
+  <script>
+    tailwind.config = {
+      darkMode: 'class', // Habilita el modo oscuro basado en la clase '.dark' en <html>
+    }
+  </script>
+
  </head>
- <body class="h-full flex body-con-fondo">
+ <body class="h-full flex body-con-fondo dark:bg-gray-900">
   <aside class="bg-fuchsia-700 text-fuchsia-50 flex flex-col h-full shadow-lg no-scrollbar overflow-y-auto" id="sidebar">
    <div class="relative h-40 flex flex-col items-center justify-center p-4">
     <img alt="Banner Navideño" class="absolute inset-0 w-full h-full object-cover z-0" src="banner.jpg"/>
@@ -29,73 +53,49 @@
      </span>
     </div>
    </div>
-   <nav class="flex-1 p-4 space-y-2 mt-4">
-    <a class="flex items-center p-3 rounded-lg hover:bg-fuchsia-600 nav-link active" data-view="view-inicio" href="#">
+   
+   <nav class="flex-1 p-4 space-y-1">
+    <a class="flex items-center p-2 rounded-lg hover:bg-fuchsia-600 nav-link active" data-view="view-inicio" href="#">
      <i class="fa-solid fa-house fa-lg sidebar-icon">
      </i>
      <span class="sidebar-text text-lg ml-4">
       Inicio
      </span>
     </a>
-    <a class="flex items-center p-3 rounded-lg hover:bg-fuchsia-600 nav-link" data-view="view-comprar-numeros" href="#">
+    <a class="flex items-center p-2 rounded-lg hover:bg-fuchsia-600 nav-link" data-view="view-comprar-numeros" href="#">
      <i class="fa-solid fa-table-cells fa-lg sidebar-icon">
      </i>
      <span class="sidebar-text text-lg ml-4">
       N&uacute;meros
      </span>
     </a>
-    <a class="flex items-center p-3 rounded-lg hover:bg-fuchsia-600 nav-link" data-view="view-faq" href="#">
+    <a class="flex items-center p-2 rounded-lg hover:bg-fuchsia-600 nav-link" data-view="view-faq" href="#">
      <i class="fa-solid fa-circle-question fa-lg sidebar-icon">
      </i>
      <span class="sidebar-text text-lg ml-4">
       Preguntas
      </span>
     </a>
-    <div class="pt-4 mt-4 border-t border-fuchsia-500">
-     <p class="sidebar-text text-xs uppercase text-fuchsia-300 px-3 mb-2">
-      Rifa
-     </p>
-     <a class="flex items-center p-3 rounded-lg hover:bg-fuchsia-600 nav-link" data-view="view-rifas-pv" href="#">
-      <i class="fa-solid fa-store fa-lg sidebar-icon">
-      </i>
-      <span class="sidebar-text text-lg ml-4">
-       Punto de Venta
-      </span>
-     </a>
-     <a class="flex items-center p-3 rounded-lg hover:bg-fuchsia-600 nav-link" data-view="view-participantes" href="#">
-      <i class="fa-solid fa-users fa-lg sidebar-icon">
-      </i>
-      <span class="sidebar-text text-lg ml-4">
-       Participantes
-      </span>
-     </a>
-     <a class="flex items-center p-3 rounded-lg hover:bg-fuchsia-600 nav-link" data-view="view-analiticos" href="#">
-      <i class="fa-solid fa-chart-line fa-lg sidebar-icon">
-      </i>
-      <span class="sidebar-text text-lg ml-4">
-       Anal&iacute;ticos
-      </span>
-     </a>
-    </div>
+    
     <div class="pt-4 mt-4 border-t border-fuchsia-500">
      <p class="sidebar-text text-xs uppercase text-fuchsia-300 px-3 mb-2">
       Comunidad
      </p>
-     <a class="flex items-center p-3 rounded-lg hover:bg-fuchsia-600" href="https://tu-sitio-web.com" target="_blank">
+     <a class="flex items-center p-2 rounded-lg hover:bg-fuchsia-600" href="https://tu-sitio-web.com" target="_blank">
       <i class="fa-solid fa-globe fa-lg sidebar-icon">
       </i>
       <span class="sidebar-text text-lg ml-4">
        Nuestra Web
       </span>
      </a>
-     <a class="flex items-center p-3 rounded-lg hover:bg-fuchsia-600" href="https://instagram.com/tu-perfil" target="_blank">
+     <a class="flex items-center p-2 rounded-lg hover:bg-fuchsia-600" href="https://www.instagram.com/marianma_crochet/" target="_blank">
       <i class="fa-brands fa-instagram fa-lg sidebar-icon">
       </i>
       <span class="sidebar-text text-lg ml-4">
        Instagram
       </span>
      </a>
-     <a class="flex items-center p-3 rounded-lg hover:bg-fuchsia-600" href="#" id="btn-compartir">
+     <a class="flex items-center p-2 rounded-lg hover:bg-fuchsia-600" href="#" id="btn-compartir">
       <i class="fa-solid fa-share-nodes fa-lg sidebar-icon">
       </i>
       <span class="sidebar-text text-lg ml-4">
@@ -103,40 +103,78 @@
       </span>
      </a>
     </div>
+    
+    <div class="pt-4 mt-4 border-t border-fuchsia-500">
+     <a class="cursor-pointer" href="#" id="btn-admin-login">
+      <p class="sidebar-text text-xs uppercase text-fuchsia-300 px-3 mb-2">
+       Admin
+      </p>
+     </a>
+     <div class="hidden" id="admin-links-container">
+      <a class="flex items-center p-2 rounded-lg hover:bg-fuchsia-600 nav-link" data-view="view-rifas-pv" href="#">
+       <i class="fa-solid fa-store fa-lg sidebar-icon">
+       </i>
+       <span class="sidebar-text text-lg ml-4">
+        Punto de Venta
+       </span>
+      </a>
+      <a class="flex items-center p-2 rounded-lg hover:bg-fuchsia-600 nav-link" data-view="view-participantes" href="#">
+       <i class="fa-solid fa-users fa-lg sidebar-icon">
+       </i>
+       <span class="sidebar-text text-lg ml-4">
+        Participantes
+       </span>
+      </a>
+      <a class="flex items-center p-2 rounded-lg hover:bg-fuchsia-600 nav-link" data-view="view-analiticos" href="#">
+       <i class="fa-solid fa-chart-line fa-lg sidebar-icon">
+       </i>
+       <span class="sidebar-text text-lg ml-4">
+        Anal&iacute;ticos
+       </span>
+      </a>
+     </div>
+    </div>
+    
     <div class="pt-4 mt-4 border-t border-fuchsia-500">
      <p class="sidebar-text text-xs uppercase text-fuchsia-300 px-3 mb-2">
       Soporte
      </p>
-     <a class="flex items-center p-3 rounded-lg hover:bg-fuchsia-600" href="mailto:soporte@tu-dominio.com">
+     <a class="flex items-center p-2 rounded-lg hover:bg-fuchsia-600" href="#" id="btn-reportar-fallo">
       <i class="fa-solid fa-bug fa-lg sidebar-icon">
       </i>
       <span class="sidebar-text text-lg ml-4">
        Reportar Fallos
       </span>
      </a>
-     <a class="flex items-center p-3 rounded-lg hover:bg-fuchsia-600 nav-link" data-view="view-nosotros" href="#">
-      <i class="fa-solid fa-circle-info fa-lg sidebar-icon">
-      </i>
+     <a class="flex items-center p-2 rounded-lg hover:bg-fuchsia-600 nav-link" data-view="view-nosotros" href="#">
+      <img alt="Icono Marian Crochet" class="w-6 h-6 rounded-full sidebar-icon" src="icono.jpg"/>
       <span class="sidebar-text text-lg ml-4">
        Nosotros
       </span>
      </a>
     </div>
    </nav>
+   
    <div class="mt-auto p-4 flex flex-col items-center border-t border-fuchsia-500">
+    <button class="text-fuchsia-200 hover:text-white mb-3" id="btn-dark-mode">
+     <i class="fa-solid fa-moon fa-lg" id="icon-dark-mode"></i>
+    </button>
+    
     <img alt="VivirApp Logo" class="h-8 mb-2" src="vivirapp.png"/>
     <span class="sidebar-text text-xs text-fuchsia-300 text-center">
      By VivirApp • 2025 • Colombia
     </span>
    </div>
   </aside>
+  
   <button class="fixed z-20 p-2 bg-fuchsia-700 text-white rounded-md toggle-sidebar-btn" id="toggle-sidebar-global">
    <i class="fa-solid fa-bars">
    </i>
   </button>
+  
   <main class="flex-1 flex flex-col h-full overflow-y-auto">
    <div class="view active p-6 md:p-12" id="view-inicio">
-    <div class="max-w-6xl mx-auto bg-white rounded-2xl shadow-xl overflow-hidden">
+    <div class="max-w-6xl mx-auto bg-white rounded-2xl shadow-xl overflow-hidden dark:bg-gray-800">
      <div class="md:flex">
       <div class="md:w-3/5 relative h-64 md:h-auto overflow-hidden" id="image-slider">
        <img alt="Imagen 1" class="slider-image h-full w-full object-cover absolute" src="01.jpg"/>
@@ -146,16 +184,16 @@
        <img alt="Imagen 5" class="slider-image h-full w-full object-cover absolute hidden" src="05.jpg"/>
       </div>
       <div class="md:w-2/5 p-8 md:p-12">
-       <h1 class="text-3xl md:text-4xl font-bold text-gray-900">
+       <h1 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white">
         Fabulosa Rifa de Navidad
        </h1>
-       <p class="mt-4 text-lg text-gray-600">
+       <p class="mt-4 text-lg text-gray-600 dark:text-gray-300">
         Espectaculares Adornos Navideños. 9 Esferas Tejidas en crochet estilo Amigurumi.
        </p>
-       <p class="mt-6 text-lg font-semibold text-gray-800">
+       <p class="mt-6 text-lg font-semibold text-gray-800 dark:text-gray-100">
         Juega con las 2 últimas cifras del Premio Mayor de La lotería de Risaralda
        </p>
-       <p class="mt-2 text-lg text-gray-600">
+       <p class="mt-2 text-lg text-gray-600 dark:text-gray-300">
         El viernes 5 de diciembre de 2025
        </p>
        <p class="mt-4 text-2xl font-bold text-fuchsia-600">
@@ -170,11 +208,12 @@
      </div>
     </div>
    </div>
+   
    <div class="view p-4 md:p-6 lg:p-10" id="view-comprar-numeros">
     <div class="flex flex-col lg:flex-row gap-6 lg:gap-10">
-     <div class="flex-1 bg-white p-6 rounded-2xl shadow-xl">
+     <div class="flex-1 bg-white p-6 rounded-2xl shadow-xl dark:bg-gray-800">
       <div class="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
-       <div class="flex flex-wrap gap-x-4 gap-y-2 text-sm text-gray-600">
+       <div class="flex flex-wrap gap-x-4 gap-y-2 text-sm text-gray-600 dark:text-gray-300">
         <span class="flex items-center">
          <span class="w-4 h-4 rounded-full bg-red-500 mr-2 border">
          </span>
@@ -186,7 +225,7 @@
          En revisi&oacute;n
         </span>
         <span class="flex items-center">
-         <span class="w-4 h-4 rounded-full bg-white border mr-2">
+         <span class="w-4 h-4 rounded-full bg-white border mr-2 dark:bg-gray-700">
          </span>
          Disponible
         </span>
@@ -197,12 +236,12 @@
         </span>
        </div>
        <label class="flex items-center cursor-pointer" for="ocultar-comprados">
-        <span class="mr-3 text-sm font-medium text-gray-700">
+        <span class="mr-3 text-sm font-medium text-gray-700 dark:text-gray-300">
          Ocultar n&uacute;meros ya comprados
         </span>
         <div class="relative">
          <input class="sr-only switch-checkbox peer" id="ocultar-comprados" type="checkbox"/>
-         <div class="w-10 h-6 bg-gray-300 rounded-full shadow-inner transition duration-300 peer-checked:bg-lime-500">
+         <div class="w-10 h-6 bg-gray-300 rounded-full shadow-inner transition duration-300 peer-checked:bg-lime-500 dark:bg-gray-600">
          </div>
          <div class="switch-dot absolute w-4 h-4 bg-white rounded-full shadow left-1 top-1 transition duration-300 peer-checked:translate-x-full">
          </div>
@@ -212,32 +251,32 @@
       <div class="grid grid-cols-5 sm:grid-cols-10 lg:grid-cols-10 gap-2 md:gap-3" id="cuadricula-numeros-publica">
       </div>
      </div>
-     <div class="w-full lg:w-96 bg-white p-6 rounded-2xl shadow-xl h-fit sticky top-10">
-      <h2 class="text-2xl font-bold text-gray-800 mb-4 flex items-center justify-between">
+     <div class="w-full lg:w-96 bg-white p-6 rounded-2xl shadow-xl h-fit sticky top-10 dark:bg-gray-800">
+      <h2 class="text-2xl font-bold text-gray-800 mb-4 flex items-center justify-between dark:text-white">
        Tu Selecci&oacute;n
        <span class="text-sm bg-blue-100 text-blue-800 font-medium px-3 py-1 rounded-full" id="cantidad-seleccionada-badge">
         0 n&uacute;meros
        </span>
       </h2>
-      <div class="flex flex-wrap gap-2 mb-4 min-h-[40px] bg-gray-50 p-3 rounded-lg border" id="numeros-seleccionados-lista">
-       <span class="text-gray-500 text-sm">
+      <div class="flex flex-wrap gap-2 mb-4 min-h-[40px] bg-gray-50 p-3 rounded-lg border dark:bg-gray-700 dark:border-gray-600" id="numeros-seleccionados-lista">
+       <span class="text-gray-500 text-sm dark:text-gray-400">
         Selecciona tus n&uacute;meros...
        </span>
       </div>
-      <div class="space-y-3 mb-6 border-t pt-4">
-       <div class="flex justify-between text-lg text-gray-600">
+      <div class="space-y-3 mb-6 border-t pt-4 dark:border-gray-700">
+       <div class="flex justify-between text-lg text-gray-600 dark:text-gray-300">
         <span>
          Total:
         </span>
-        <span class="font-medium text-gray-900" id="subtotal">
+        <span class="font-medium text-gray-900 dark:text-white" id="subtotal">
          $ 0
         </span>
        </div>
-       <div class="flex justify-between text-lg text-gray-600">
+       <div class="flex justify-between text-lg text-gray-600 dark:text-gray-300">
         <span>
          Precio por n&uacute;mero:
         </span>
-        <span class="font-medium text-gray-900" id="precio-numero">
+        <span class="font-medium text-gray-900 dark:text-white" id="precio-numero">
          $ 6.000
         </span>
        </div>
@@ -245,7 +284,7 @@
       <button class="w-full bg-lime-500 text-white font-bold text-lg py-3 px-6 rounded-xl hover:bg-lime-600 transition duration-300 shadow-lg disabled:bg-gray-400" id="btn-proceder-pago">
        Proceder al pago
       </button>
-      <p class="text-xs text-gray-500 mt-4 text-center">
+      <p class="text-xs text-gray-500 mt-4 text-center dark:text-gray-400">
        <i class="fa-solid fa-circle-info mr-1">
        </i>
        Selecciona los n&uacute;meros que deseas comprar.
@@ -253,11 +292,12 @@
      </div>
     </div>
    </div>
+   
    <div class="view p-6 md:p-10" id="view-rifas-pv">
-    <h1 class="text-3xl font-bold text-gray-800 mb-6">
+    <h1 class="text-3xl font-bold text-gray-800 mb-6 dark:text-white">
      Punto de Venta (Admin)
     </h1>
-    <div class="bg-white p-6 rounded-2xl shadow-xl">
+    <div class="bg-white p-6 rounded-2xl shadow-xl dark:bg-gray-800">
      <div class="flex flex-wrap gap-3 mb-6">
       <button class="filtro-btn-admin filtro-admin-activo" data-filtro="todos">
        Todos
@@ -279,9 +319,10 @@
      </div>
     </div>
    </div>
+   
    <div class="view p-6 md:p-10" id="view-participantes">
     <div class="flex justify-between items-center mb-6">
-     <h1 class="text-3xl font-bold text-gray-800">
+     <h1 class="text-3xl font-bold text-gray-800 dark:text-white">
       Participantes
      </h1>
      <button class="bg-lime-500 text-white font-bold py-2 px-5 rounded-xl hover:bg-lime-600 transition shadow-lg flex items-center" id="btn-registrar-venta-global">
@@ -290,105 +331,109 @@
       Registrar Venta
      </button>
     </div>
-    <div class="bg-white rounded-2xl shadow-xl overflow-hidden">
+    <div class="bg-white rounded-2xl shadow-xl overflow-hidden dark:bg-gray-800">
      <div class="overflow-x-auto">
       <table class="w-full">
-       <thead class="bg-gray-50">
+       <thead class="bg-gray-50 dark:bg-gray-700">
         <tr>
-         <th class="p-4 text-left text-sm font-semibold text-gray-600 uppercase">
+         <th class="p-4 text-left text-sm font-semibold text-gray-600 uppercase dark:text-gray-300">
           Nombre
          </th>
-         <th class="p-4 text-left text-sm font-semibold text-gray-600 uppercase">
+         <th class="p-4 text-left text-sm font-semibold text-gray-600 uppercase dark:text-gray-300">
           Tel&eacute;fono
          </th>
-         <th class="p-4 text-left text-sm font-semibold text-gray-600 uppercase">
+         <th class="p-4 text-left text-sm font-semibold text-gray-600 uppercase dark:text-gray-300">
           N&uacute;meros
          </th>
-         <th class="p-4 text-left text-sm font-semibold text-gray-600 uppercase">
+         <th class="p-4 text-left text-sm font-semibold text-gray-600 uppercase dark:text-gray-300">
           Estado
          </th>
         </tr>
        </thead>
-       <tbody class="divide-y divide-gray-200" id="tabla-participantes">
+       <tbody class="divide-y divide-gray-200 dark:divide-gray-700" id="tabla-participantes">
        </tbody>
       </table>
      </div>
     </div>
    </div>
+   
    <div class="view p-6 md:p-10" id="view-analiticos">
-    <h1 class="text-3xl font-bold text-gray-800 mb-6">
+    <h1 class="text-3xl font-bold text-gray-800 mb-6 dark:text-white">
      Anal&iacute;ticos
     </h1>
-    <div class="bg-white p-10 rounded-2xl shadow-xl text-center">
+    <div class="bg-white p-10 rounded-2xl shadow-xl text-center dark:bg-gray-800">
      <i class="fa-solid fa-chart-line fa-3x text-lime-500 mb-4">
      </i>
-     <h2 class="text-2xl font-semibold text-gray-700">
+     <h2 class="text-2xl font-semibold text-gray-700 dark:text-gray-200">
       Pr&oacute;ximamente
      </h2>
-     <p class="text-gray-500 mt-2">
+     <p class="text-gray-500 mt-2 dark:text-gray-400">
       Aqu&iacute; ver&aacute;s las estad&iacute;sticas detalladas de tus rifas.
      </p>
     </div>
    </div>
+   
    <div class="view p-6 md:p-12" id="view-faq">
-    <h1 class="text-3xl font-bold text-gray-800 mb-6">
+    <h1 class="text-3xl font-bold text-gray-800 mb-6 dark:text-white">
      Preguntas Frecuentes (FAQ)
     </h1>
-    <div class="max-w-4xl mx-auto bg-white rounded-2xl shadow-xl p-6 md:p-10">
+    <div class="max-w-4xl mx-auto bg-white rounded-2xl shadow-xl p-6 md:p-10 dark:bg-gray-800">
      <div class="space-y-4">
       <div>
-       <h5 class="text-lg font-semibold text-gray-800">
+       <h5 class="text-lg font-semibold text-gray-800 dark:text-white">
         1. &iquest;Esto es real?
        </h5>
-       <p class="text-gray-600 mt-1">
+       <p class="text-gray-600 mt-1 dark:text-gray-300">
         Si esta rifa es completamente real, los adornos son hechos a mano en lana, tejidos en estilo crochet.
        </p>
       </div>
-      <hr/>
+      <hr class="dark:border-gray-700"/>
       <div>
-       <h5 class="text-lg font-semibold text-gray-800">
+       <h5 class="text-lg font-semibold text-gray-800 dark:text-white">
         2. &iquest;C&oacute;mo se elige al ganador?
        </h5>
-       <p class="text-gray-600 mt-1">
+       <p class="text-gray-600 mt-1 dark:text-gray-300">
         De manera transparente, utilizando los números del Premio Mayor de la Lotería de Risaralda.
        </p>
       </div>
-      <hr/>
+      <hr class="dark:border-gray-700"/>
       <div>
-       <h5 class="text-lg font-semibold text-gray-800">
+       <h5 class="text-lg font-semibold text-gray-800 dark:text-white">
         3. &iquest;D&oacute;nde veo mis n&uacute;meros?
        </h5>
-       <p class="text-gray-600 mt-1">
+       <p class="text-gray-600 mt-1 dark:text-gray-300">
         Al finalizar la compra, recibirás un mensaje a Whatsapp con el listado de tu(s) número(s) registrado(s).
        </p>
       </div>
      </div>
     </div>
    </div>
+   
    <div class="view p-6 md:p-10" id="view-nosotros">
-    <h1 class="text-3xl font-bold text-gray-800 mb-6">
+    <h1 class="text-3xl font-bold text-gray-800 mb-6 dark:text-white">
      Sobre Nosotros
     </h1>
-    <div class="bg-white p-10 rounded-2xl shadow-xl text-center">
-     <i class="fa-solid fa-users-rays fa-3x text-fuchsia-500 mb-4">
-     </i>
-     <h2 class="text-2xl font-semibold text-gray-700">
+    <div class="bg-white p-10 rounded-2xl shadow-xl text-center dark:bg-gray-800">
+     <img alt="Icono Marian Crochet" class="w-24 h-24 rounded-full mx-auto mb-4 shadow-lg" src="icono.jpg"/>
+     <h2 class="text-2xl font-semibold text-gray-700 dark:text-gray-200">
       Nuestra Historia
      </h2>
-     <p class="text-gray-600 mt-2 max-w-2xl mx-auto">
-      Somos Rifa Amigurumi, un proyecto dedicado a... (Aqu&iacute; puedes poner la descripci&oacute;n de tu negocio o proyecto). ¡Gracias por participar!
+     <p class="text-gray-600 mt-2 max-w-2xl mx-auto dark:text-gray-300">
+      Somos "Marian Crochet", con más de tres años de experiencia en crochet, creando piezas únicas y coloridas hechas con dedicación. Nuestros amigurumis y accesorios buscan transmitir cariño y generar alegría en quienes los reciben.
      </p>
     </div>
    </div>
+   
   </main>
+  
   <div class="modal fixed inset-0 z-50 overflow-y-auto bg-black bg-opacity-60" id="modal-mas-info">
    <div class="relative p-4 w-full max-w-4xl mx-auto my-12">
-    <div class="relative bg-white rounded-2xl shadow-2xl">
-     <div class="flex justify-between items-center p-5 border-b rounded-t-2xl">
-      <h3 class="text-2xl font-semibold text-gray-900">
+    <div class="relative bg-white rounded-2xl shadow-2xl dark:bg-gray-800">
+     <div class="flex justify-between items-center p-5 border-b rounded-t-2xl dark:border-gray-700">
+      <h3 class="text-2xl font-semibold text-gray-900 dark:text-white">
        Fabulosa Rifa de Navidad
       </h3>
-      <button class="modal-close text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-2 ml-auto inline-flex items-center" data-modal-id="modal-mas-info" type="button">
+      <button class="modal-close text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-2 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-id="modal-mas-info" type="button">
        <i class="fa-solid fa-xmark fa-2x">
        </i>
        <span class="sr-only">
@@ -396,11 +441,11 @@
        </span>
       </button>
      </div>
-     <div class="p-6 md:p-8 space-y-6 max-h-[70vh] overflow-y-auto text-gray-600">
+     <div class="p-6 md:p-8 space-y-6 max-h-[70vh] overflow-y-auto text-gray-600 dark:text-gray-300">
       <p class="text-lg">
        Espectaculares Adornos Navideños. 9 Esferas Tejidas en crochet estilo Amigurumi.
       </p>
-      <p class="text-lg font-semibold text-gray-800">
+      <p class="text-lg font-semibold text-gray-800 dark:text-gray-100">
        Juega con las 2 últimas cifras del Premio Mayor de La lotería de Risaralda
       </p>
       <p class="text-lg">
@@ -409,9 +454,9 @@
       <p class="text-xl font-bold text-fuchsia-600">
        Valor $ 6.000
       </p>
-      <hr/>
+      <hr class="dark:border-gray-700"/>
       <div>
-       <h4 class="text-xl font-bold text-gray-800 mb-3">
+       <h4 class="text-xl font-bold text-gray-800 mb-3 dark:text-white">
         Detalles del Premio
        </h4>
        <p>
@@ -448,7 +493,7 @@
        </ul>
       </div>
       <div>
-       <h4 class="text-xl font-bold text-gray-800 mb-3">
+       <h4 class="text-xl font-bold text-gray-800 mb-3 dark:text-white">
         Forma de pago
        </h4>
        <ul class="list-disc list-inside space-y-1">
@@ -462,16 +507,16 @@
          Efectivo
         </li>
        </ul>
-       <p class="mt-4 text-sm text-gray-700">
+       <p class="mt-4 text-sm text-gray-700 dark:text-gray-300">
         Rifa realizada en Pereira, boletas compradas en otra ciudad el envio del premio corre por cuenta del ganador.
        </p>
        <p class="mt-2 text-sm font-semibold text-red-600">
         Boleta sin cancelar no participa en el Sorteo.
        </p>
       </div>
-      <hr/>
+      <hr class="dark:border-gray-700"/>
       <div>
-       <h4 class="text-xl font-bold text-gray-800 mb-3">
+       <h4 class="text-xl font-bold text-gray-800 mb-3 dark:text-white">
         &iquest;C&oacute;mo participar?
        </h4>
        <ol class="list-decimal list-inside space-y-2">
@@ -490,14 +535,15 @@
     </div>
    </div>
   </div>
+  
   <div class="modal fixed inset-0 z-50 overflow-y-auto bg-black bg-opacity-60" id="modal-registrar-venta">
    <div class="relative p-4 w-full max-w-lg mx-auto my-12">
-    <div class="relative bg-white rounded-2xl shadow-2xl">
-     <div class="flex justify-between items-center p-5 border-b rounded-t-2xl">
-      <h3 class="text-2xl font-semibold text-gray-900">
+    <div class="relative bg-white rounded-2xl shadow-2xl dark:bg-gray-800">
+     <div class="flex justify-between items-center p-5 border-b rounded-t-2xl dark:border-gray-700">
+      <h3 class="text-2xl font-semibold text-gray-900 dark:text-white">
        Registrar Venta Manual
       </h3>
-      <button class="modal-close text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-2 ml-auto inline-flex items-center" data-modal-id="modal-registrar-venta" type="button">
+      <button class="modal-close text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-2 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-id="modal-registrar-venta" type="button">
        <i class="fa-solid fa-xmark fa-2x">
        </i>
        <span class="sr-only">
@@ -507,10 +553,10 @@
      </div>
      <form class="p-6 md:p-8 space-y-6" id="form-registrar-venta">
       <div>
-       <h4 class="text-lg font-semibold text-gray-800 mb-3">
+       <h4 class="text-lg font-semibold text-gray-800 mb-3 dark:text-white">
         N&uacute;meros a Registrar
        </h4>
-       <div class="text-sm text-gray-500 mb-3" id="lista-numeros-disponibles-modal">
+       <div class="text-sm text-gray-500 mb-3 dark:text-gray-400" id="lista-numeros-disponibles-modal">
         Cargando n&uacute;meros disponibles...
        </div>
        <div class="space-y-3" id="campos-numeros-dinamicos">
@@ -522,21 +568,21 @@
        </button>
       </div>
       <div>
-       <h4 class="text-lg font-semibold text-gray-800 mb-3">
+       <h4 class="text-lg font-semibold text-gray-800 mb-3 dark:text-white">
         Participante
        </h4>
        <div class="space-y-4">
         <div>
-         <input class="w-full p-3 border border-gray-300 rounded-lg text-gray-900" id="participante-nombre" placeholder="Nombre y apellido" required="" type="text"/>
+         <input class="w-full p-3 border border-gray-300 rounded-lg text-gray-900 dark:bg-gray-700 dark:border-gray-600 dark:text-white" id="participante-nombre" placeholder="Nombre y apellido" required="" type="text"/>
         </div>
         <div>
-         <input class="w-full p-3 border border-gray-300 rounded-lg text-gray-900" id="participante-telefono" placeholder="Tel&eacute;fono" required="" type="tel"/>
+         <input class="w-full p-3 border border-gray-300 rounded-lg text-gray-900 dark:bg-gray-700 dark:border-gray-600 dark:text-white" id="participante-telefono" placeholder="Tel&eacute;fono" required="" type="tel"/>
         </div>
         <div>
-         <label class="block mb-2 text-sm font-medium text-gray-700" for="participante-estado">
+         <label class="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300" for="participante-estado">
           Estado del boleto
          </label>
-         <select class="w-full p-3 border border-gray-300 rounded-lg text-gray-900 bg-white" id="participante-estado">
+         <select class="w-full p-3 border border-gray-300 rounded-lg text-gray-900 bg-white dark:bg-gray-700 dark:border-gray-600 dark:text-white" id="participante-estado">
           <option value="apartado">
            Apartado (Azul)
           </option>
@@ -550,8 +596,8 @@
         </div>
        </div>
       </div>
-      <div class="flex items-center justify-end space-x-4 pt-4 border-t">
-       <button class="modal-close text-gray-700 bg-gray-100 hover:bg-gray-200 font-medium rounded-lg px-5 py-2.5" data-modal-id="modal-registrar-venta" type="button">
+      <div class="flex items-center justify-end space-x-4 pt-4 border-t dark:border-gray-700">
+       <button class="modal-close text-gray-700 bg-gray-100 hover:bg-gray-200 font-medium rounded-lg px-5 py-2.5 dark:bg-gray-600 dark:text-gray-300 dark:hover:bg-gray-500" data-modal-id="modal-registrar-venta" type="button">
         Cancelar
        </button>
        <button class="text-white bg-lime-500 hover:bg-lime-600 font-medium rounded-lg px-6 py-2.5" type="submit">
@@ -562,13 +608,89 @@
     </div>
    </div>
   </div>
-  <div class="fixed top-5 right-5 z-50 hidden items-center w-full max-w-xs p-4 text-gray-500 bg-white rounded-lg shadow-lg" id="toast-notificacion" role="alert">
-   <div class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-lime-500 bg-lime-100 rounded-lg">
+  
+  <div class="modal fixed inset-0 z-50 overflow-y-auto bg-black bg-opacity-60" id="modal-reportar-fallo">
+   <div class="relative p-4 w-full max-w-lg mx-auto my-12">
+    <div class="relative bg-white rounded-2xl shadow-2xl dark:bg-gray-800">
+     <div class="flex justify-between items-center p-5 border-b rounded-t-2xl dark:border-gray-700">
+      <h3 class="text-2xl font-semibold text-gray-900 dark:text-white">
+       Reportar un Fallo
+      </h3>
+      <button class="modal-close text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-2 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-id="modal-reportar-fallo" type="button">
+       <i class="fa-solid fa-xmark fa-2x">
+       </i>
+       <span class="sr-only">
+        Cerrar modal
+       </span>
+      </button>
+     </div>
+     <form class="p-6 md:p-8 space-y-6" id="form-reportar-fallo">
+      <p class="text-gray-600 dark:text-gray-300">
+       ¿Encontraste un error o algo que no funciona bien? Por favor, descríbelo aquí para que podamos arreglarlo. ¡Gracias!
+      </p>
+      <div>
+       <textarea class="w-full p-3 border border-gray-300 rounded-lg text-gray-900 dark:bg-gray-700 dark:border-gray-600 dark:text-white" id="reporte-textarea" placeholder="Describe el fallo aquí..." required="" rows="5"></textarea>
+      </div>
+      <div class="flex items-center justify-end space-x-4 pt-4 border-t dark:border-gray-700">
+       <button class="modal-close text-gray-700 bg-gray-100 hover:bg-gray-200 font-medium rounded-lg px-5 py-2.5 dark:bg-gray-600 dark:text-gray-300 dark:hover:bg-gray-500" data-modal-id="modal-reportar-fallo" type="button">
+        Cancelar
+       </button>
+       <button class="text-white bg-lime-500 hover:bg-lime-600 font-medium rounded-lg px-6 py-2.5" id="btn-reportar-enviar" type="submit">
+        Enviar Reporte
+       </button>
+      </div>
+     </form>
+    </div>
+   </div>
+  </div>
+  
+  <div class="modal fixed inset-0 z-50 overflow-y-auto bg-black bg-opacity-60" id="modal-admin-login">
+   <div class="relative p-4 w-full max-w-sm mx-auto my-12">
+    <div class="relative bg-white rounded-2xl shadow-2xl dark:bg-gray-800">
+     <div class="flex justify-between items-center p-5 border-b rounded-t-2xl dark:border-gray-700">
+      <h3 class="text-2xl font-semibold text-gray-900 dark:text-white">
+       Acceso de Administrador
+      </h3>
+      <button class="modal-close text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-2 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-id="modal-admin-login" type="button">
+       <i class="fa-solid fa-xmark fa-2x">
+       </i>
+       <span class="sr-only">
+        Cerrar modal
+       </span>
+      </button>
+     </div>
+     <form class="p-6 md:p-8 space-y-6" id="form-admin-login">
+      <p class="text-sm text-gray-600 dark:text-gray-300">
+       Esta es una sección privada. Por favor, introduce la contraseña de administrador.
+      </p>
+      <div>
+       <label class="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300" for="admin-password">
+        Contraseña
+       </label>
+       <input class="w-full p-3 border border-gray-300 rounded-lg text-gray-900 dark:bg-gray-700 dark:border-gray-600 dark:text-white" id="admin-password" placeholder="••••••••" required="" type="password"/>
+      </div>
+      <div class="flex items-center justify-end space-x-4 pt-4 border-t dark:border-gray-700">
+       <button class="modal-close text-gray-700 bg-gray-100 hover:bg-gray-200 font-medium rounded-lg px-5 py-2.5 dark:bg-gray-600 dark:text-gray-300 dark:hover:bg-gray-500" data-modal-id="modal-admin-login" type="button">
+        Cancelar
+       </button>
+       <button class="text-white bg-lime-500 hover:bg-lime-600 font-medium rounded-lg px-6 py-2.5" type="submit">
+        Acceder
+       </button>
+      </div>
+     </form>
+    </div>
+   </div>
+  </div>
+  
+  <div classShow-lg" id="toast-notificacion" role="alert">
+   <div class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-lime-500 bg-lime-100 rounded-lg dark:bg-lime-800 dark:text-lime-200">
     <i class="fa-solid fa-check">
     </i>
    </div>
-   <div class="ml-3 text-sm font-normal" id="toast-mensaje"></div>
-   <button aria-label="Close" class="ml-auto -mx-1.5 -my-1.5 bg-white text-gray-400 hover:text-gray-900 rounded-lg p-1.5 hover:bg-gray-100 inline-flex h-8 w-8" id="toast-close" type="button">
+   <div class="ml-3 text-sm font-normal" id="toast-mensaje">
+    Item guardado.
+   </div>
+   <button aria-label="Close" class="ml-auto -mx-1.5 -my-1.5 bg-white text-gray-400 hover:text-gray-900 rounded-lg p-1.5 hover:bg-gray-100 inline-flex h-8 w-8 dark:bg-gray-800 dark:text-gray-500 dark:hover:text-white dark:hover:bg-gray-700" id="toast-close" type="button">
     <span class="sr-only">
      Close
     </span>
@@ -576,6 +698,7 @@
     </i>
    </button>
   </div>
+  
   <script type="module" src="script.js">
   </script>
  </body>

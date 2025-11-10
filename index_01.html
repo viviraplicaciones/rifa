@@ -41,7 +41,6 @@
      </span>
     </div>
    </div>
-   
    <nav class="flex-1 p-4 space-y-1">
     <a class="flex items-center p-2 rounded-lg hover:bg-fuchsia-600 nav-link" href="index.html?view=view-inicio">
      <i class="fa-solid fa-house fa-lg sidebar-icon">
@@ -64,7 +63,6 @@
       Preguntas
      </span>
     </a>
-    
     <div class="pt-4 mt-4 border-t border-fuchsia-500">
      <p class="sidebar-text text-xs uppercase text-fuchsia-300 px-3 mb-2">
       Comunidad
@@ -91,7 +89,6 @@
       </span>
      </a>
     </div>
-    
     <div class="pt-4 mt-4 border-t border-fuchsia-500">
      <a class="cursor-pointer" href="index.html?modal=admin" id="btn-admin-login">
       <p class="sidebar-text text-xs uppercase text-fuchsia-300 px-3 mb-2">
@@ -99,7 +96,6 @@
       </p>
      </a>
     </div>
-    
     <div class="pt-4 mt-4 border-t border-fuchsia-500">
      <p class="sidebar-text text-xs uppercase text-fuchsia-300 px-3 mb-2">
       Soporte
@@ -118,9 +114,8 @@
        Tema
       </span>
      </a>
-     </div>
+    </div>
    </nav>
-   
    <div class="mt-auto p-4 flex flex-col items-center border-t border-fuchsia-500">
     <img alt="VivirApp Logo" class="h-8 mb-2" src="vivirapp.png"/>
     <span class="sidebar-text text-xs text-fuchsia-300 text-center">
@@ -137,7 +132,7 @@
   <main class="flex-1 flex flex-col h-full overflow-y-auto" id="main-content">
    
    <div class="view active p-0" id="view-landing-page">
-    <div class="w-full max-w-6xl mx-auto bg-white md:rounded-2xl shadow-xl overflow-hidden dark:bg-gray-800">
+    <div class="mt-0 md:mt-8 w-full max-w-6xl mx-auto bg-white md:rounded-2xl shadow-xl overflow-hidden dark:bg-gray-800">
      
      <div class="relative">
       <img alt="Adornos Navideños Amigurumi" class="w-full h-64 md:h-80 object-cover" src="01.jpg"/>
@@ -173,15 +168,12 @@
         </p>
        </div>
       </section>
-      
       <hr class="dark:border-gray-700"/>
-      
       <section id="galeria-productos">
        <h2 class="text-3xl font-bold text-gray-800 dark:text-white text-center">
         Nuestros Productos
        </h2>
        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
-        
         <div class="bg-gray-50 dark:bg-gray-700 rounded-lg shadow-md overflow-hidden flex flex-col">
          <img alt="Producto 1" class="w-full h-56 object-cover" src="02.jpg"/>
          <div class="p-5 flex flex-col flex-1">
@@ -199,7 +191,6 @@
           </a>
          </div>
         </div>
-        
         <div class="bg-gray-50 dark:bg-gray-700 rounded-lg shadow-md overflow-hidden flex flex-col">
          <img alt="Producto 2" class="w-full h-56 object-cover" src="03.jpg"/>
          <div class="p-5 flex flex-col flex-1">
@@ -217,7 +208,6 @@
           </a>
          </div>
         </div>
-        
         <div class="bg-gray-50 dark:bg-gray-700 rounded-lg shadow-md overflow-hidden flex flex-col">
          <img alt="Producto 3" class="w-full h-56 object-cover" src="04.jpg"/>
          <div class="p-5 flex flex-col flex-1">
@@ -235,12 +225,9 @@
           </a>
          </div>
         </div>
-        
        </div>
       </section>
-      
       <hr class="dark:border-gray-700"/>
-      
       <section class="text-center">
        <i class="fa-solid fa-palette fa-3x text-fuchsia-500">
        </i>
@@ -254,9 +241,7 @@
         Enviar Mensaje Directo
        </a>
       </section>
-      
       <hr class="dark:border-gray-700"/>
-      
       <section class="text-center bg-gray-100 dark:bg-gray-700 p-8 rounded-lg">
        <h2 class="text-3xl font-bold text-gray-800 dark:text-white">
         ¡No te olvides de la Rifa Navideña!
@@ -268,7 +253,6 @@
         Ver Números Disponibles
        </a>
       </section>
-      
      </div>
     </div>
    </div>
@@ -302,8 +286,9 @@
       
       // --- Lógica importada de common-ui.js ---
       initDarkMode(iconDarkMode);
-      toggleBtn?.addEventListener('click', () => toggleSidebarGlobal(sidebar, toggleBtn));
-      toggleBtnMobile?.addEventListener('click', () => toggleSidebarGlobal(sidebar, toggleBtn));
+      // Ajuste: Esta página NO usa el overlay, por lo que pasamos 'null'
+      toggleBtn?.addEventListener('click', () => toggleSidebarGlobal(sidebar, toggleBtn, null));
+      toggleBtnMobile?.addEventListener('click', () => toggleSidebarGlobal(sidebar, toggleBtn, null));
       registerDarkModeHandler(btnDarkMode, iconDarkMode);
       // --- Fin de lógica importada ---
 

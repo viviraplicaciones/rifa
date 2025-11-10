@@ -7,16 +7,30 @@
  * Controla el colapso del sidebar y la posición del botón de PC.
  * @param {HTMLElement} sidebar - El elemento del sidebar.
  * @param {HTMLElement} toggleSidebarGlobalBtn - El botón de toggle (versión PC).
+ * @param {HTMLElement} [overlay] - (Opcional) El overlay para mostrar/ocultar en móvil.
  */
-export function toggleSidebarGlobal(sidebar, toggleSidebarGlobalBtn) {
+export function toggleSidebarGlobal(sidebar, toggleSidebarGlobalBtn, overlay) {
+  const isMobile = window.innerWidth < 768;
   sidebar?.classList.toggle('collapsed');
   
+  // Lógica del botón de PC
   if (sidebar?.classList.contains('collapsed')) {
     toggleSidebarGlobalBtn?.classList.remove('md:left-[15rem]');
     toggleSidebarGlobalBtn?.classList.add('left-4', 'md:left-4');
+    
+    // Ocultar overlay si existe
+    if (isMobile && overlay) {
+      overlay.classList.add('hidden');
+    }
+    
   } else {
     toggleSidebarGlobalBtn?.classList.remove('left-4');
     toggleSidebarGlobalBtn?.classList.add('md:left-[15rem]');
+    
+    // Mostrar overlay si existe
+    if (isMobile && overlay) {
+      overlay.classList.remove('hidden');
+    }
   }
 }
 

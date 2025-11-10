@@ -172,7 +172,7 @@
   <main class="flex-1 flex flex-col h-full overflow-y-auto" id="main-content">
    
    <div class="view active p-0" id="view-inicio">
-    <div class="mt-4 md:mt-8 w-full max-w-6xl mx-auto bg-white md:rounded-2xl shadow-xl overflow-hidden dark:bg-gray-800">
+    <div class="mt-0 md:mt-8 w-full max-w-6xl mx-auto bg-white md:rounded-2xl shadow-xl overflow-hidden dark:bg-gray-800">
      <div class="md:flex">
       <div class="md:w-3/5 relative h-64 md:h-auto overflow-hidden" id="image-slider">
        <img alt="Imagen 1" class="slider-image h-full w-full object-cover absolute" src="01.jpg"/>
@@ -208,7 +208,7 @@
    </div>
    
    <div class="view p-0" id="view-comprar-numeros">
-    <div class="flex flex-col lg:flex-row gap-6 lg:gap-10 p-4 md:p-6 lg:p-8">
+    <div class="flex flex-col lg:flex-row gap-6 lg:gap-10 pt-0 pb-4 px-0 md:p-6 lg:p-8">
      <div class="flex-1 bg-white p-4 md:p-6 md:rounded-2xl shadow-xl dark:bg-gray-800">
       <div class="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
        <div class="flex flex-wrap gap-x-4 gap-y-2 text-sm text-gray-600 dark:text-gray-300">
@@ -291,7 +291,7 @@
     </div>
    </div>
    
-   <div class="view p-4 md:p-6" id="view-rifas-pv">
+   <div class="view p-0 md:p-6" id="view-rifas-pv">
     <div class="bg-white p-4 md:p-6 md:rounded-2xl shadow-xl dark:bg-gray-800">
      <h1 class="text-3xl font-bold text-gray-800 mb-6 dark:text-white">
       Punto de Venta (Admin)
@@ -314,12 +314,12 @@
       </button>
      </div>
      <div class="grid grid-cols-[repeat(auto-fill,minmax(40px,1fr))] gap-2" id="cuadricula-numeros-admin">
-     </div>
+      </div>
     </div>
    </div>
    
-   <div class="view p-4" id="view-participantes">
-    <div class="flex flex-col md:flex-row md:justify-between md:items-center mb-6 gap-4">
+   <div class="view p-0 md:p-4" id="view-participantes">
+    <div class="flex flex-col md:flex-row md:justify-between md:items-center mb-6 gap-4 p-4 md:p-0">
      <h1 class="text-3xl font-bold text-gray-800 dark:text-white">
       Participantes
      </h1>
@@ -330,7 +330,7 @@
      </button>
     </div>
     
-    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl overflow-hidden p-4">
+    <div class="bg-white dark:bg-gray-800 md:rounded-2xl shadow-xl overflow-hidden p-4">
      <div class="hidden md:grid grid-cols-4 gap-4 bg-gray-50 dark:bg-gray-700 rounded-lg p-4 mb-3 text-left text-xs md:text-sm font-semibold text-gray-600 uppercase dark:text-gray-300">
       <span>
        Nombre
@@ -352,7 +352,7 @@
     
    </div>
    
-   <div class="view p-4 md:p-10" id="view-analiticos">
+   <div class="view p-0 md:p-10" id="view-analiticos">
     <div class="bg-white p-10 md:rounded-2xl shadow-xl text-center dark:bg-gray-800">
      <i class="fa-solid fa-chart-line fa-3x text-lime-500 mb-4">
      </i>
@@ -365,7 +365,7 @@
     </div>
    </div>
    
-   <div class="view p-4 md:p-10" id="view-faq">
+   <div class="view pt-0 pb-4 px-0 md:p-10" id="view-faq">
     <div class="w-full max-w-4xl mx-auto bg-white md:rounded-2xl shadow-xl p-4 md:p-10 dark:bg-gray-800">
      <h1 class="text-3xl font-bold text-gray-800 mb-6 dark:text-white">
       Preguntas Frecuentes (FAQ)
@@ -666,8 +666,7 @@
     </div>
    </div>
   </div>
-  
-  <div class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-40 opacity-0 transition-opacity duration-300 ease-in-out items-center w-full max-w-xs p-4 text-gray-500 bg-white rounded-lg shadow-lg dark:text-gray-400 dark:bg-gray-800" id="toast-notificacion" role="alert">
+  <div class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-40 opacity-0 pointer-events-none transition-opacity duration-300 ease-in-out items-center w-full max-w-xs p-4 text-gray-500 bg-white rounded-lg shadow-lg dark:text-gray-400 dark:bg-gray-800" id="toast-notificacion" role="alert">
    <div class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-lime-500 bg-lime-100 rounded-lg dark:bg-lime-800 dark:text-lime-200">
     <i class="fa-solid fa-check">
     </i>

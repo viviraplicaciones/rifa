@@ -1,5 +1,5 @@
 /* =========================================================
-   script.js (Controlador Principal v16)
+   script.js (v24 - Corrección Menú PC)
    ========================================================= */
 
 // Importar lógica de UI compartida
@@ -34,6 +34,7 @@ let numerosSeleccionadosPublica = [];
 let sidebar;
 let toggleSidebarGlobalBtn;
 let toggleSidebarMobileBtn;
+// 'sidebarOverlay' se eliminó intencionalmente
 let mainContent;
 let navLinks;
 let views;
@@ -109,11 +110,20 @@ document.addEventListener('DOMContentLoaded', () => {
   
   registrarEventListeners();
   
+  // =========================================================
+  // CORRECCIÓN MENÚ PC (Debe iniciar abierto)
+  // =========================================================
   if (window.innerWidth < 768) {
+    // Es Móvil: Inicia colapsado
     sidebar?.classList.add('collapsed');
   } else {
-    toggleSidebarGlobalBtn?.classList.add('left-4');
+    // Es PC: Inicia abierto
+    sidebar?.classList.remove('collapsed');
+    // Asegurar que el botón de toggle esté en la posición correcta
+    toggleSidebarGlobalBtn?.classList.remove('left-4', 'md:left-4');
+    toggleSidebarGlobalBtn?.classList.add('md:left-[15rem]');
   }
+  // =========================================================
   
   if (sessionStorage.getItem('isAdmin') === 'true') {
     adminLinksContainer?.classList.remove('hidden');
@@ -139,7 +149,7 @@ document.addEventListener('DOMContentLoaded', () => {
     window.history.replaceState({}, document.title, window.location.pathname);
   }
   
-  // Renderizados iniciales (usando funciones importadas)
+  // Renderizados iniciales
   renderCuadriculaPublica();
   renderCuadriculaAdmin('todos');
   renderTablaParticipantes();
@@ -183,6 +193,7 @@ function cachearElementosDOM() {
   sidebar = document.getElementById('sidebar');
   toggleSidebarGlobalBtn = document.getElementById('toggle-sidebar-global');
   toggleSidebarMobileBtn = document.getElementById('toggle-sidebar-mobile');
+  // sidebarOverlay se eliminó
   mainContent = document.getElementById('main-content');
   navLinks = document.querySelectorAll('.nav-link');
   views = document.querySelectorAll('.view');
@@ -226,8 +237,9 @@ function cachearElementosDOM() {
    ========================================================= */
 function registrarEventListeners() {
   // --- UI Común (Sidebar, DarkMode) ---
-  toggleSidebarGlobalBtn?.addEventListener('click', () => toggleSidebarGlobal(sidebar, toggleSidebarGlobalBtn));
-  toggleSidebarMobileBtn?.addEventListener('click', () => toggleSidebarGlobal(sidebar, toggleSidebarGlobalBtn));
+  toggleSidebarGlobalBtn?.addEventListener('click', () => toggleSidebarGlobal(sidebar, toggleSidebarGlobalBtn, null));
+  toggleSidebarMobileBtn?.addEventListener('click', () => toggleSidebarGlobal(sidebar, toggleSidebarGlobalBtn, null));
+  
   registerDarkModeHandler(btnDarkMode, iconDarkMode);
 
   // --- Navegación SPA ---
@@ -237,15 +249,20 @@ function registrarEventListeners() {
       if (viewId) {
         e.preventDefault();
         actualizarVistaActiva(viewId);
+        // Esta lógica es solo para móvil, no afectará a PC
         if (window.innerWidth < 768 && sidebar && !sidebar.classList.contains('collapsed')) {
-          sidebar.classList.add('collapsed');
+          toggleSidebarGlobal(sidebar, toggleSidebarGlobalBtn, null);
         }
       }
     });
   });
 
   // --- Toast ---
-  toastCloseBtn?.addEventListener('click', () => toastEl.classList.remove('opacity-100'));
+  toastCloseBtn?.addEventListener('click', () => {
+    // Corrección Toast (Añadir opacity-0 al cerrar)
+    toastEl.classList.remove('opacity-100', 'pointer-events-auto');
+    toastEl.classList.add('opacity-0', 'pointer-events-none');
+  });
 
   // --- Lógica de Rifa (Eventos delegados a módulos importados) ---
   cuadriculaPublica?.addEventListener('click', handleSeleccionPublica);
@@ -314,8 +331,6 @@ function registrarEventListeners() {
 
 /* =========================================================
    Funciones UI: (Vistas, Toast, Compartir)
-   (Estas funciones se quedan aquí porque son el "controlador" 
-   o utilidades generales de la SPA)
    ========================================================= */
 
 function actualizarVistaActiva(viewId) {
@@ -331,6 +346,9 @@ function actualizarVistaActiva(viewId) {
   });
 }
 
+// =========================================================
+// CORRECCIÓN TOAST (Se mantiene la v23)
+// =========================================================
 function mostrarToast(mensaje, esError = false) {
   if (!toastEl || !toastMsg) return;
 
@@ -349,20 +367,23 @@ function mostrarToast(mensaje, esError = false) {
     icon?.classList.add('fa-solid', 'fa-check');
   }
 
-  toastEl.classList.add('opacity-100');
+  // Hacer el toast visible Y CLICABLE
+  toastEl.classList.remove('opacity-0', 'pointer-events-none');
+  toastEl.classList.add('opacity-100', 'pointer-events-auto');
   
   setTimeout(() => { 
-    toastEl.classList.remove('opacity-100'); 
+    // Ocultar el toast Y DEVOLVERLO A "INTOCABLE"
+    toastEl.classList.remove('opacity-100', 'pointer-events-auto');
+    toastEl.classList.add('opacity-0', 'pointer-events-none');
   }, 2000);
 }
 
 async function handleCompartir() {
   const shareTitle = 'Fabulosa Rifa de Navidad';
   const shareText = '¡Participa en esta increíble rifa y gánate 9 adornos navideños Amigurumi!';
-  const shareUrl = window.location.href.split('?')[0]; // Limpiar params
+  const shareUrl = window.location.href.split('?')[0]; 
 
   try {
-    // (Asumiendo que banner.jpg está accesible)
     const response = await fetch('banner.jpg');
     const blob = await response.blob();
     const file = new File([blob], 'banner.jpg', { type: 'image/jpeg' });
@@ -391,7 +412,7 @@ async function handleCompartir() {
 }
 
 /* =========================================================
-   Estilo dinámico (Se queda aquí, es específico de la SPA)
+   Estilo dinámico (Función sin cambios)
    ========================================================= */
 (function insertarEstiloFiltroAdmin() {
   const style = document.createElement('style');

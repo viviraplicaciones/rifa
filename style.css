@@ -82,9 +82,9 @@ body {font-family: 'Roboto', sans-serif;}
   border-color: #4B5563; /* border-gray-600 */
 }
 
-/* ============ INICIO DE NUEVAS CORRECCIONES ============ */
+/* ============ INICIO DE NUEVAS CORRECCIONES (v14) ============ */
 
-/* PUNTO 1: Arreglar color de números (disponibles) en modo oscuro */
+/* PUNTO 1 (Feedback anterior): Arreglar color de números (disponibles) en modo oscuro */
 .dark .numero-rifa-publico:not(.ocupado):not(.revisando):not(.seleccionado) {
     color: #E5E7EB; /* text-gray-200 */
     border-color: #4B5563; /* border-gray-600 */
@@ -94,7 +94,7 @@ body {font-family: 'Roboto', sans-serif;}
     background-color: #374151; /* bg-gray-700 */
 }
 
-/* PUNTO 3: Espaciado de iconos del menú colapsado */
+/* PUNTO 3 (Feedback anterior): Espaciado de iconos del menú colapsado */
 
 /* 1. Resetear el padding del <nav> y el espacio entre hijos */
 #sidebar.collapsed nav {
@@ -117,18 +117,28 @@ body {font-family: 'Roboto', sans-serif;}
 /* 3. Aplicar un padding vertical IGUAL a TODOS los enlaces */
 #sidebar.collapsed nav > a,
 #sidebar.collapsed nav > div > a {
-    padding-top: 0.875rem;    /* 14px */
-    padding-bottom: 0.875rem; /* 14px */
-    /* Quitar padding horizontal para que .sidebar-icon pueda centrarse */
+    /* CAMBIO: Aumentado a 18px */
+    padding-top: 1.125rem;    /* 18px */
+    padding-bottom: 1.125rem; /* 18px */
     padding-left: 0;
     padding-right: 0;
 }
 
-/* 4. Ocultar los links de admin (que ya están en un div) */
+/* 4. Aumentar el tamaño de los iconos SÓLO cuando está colapsado */
+#sidebar.collapsed .sidebar-icon {
+    font-size: 1.25rem; /* 20px */
+}
+/* (Ajustar el icono de "Nosotros" que es una imagen) */
+#sidebar.collapsed a[data-view="view-nosotros"] .sidebar-icon {
+    width: 1.75rem; /* 28px */
+    height: 1.75rem; /* 28px */
+}
+
+/* 5. Ocultar los links de admin (que ya están en un div) */
 #sidebar.collapsed #admin-links-container {
     display: none !important; 
 }
 
-/* ============ FIN DE NUEVAS CORRECCIONES ============ */
+/* ============ FIN DE NUEVAS CORRECCIONES (v14) ============ */
 
 /* --- FIN DE NUEVOS ESTILOS --- */

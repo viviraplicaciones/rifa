@@ -146,7 +146,6 @@
        Reportar Fallos
       </span>
      </a>
-     
      <a class="flex items-center p-2 rounded-lg hover:bg-fuchsia-600" href="#" id="btn-dark-mode">
       <i class="fa-solid fa-moon fa-lg sidebar-icon" id="icon-dark-mode">
       </i>
@@ -154,7 +153,6 @@
        Tema
       </span>
      </a>
-     
      <a class="flex items-center p-2 rounded-lg hover:bg-fuchsia-600 nav-link" data-view="view-nosotros" href="#">
       <img alt="Icono Marian Crochet" class="w-6 h-6 rounded-full sidebar-icon" src="icono.jpg"/>
       <span class="sidebar-text text-lg ml-4">
@@ -178,8 +176,9 @@
   </button>
   
   <main class="flex-1 flex flex-col h-full overflow-y-auto">
-   <div class="view active p-6 md:p-12" id="view-inicio">
-    <div class="max-w-6xl mx-auto bg-white rounded-2xl shadow-xl overflow-hidden dark:bg-gray-800">
+   
+   <div class="view active p-0" id="view-inicio">
+    <div class="w-full max-w-6xl mx-auto bg-white md:rounded-2xl shadow-xl overflow-hidden dark:bg-gray-800">
      <div class="md:flex">
       <div class="md:w-3/5 relative h-64 md:h-auto overflow-hidden" id="image-slider">
        <img alt="Imagen 1" class="slider-image h-full w-full object-cover absolute" src="01.jpg"/>
@@ -214,9 +213,9 @@
     </div>
    </div>
    
-   <div class="view p-4 md:p-6 lg:p-10" id="view-comprar-numeros">
-    <div class="flex flex-col lg:flex-row gap-6 lg:gap-10">
-     <div class="flex-1 bg-white p-6 rounded-2xl shadow-xl dark:bg-gray-800">
+   <div class="view p-0" id="view-comprar-numeros">
+    <div class="flex flex-col lg:flex-row gap-6 lg:gap-10 p-4">
+     <div class="flex-1 bg-white p-4 md:p-6 md:rounded-2xl shadow-xl dark:bg-gray-800">
       <div class="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
        <div class="flex flex-wrap gap-x-4 gap-y-2 text-sm text-gray-600 dark:text-gray-300">
         <span class="flex items-center">
@@ -253,12 +252,10 @@
         </div>
        </label>
       </div>
-      
       <div class="grid grid-cols-[repeat(auto-fill,minmax(40px,1fr))] gap-2" id="cuadricula-numeros-publica">
-       </div>
-      
+      </div>
      </div>
-     <div class="w-full lg:w-96 bg-white p-6 rounded-2xl shadow-xl h-fit sticky top-10 dark:bg-gray-800">
+     <div class="w-full lg:w-96 bg-white p-4 md:p-6 md:rounded-2xl shadow-xl h-fit sticky top-10 dark:bg-gray-800">
       <h2 class="text-2xl font-bold text-gray-800 mb-4 flex items-center justify-between dark:text-white">
        Tu Selecci&oacute;n
        <span class="text-sm bg-blue-100 text-blue-800 font-medium px-3 py-1 rounded-full" id="cantidad-seleccionada-badge">
@@ -300,11 +297,11 @@
     </div>
    </div>
    
-   <div class="view p-6 md:p-10" id="view-rifas-pv">
-    <h1 class="text-3xl font-bold text-gray-800 mb-6 dark:text-white">
-     Punto de Venta (Admin)
-    </h1>
-    <div class="bg-white p-6 rounded-2xl shadow-xl dark:bg-gray-800">
+   <div class="view p-0" id="view-rifas-pv">
+    <div class="bg-white p-4 md:p-6 md:rounded-2xl shadow-xl dark:bg-gray-800">
+     <h1 class="text-3xl font-bold text-gray-800 mb-6 dark:text-white">
+      Punto de Venta (Admin)
+     </h1>
      <div class="flex flex-wrap gap-3 mb-6">
       <button class="filtro-btn-admin filtro-admin-activo" data-filtro="todos">
        Todos
@@ -322,55 +319,49 @@
        Pagados
       </button>
      </div>
-     
      <div class="grid grid-cols-[repeat(auto-fill,minmax(40px,1fr))] gap-2" id="cuadricula-numeros-admin">
-      </div>
-     
+     </div>
     </div>
    </div>
    
-   <div class="view p-6 md:p-10" id="view-participantes">
-    <div class="flex justify-between items-center mb-6">
+   <div class="view p-4" id="view-participantes">
+    <div class="flex flex-col md:flex-row md:justify-between md:items-center mb-6 gap-4">
      <h1 class="text-3xl font-bold text-gray-800 dark:text-white">
       Participantes
      </h1>
-     <button class="bg-lime-500 text-white font-bold py-2 px-5 rounded-xl hover:bg-lime-600 transition shadow-lg flex items-center" id="btn-registrar-venta-global">
+     <button class="bg-lime-500 text-white font-bold py-2 px-5 rounded-xl hover:bg-lime-600 transition shadow-lg flex items-center w-full md:w-auto" id="btn-registrar-venta-global">
       <i class="fa-solid fa-plus mr-2">
       </i>
       Registrar Venta
      </button>
     </div>
-    <div class="bg-white rounded-2xl shadow-xl overflow-hidden dark:bg-gray-800">
-     <div class="overflow-x-auto">
-      <table class="w-full">
-       <thead class="bg-gray-50 dark:bg-gray-700">
-        <tr>
-         <th class="p-4 text-left text-sm font-semibold text-gray-600 uppercase dark:text-gray-300">
-          Nombre
-         </th>
-         <th class="p-4 text-left text-sm font-semibold text-gray-600 uppercase dark:text-gray-300">
-          Tel&eacute;fono
-         </th>
-         <th class="p-4 text-left text-sm font-semibold text-gray-600 uppercase dark:text-gray-300">
-          N&uacute;meros
-         </th>
-         <th class="p-4 text-left text-sm font-semibold text-gray-600 uppercase dark:text-gray-300">
-          Estado
-         </th>
-        </tr>
-       </thead>
-       <tbody class="divide-y divide-gray-200 dark:divide-gray-700" id="tabla-participantes">
-       </tbody>
-      </table>
+    
+    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl overflow-hidden p-4">
+     <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-4 mb-3">
+      <div class="grid grid-cols-4 gap-4 text-left text-xs md:text-sm font-semibold text-gray-600 uppercase dark:text-gray-300">
+       <span>
+        Nombre
+       </span>
+       <span>
+        Teléfono
+       </span>
+       <span>
+        Números
+       </span>
+       <span>
+        Estado
+       </span>
+      </div>
      </div>
+     
+     <div class="space-y-3" id="tabla-participantes-cards">
+      </div>
     </div>
+    
    </div>
    
-   <div class="view p-6 md:p-10" id="view-analiticos">
-    <h1 class="text-3xl font-bold text-gray-800 mb-6 dark:text-white">
-     Anal&iacute;ticos
-    </h1>
-    <div class="bg-white p-10 rounded-2xl shadow-xl text-center dark:bg-gray-800">
+   <div class="view p-0" id="view-analiticos">
+    <div class="bg-white p-10 md:rounded-2xl shadow-xl text-center dark:bg-gray-800">
      <i class="fa-solid fa-chart-line fa-3x text-lime-500 mb-4">
      </i>
      <h2 class="text-2xl font-semibold text-gray-700 dark:text-gray-200">
@@ -382,11 +373,11 @@
     </div>
    </div>
    
-   <div class="view p-6 md:p-12" id="view-faq">
-    <h1 class="text-3xl font-bold text-gray-800 mb-6 dark:text-white">
-     Preguntas Frecuentes (FAQ)
-    </h1>
-    <div class="max-w-4xl mx-auto bg-white rounded-2xl shadow-xl p-6 md:p-10 dark:bg-gray-800">
+   <div class="view p-0" id="view-faq">
+    <div class="w-full max-w-4xl mx-auto bg-white md:rounded-2xl shadow-xl p-4 md:p-10 dark:bg-gray-800">
+     <h1 class="text-3xl font-bold text-gray-800 mb-6 dark:text-white">
+      Preguntas Frecuentes (FAQ)
+     </h1>
      <div class="space-y-4">
       <div>
        <h5 class="text-lg font-semibold text-gray-800 dark:text-white">
@@ -418,11 +409,8 @@
     </div>
    </div>
    
-   <div class="view p-6 md:p-10" id="view-nosotros">
-    <h1 class="text-3xl font-bold text-gray-800 mb-6 dark:text-white">
-     Sobre Nosotros
-    </h1>
-    <div class="bg-white p-10 rounded-2xl shadow-xl text-center dark:bg-gray-800">
+   <div class="view p-0" id="view-nosotros">
+    <div class="bg-white p-10 md:rounded-2xl shadow-xl text-center dark:bg-gray-800">
      <img alt="Icono Marian Crochet" class="w-24 h-24 rounded-full mx-auto mb-4 shadow-lg" src="icono.jpg"/>
      <h2 class="text-2xl font-semibold text-gray-700 dark:text-gray-200">
       Nuestra Historia

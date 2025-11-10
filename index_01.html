@@ -4,11 +4,11 @@
   <meta charset="utf-8"/>
   <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
   <title>
-   Nuestra Web - Rifa Navideña
+   Marian Crochet - Rifa Navideña
   </title>
   
-  <meta content="Participa en nuestra Fabulosa Rifa de Navidad y gana 9 espectaculares adornos navideños tejidos en crochet estilo Amigurumi. Juega con la Lotería de Risaralda." name="description"/>
-  <meta content="rifa, navidad, amigurumi, crochet, sorteo, lotería, pereira, marian crochet" name="keywords"/>
+  <meta content="Bienvenidos a Marian Crochet. Participa en nuestra Fabulosa Rifa de Navidad y gana 9 espectaculares adornos navideños tejidos en crochet estilo Amigurumi." name="description"/>
+  <meta content="marian crochet, amigurumi, crochet, rifa, navidad, hecho a mano, pereira" name="keywords"/>
   <meta content="VivirApp" name="author"/>
   <link href="icono.jpg" rel="icon" type="image/jpeg"/>
   
@@ -43,21 +43,21 @@
    </div>
    
    <nav class="flex-1 p-4 space-y-1">
-    <a class="flex items-center p-2 rounded-lg hover:bg-fuchsia-600 nav-link" href="index.html">
+    <a class="flex items-center p-2 rounded-lg hover:bg-fuchsia-600 nav-link" href="index.html?view=view-inicio">
      <i class="fa-solid fa-house fa-lg sidebar-icon">
      </i>
      <span class="sidebar-text text-lg ml-4">
       Inicio
      </span>
     </a>
-    <a class="flex items-center p-2 rounded-lg hover:bg-fuchsia-600 nav-link" href="index.html">
+    <a class="flex items-center p-2 rounded-lg hover:bg-fuchsia-600 nav-link" href="index.html?view=view-comprar-numeros">
      <i class="fa-solid fa-table-cells fa-lg sidebar-icon">
      </i>
      <span class="sidebar-text text-lg ml-4">
       N&uacute;meros
      </span>
     </a>
-    <a class="flex items-center p-2 rounded-lg hover:bg-fuchsia-600 nav-link" href="index.html">
+    <a class="flex items-center p-2 rounded-lg hover:bg-fuchsia-600 nav-link" href="index.html?view=view-faq">
      <i class="fa-solid fa-circle-question fa-lg sidebar-icon">
      </i>
      <span class="sidebar-text text-lg ml-4">
@@ -69,7 +69,7 @@
      <p class="sidebar-text text-xs uppercase text-fuchsia-300 px-3 mb-2">
       Comunidad
      </p>
-     <a class="flex items-center p-2 rounded-lg hover:bg-fuchsia-600 active bg-fuchsia-600" href="index_01.html">
+     <a class="flex items-center p-2 rounded-lg hover:bg-fuchsia-600 active bg-fuchsia-600" href="#" id="btn-nuestra-web">
       <i class="fa-solid fa-globe fa-lg sidebar-icon">
       </i>
       <span class="sidebar-text text-lg ml-4">
@@ -93,32 +93,32 @@
     </div>
     
     <div class="pt-4 mt-4 border-t border-fuchsia-500">
-     <a class="cursor-pointer" href="index.html">
+     <a class="cursor-pointer" href="index.html?modal=admin" id="btn-admin-login">
       <p class="sidebar-text text-xs uppercase text-fuchsia-300 px-3 mb-2">
        Admin
       </p>
      </a>
-     </div>
+    </div>
     
     <div class="pt-4 mt-4 border-t border-fuchsia-500">
      <p class="sidebar-text text-xs uppercase text-fuchsia-300 px-3 mb-2">
       Soporte
      </p>
-     <a class="flex items-center p-2 rounded-lg hover:bg-fuchsia-600" href="index.html">
+     <a class="flex items-center p-2 rounded-lg hover:bg-fuchsia-600" href="index.html?modal=reportar">
       <i class="fa-solid fa-bug fa-lg sidebar-icon">
       </i>
       <span class="sidebar-text text-lg ml-4">
        Reportar Fallos
       </span>
      </a>
-     <a class="flex items-center p-2 rounded-lg hover:bg-fuchsia-600" href="index.html">
+     <a class="flex items-center p-2 rounded-lg hover:bg-fuchsia-600" href="#" id="btn-dark-mode">
       <i class="fa-solid fa-moon fa-lg sidebar-icon" id="icon-dark-mode">
       </i>
       <span class="sidebar-text text-lg ml-4">
        Tema
       </span>
      </a>
-     <a class="flex items-center p-2 rounded-lg hover:bg-fuchsia-600 nav-link" href="index.html">
+     <a class="flex items-center p-2 rounded-lg hover:bg-fuchsia-600 nav-link" href="index.html?view=view-nosotros">
       <img alt="Icono Marian Crochet" class="w-6 h-6 rounded-full sidebar-icon" src="icono.jpg"/>
       <span class="sidebar-text text-lg ml-4">
        Nosotros
@@ -141,31 +141,169 @@
   </button>
   
   <main class="flex-1 flex flex-col h-full overflow-y-auto">
-   <div class="view active p-6 md:p-12" id="view-landing-page">
-    <div class="max-w-6xl mx-auto bg-white rounded-2xl shadow-xl overflow-hidden dark:bg-gray-800">
-     <div class="p-8 md:p-12">
-      <h1 class="text-4xl font-bold text-gray-900 dark:text-white">
-       Bienvenido a Nuestra Web
-      </h1>
-      <p class="mt-4 text-lg text-gray-600 dark:text-gray-300">
-       Este es el contenido de tu landing page, `index_01.html`.
-      </p>
-      <p class="mt-4 text-gray-600 dark:text-gray-300">
-       Puedes construir lo que quieras aquí (galerías, más información sobre Marian Crochet, etc.) y mantendrá el menú lateral y el estilo general.
-      </p>
-      <p class="mt-4 text-gray-600 dark:text-gray-300">
-       Si haces clic en "Inicio", "Números", o cualquier otro enlace del menú (excepto Instagram y Compartir), te llevará de vuelta a la aplicación principal de la rifa (`index.html`).
-      </p>
+   
+   <div class="view active p-0" id="view-landing-page">
+    <div class="w-full max-w-6xl mx-auto bg-white md:rounded-2xl shadow-xl overflow-hidden dark:bg-gray-800">
+     
+     <div class="relative">
+      <img alt="Adornos Navideños Amigurumi" class="w-full h-64 md:h-80 object-cover" src="01.jpg"/>
+      <div class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center">
+       <div class="text-center p-4">
+        <h1 class="text-4xl md:text-5xl font-bold text-white">
+         Bienvenidos a Marian Crochet
+        </h1>
+        <p class="text-xl text-fuchsia-200 mt-2">
+         Donde cada puntada está hecha con amor.
+        </p>
+        <div class="mt-6 flex flex-col sm:flex-row gap-4 justify-center">
+         <a class="inline-block bg-lime-500 text-white font-bold text-lg py-3 px-8 rounded-xl hover:bg-lime-600 transition duration-300 shadow-lg" href="#galeria-productos">
+          Ver Productos
+         </a>
+         <a class="inline-block bg-fuchsia-500 text-white font-bold text-lg py-3 px-8 rounded-xl hover:bg-fuchsia-600 transition duration-300 shadow-lg" href="index.html?view=view-comprar-numeros">
+          ¡Participa en la Rifa!
+         </a>
+        </div>
+       </div>
+      </div>
+     </div>
+     
+     <div class="p-4 md:p-12 space-y-12">
+      <section class="flex flex-col md:flex-row items-center gap-8">
+       <img alt="Icono Marian Crochet" class="w-40 h-40 rounded-full shadow-lg" src="icono.jpg"/>
+       <div class="flex-1 text-center md:text-left">
+        <h2 class="text-3xl font-bold text-gray-800 dark:text-white">
+         Sobre Mí
+        </h2>
+        <p class="text-lg text-gray-600 mt-2 dark:text-gray-300">
+         Somos "Marian Crochet", con más de tres años de experiencia en crochet, creando piezas únicas y coloridas hechas con dedicación. Nuestros amigurumis y accesorios buscan transmitir cariño y generar alegría en quienes los reciben.
+        </p>
+       </div>
+      </section>
+      
+      <hr class="dark:border-gray-700"/>
+      
+      <section id="galeria-productos">
+       <h2 class="text-3xl font-bold text-gray-800 dark:text-white text-center">
+        Nuestros Productos
+       </h2>
+       <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
+        
+        <div class="bg-gray-50 dark:bg-gray-700 rounded-lg shadow-md overflow-hidden flex flex-col">
+         <img alt="Producto 1" class="w-full h-56 object-cover" src="02.jpg"/>
+         <div class="p-5 flex flex-col flex-1">
+          <h3 class="text-2xl font-bold text-gray-900 dark:text-white">
+           Oso Polar Navideño
+          </h3>
+          <p class="text-gray-600 mt-2 dark:text-gray-300">
+           Adorable oso polar tejido a mano, perfecto para decorar tu árbol o regalar.
+          </p>
+          <span class="text-xl font-bold text-fuchsia-500 mt-4">
+           $ 25.000
+          </span>
+          <a class="mt-4 text-center bg-gray-200 dark:bg-gray-600 dark:hover:bg-gray-500 dark:text-white text-gray-800 font-semibold py-2 px-4 rounded-lg hover:bg-gray-300 transition-colors" href="https://www.instagram.com/marianma_crochet/" target="_blank">
+           Pedir por Instagram
+          </a>
+         </div>
+        </div>
+        
+        <div class="bg-gray-50 dark:bg-gray-700 rounded-lg shadow-md overflow-hidden flex flex-col">
+         <img alt="Producto 2" class="w-full h-56 object-cover" src="03.jpg"/>
+         <div class="p-5 flex flex-col flex-1">
+          <h3 class="text-2xl font-bold text-gray-900 dark:text-white">
+           Reno Amigurumi
+          </h3>
+          <p class="text-gray-600 mt-2 dark:text-gray-300">
+           Un compañero clásico de la navidad, con bufanda roja y detalles bordados.
+          </p>
+          <span class="text-xl font-bold text-fuchsia-500 mt-4">
+           $ 30.000
+          </span>
+          <a class="mt-4 text-center bg-gray-200 dark:bg-gray-600 dark:hover:bg-gray-500 dark:text-white text-gray-800 font-semibold py-2 px-4 rounded-lg hover:bg-gray-300 transition-colors" href="https://www.instagram.com/marianma_crochet/" target="_blank">
+           Pedir por Instagram
+          </a>
+         </div>
+        </div>
+        
+        <div class="bg-gray-50 dark:bg-gray-700 rounded-lg shadow-md overflow-hidden flex flex-col">
+         <img alt="Producto 3" class="w-full h-56 object-cover" src="04.jpg"/>
+         <div class="p-5 flex flex-col flex-1">
+          <h3 class="text-2xl font-bold text-gray-900 dark:text-white">
+           Muñeco de Nieve
+          </h3>
+          <p class="text-gray-600 mt-2 dark:text-gray-300">
+           Un amigable muñeco de nieve que no se derrite. Ideal para colgar.
+          </p>
+          <span class="text-xl font-bold text-fuchsia-500 mt-4">
+           $ 20.000
+          </span>
+          <a class="mt-4 text-center bg-gray-200 dark:bg-gray-600 dark:hover:bg-gray-500 dark:text-white text-gray-800 font-semibold py-2 px-4 rounded-lg hover:bg-gray-300 transition-colors" href="https://www.instagram.com/marianma_crochet/" target="_blank">
+           Pedir por Instagram
+          </a>
+         </div>
+        </div>
+        
+       </div>
+      </section>
+      
+      <hr class="dark:border-gray-700"/>
+      
+      <section class="text-center">
+       <i class="fa-solid fa-palette fa-3x text-fuchsia-500">
+       </i>
+       <h2 class="text-3xl font-bold text-gray-800 dark:text-white mt-4">
+        &iquest;Quieres algo especial?
+       </h2>
+       <p class="text-lg text-gray-600 mt-2 max-w-2xl mx-auto dark:text-gray-300">
+        ¡Claro que sí! Me encanta crear piezas únicas. Si tienes una idea para un amigurumi personalizado, contáctame por Instagram y cuéntame qué tienes en mente.
+       </p>
+       <a class="mt-6 inline-block bg-fuchsia-500 text-white font-bold text-lg py-3 px-8 rounded-xl hover:bg-fuchsia-600 transition duration-300 shadow-lg" href="https://www.instagram.com/marianma_crochet/" target="_blank">
+        Enviar Mensaje Directo
+       </a>
+      </section>
+      
+      <hr class="dark:border-gray-700"/>
+      
+      <section class="text-center bg-gray-100 dark:bg-gray-700 p-8 rounded-lg">
+       <h2 class="text-3xl font-bold text-gray-800 dark:text-white">
+        ¡No te olvides de la Rifa Navideña!
+       </h2>
+       <p class="text-lg text-gray-600 mt-2 dark:text-gray-300">
+        Además de mis productos, estoy rifando un set increíble de 9 esferas navideñas. ¡No dejes pasar la oportunidad!
+       </p>
+       <a class="mt-6 inline-block bg-lime-500 text-white font-bold text-lg py-3 px-8 rounded-xl hover:bg-lime-600 transition duration-300 shadow-lg" href="index.html?view=view-comprar-numeros">
+        Ver Números Disponibles
+       </a>
+      </section>
+      
      </div>
     </div>
    </div>
   </main>
   <script>
     document.addEventListener('DOMContentLoaded', () => {
+      // ===== CAMBIO PUNTO 4: Scroll al Top =====
+      const mainContent = document.querySelector('main');
+      if (mainContent) mainContent.scrollTop = 0;
+      
       const sidebar = document.getElementById('sidebar');
       const toggleBtn = document.getElementById('toggle-sidebar-global');
       const btnDarkMode = document.getElementById('btn-dark-mode');
       const iconDarkMode = document.getElementById('icon-dark-mode');
+      
+      // ===== CAMBIO PUNTO 1: Menú colapsado en móvil =====
+      if (window.innerWidth < 768) {
+        sidebar?.classList.add('collapsed');
+        toggleBtn?.classList.add('left-4');
+        toggleBtn?.classList.remove('md:left-64');
+      }
+      
+      // =========== LÓGICA DE LINKS ESPECIALES ===========
+      const btnNuestraWeb = document.getElementById('btn-nuestra-web');
+
+      // Botón "Nuestra Web": No hace nada
+      btnNuestraWeb?.addEventListener('click', (e) => e.preventDefault());
+      
+      // =================================================
 
       // Lógica de Toggle
       toggleBtn?.addEventListener('click', () => {
@@ -182,12 +320,16 @@
       // Lógica de Modo Oscuro
       if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
         document.documentElement.classList.add('dark');
-        iconDarkMode?.classList.remove('fa-moon');
-        iconDarkMode?.classList.add('fa-sun');
+        if (iconDarkMode) {
+          iconDarkMode.classList.remove('fa-moon');
+          iconDarkMode.classList.add('fa-sun');
+        }
       } else {
         document.documentElement.classList.remove('dark');
-        iconDarkMode?.classList.remove('fa-sun');
-        iconDarkMode?.classList.add('fa-moon');
+        if (iconDarkMode) {
+          iconDarkMode.classList.remove('fa-sun');
+          iconDarkMode.classList.add('fa-moon');
+        }
       }
       
       btnDarkMode?.addEventListener('click', (e) => {
@@ -195,16 +337,20 @@
         const isDark = document.documentElement.classList.toggle('dark');
         if (isDark) {
           localStorage.setItem('theme', 'dark');
-          iconDarkMode?.classList.remove('fa-moon');
-          iconDarkMode?.classList.add('fa-sun');
+          if (iconDarkMode) {
+            iconDarkMode.classList.remove('fa-moon');
+            iconDarkMode.classList.add('fa-sun');
+          }
         } else {
           localStorage.setItem('theme', 'light');
-          iconDarkMode?.classList.remove('fa-sun');
-          iconDarkMode?.classList.add('fa-moon');
+          if (iconDarkMode) {
+            iconDarkMode.classList.remove('fa-sun');
+            iconDarkMode.classList.add('fa-moon');
+          }
         }
       });
       
-      // La lógica de "Compartir" es simple aquí, solo copia el enlace
+      // Lógica de "Compartir" (simple, solo copia el enlace)
       const btnCompartir = document.getElementById('btn-compartir');
       btnCompartir?.addEventListener('click', (e) => {
          e.preventDefault();

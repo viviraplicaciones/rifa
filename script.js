@@ -26,7 +26,7 @@ let btnProcederPago;
 let switchOcultarComprados;
 let cuadriculaAdmin;
 let filtrosAdminContainer;
-let tablaParticipantes;
+let tablaParticipantes; // AHORA ES 'tabla-participantes-cards'
 let btnRegistrarVentaGlobal;
 let modalRegistrarVenta;
 let formRegistrarVenta;
@@ -62,15 +62,26 @@ document.addEventListener('DOMContentLoaded', () => {
   cachearElementosDOM();
   registrarEventListeners();
   
+  // ===== CAMBIO PUNTO 1: Menú colapsado en móvil =====
+  if (window.innerWidth < 768) {
+    sidebar?.classList.add('collapsed');
+    toggleSidebarGlobalBtn?.classList.add('left-4');
+    toggleSidebarGlobalBtn?.classList.remove('md:left-64');
+  }
+  
   // Inicialización de Modo Oscuro
   if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
     document.documentElement.classList.add('dark');
-    iconDarkMode?.classList.remove('fa-moon');
-    iconDarkMode?.classList.add('fa-sun');
+    if(iconDarkMode) {
+      iconDarkMode.classList.remove('fa-moon');
+      iconDarkMode.classList.add('fa-sun');
+    }
   } else {
     document.documentElement.classList.remove('dark');
-    iconDarkMode?.classList.remove('fa-sun');
-    iconDarkMode?.classList.add('fa-moon');
+    if(iconDarkMode) {
+      iconDarkMode.classList.remove('fa-sun');
+      iconDarkMode.classList.add('fa-moon');
+    }
   }
   
   // Inicialización de Login Admin (G)
@@ -78,8 +89,28 @@ document.addEventListener('DOMContentLoaded', () => {
     adminLinksContainer?.classList.remove('hidden');
   }
 
+  // ============ Lógica de Deep Linking ============
+  const params = new URLSearchParams(window.location.search);
+  const viewParam = params.get('view');
+  const modalParam = params.get('modal');
+  
+  let initialView = 'view-inicio'; // Default
+  
+  if (viewParam && document.getElementById(viewParam)) {
+    initialView = viewParam;
+  }
+  
+  actualizarVistaActiva(initialView); // Esto ya incluye el scroll-to-top (Punto 4)
+  
+  if (modalParam) {
+    if (modalParam === 'admin' && modalAdminLogin) {
+      modalAdminLogin.classList.add('flex');
+    } else if (modalParam === 'reportar' && modalReportarFallo) {
+      modalReportarFallo.classList.add('flex');
+    }
+  }
+  
   // Inicializaciones visuales
-  actualizarVistaActiva('view-inicio');
   renderCuadriculaPublica();
   renderCuadriculaAdmin('todos');
   renderTablaParticipantes();
@@ -140,7 +171,8 @@ function cachearElementosDOM() {
   switchOcultarComprados = document.getElementById('ocultar-comprados');
   cuadriculaAdmin = document.getElementById('cuadricula-numeros-admin');
   filtrosAdminContainer = document.querySelector('#view-rifas-pv .flex-wrap');
-  tablaParticipantes = document.getElementById('tabla-participantes');
+  // ===== CAMBIO PUNTO 3: ID del contenedor de tarjetas =====
+  tablaParticipantes = document.getElementById('tabla-participantes-cards');
   btnRegistrarVentaGlobal = document.getElementById('btn-registrar-venta-global');
   modalRegistrarVenta = document.getElementById('modal-registrar-venta');
   formRegistrarVenta = document.getElementById('form-registrar-venta');
@@ -176,7 +208,7 @@ function registrarEventListeners() {
       const viewId = link.getAttribute('data-view');
       if (viewId) {
         actualizarVistaActiva(viewId);
-        // CAMBIO A: Lógica de colapso solo en móvil
+        // Lógica de colapso solo en móvil
         if (window.innerWidth < 768 && sidebar && !sidebar.classList.contains('collapsed')) {
           sidebar.classList.add('collapsed');
           toggleSidebarGlobalBtn?.classList.remove('md:left-64');
@@ -186,7 +218,6 @@ function registrarEventListeners() {
     });
   });
 
-  // CAMBIO: Lógica de Toast actualizada
   toastCloseBtn?.addEventListener('click', () => toastEl.classList.remove('opacity-100'));
 
   cuadriculaPublica?.addEventListener('click', handleSeleccionPublica);
@@ -262,18 +293,21 @@ function registrarEventListeners() {
     formAdminLogin.reset();
   });
 
-  // CAMBIO: Event listener de Modo Oscuro actualizado con e.preventDefault()
   btnDarkMode?.addEventListener('click', (e) => {
-    e.preventDefault(); // <-- AÑADIDO
+    e.preventDefault();
     const isDark = document.documentElement.classList.toggle('dark');
     if (isDark) {
       localStorage.setItem('theme', 'dark');
-      iconDarkMode?.classList.remove('fa-moon');
-      iconDarkMode?.classList.add('fa-sun');
+      if(iconDarkMode) {
+        iconDarkMode.classList.remove('fa-moon');
+        iconDarkMode.classList.add('fa-sun');
+      }
     } else {
       localStorage.setItem('theme', 'light');
-      iconDarkMode?.classList.remove('fa-sun');
-      iconDarkMode?.classList.add('fa-moon');
+      if(iconDarkMode) {
+        iconDarkMode.classList.remove('fa-sun');
+        iconDarkMode.classList.add('fa-moon');
+      }
     }
   });
 }
@@ -293,6 +327,10 @@ function toggleSidebarGlobal() {
 }
 
 function actualizarVistaActiva(viewId) {
+  // ===== CAMBIO PUNTO 4: Scroll al Top =====
+  const mainContent = document.querySelector('main');
+  if (mainContent) mainContent.scrollTop = 0;
+  
   views.forEach(view => view.classList.remove('active'));
   document.getElementById(viewId)?.classList.add('active');
 
@@ -307,7 +345,6 @@ function actualizarVistaActiva(viewId) {
 /* =========================================================
    Toasts
    ========================================================= */
-// CAMBIO: Lógica de Toast actualizada a modal central
 function mostrarToast(mensaje, esError = false) {
   if (!toastEl || !toastMsg) return;
 
@@ -326,10 +363,8 @@ function mostrarToast(mensaje, esError = false) {
     icon?.classList.add('fa-solid', 'fa-check');
   }
 
-  // Usar opacidad en lugar de 'hidden'
   toastEl.classList.add('opacity-100');
   
-  // Ocultar después de 2 segundos
   setTimeout(() => { 
     toastEl.classList.remove('opacity-100'); 
   }, 2000);
@@ -399,7 +434,6 @@ function renderCuadriculaPublica() {
     if (esSeleccionado && !esOcupado) claseEstado = 'seleccionado';
 
     const divBoleto = document.createElement('div');
-    // CAMBIO C: Padding a 0 para que el contenedor sea más pequeño
     divBoleto.className = `numero-rifa-publico w-full aspect-square flex items-center justify-center font-bold text-xs border-2 rounded-xl p-0 cursor-pointer ${claseEstado}`;
     divBoleto.textContent = boleto.numero;
     divBoleto.dataset.numero = boleto.numero;
@@ -489,7 +523,6 @@ function renderCuadriculaAdmin(filtro) {
     }
 
     const divBoleto = document.createElement('div');
-    // CAMBIO C: Padding a 0 para que el contenedor sea más pequeño
     divBoleto.className = `w-full aspect-square flex items-center justify-center font-medium text-xs border rounded-md p-0 ${claseColor}`;
     divBoleto.textContent = boleto.numero;
     cuadriculaAdmin.appendChild(divBoleto);
@@ -507,35 +540,68 @@ function handleFiltroAdmin(e) {
 /* =========================================================
    Tabla participantes
    ========================================================= */
+
+// ===== CAMBIO PUNTO 3: Función re-escrita para usar Tarjetas =====
 function renderTablaParticipantes() {
-  if (!tablaParticipantes) return;
+  if (!tablaParticipantes) return; // ID es 'tabla-participantes-cards'
   tablaParticipantes.innerHTML = '';
 
   if (participantes.length === 0) {
     tablaParticipantes.innerHTML = `
-      <tr class="no-participantes"><td colspan="4" class="p-6 text-center text-gray-500 dark:text-gray-400">Aún no hay participantes registrados.</td></tr>
+      <div class="bg-white dark:bg-gray-800 rounded-lg p-6 text-center text-gray-500 dark:text-gray-400 shadow">
+        Aún no hay participantes registrados.
+      </div>
     `;
     return;
   }
 
   participantes.forEach(p => {
     let colorEstado = 'text-gray-700 dark:text-gray-300';
+    let bgEstado = 'bg-gray-100 dark:bg-gray-600';
     switch (p.estado) {
-      case 'apartado': colorEstado = 'text-blue-600 font-medium'; break;
-      case 'revisando': colorEstado = 'text-amber-600 font-medium'; break;
-      case 'pagado': colorEstado = 'text-red-600 font-medium'; break;
+      case 'apartado':
+        colorEstado = 'text-blue-700 dark:text-blue-300';
+        bgEstado = 'bg-blue-100 dark:bg-blue-900';
+        break;
+      case 'revisando':
+        colorEstado = 'text-amber-700 dark:text-amber-300';
+        bgEstado = 'bg-amber-100 dark:bg-amber-900';
+        break;
+      case 'pagado':
+        colorEstado = 'text-red-700 dark:text-red-300';
+        bgEstado = 'bg-red-100 dark:bg-red-900';
+        break;
     }
+    
+    const estadoTexto = p.estado.charAt(0).toUpperCase() + p.estado.slice(1);
 
-    const fila = document.createElement('tr');
-    fila.innerHTML = `
-      <td class="p-4 text-sm text-gray-800 dark:text-gray-200">${p.nombre}</td>
-      <td class="p-4 text-sm text-gray-600 dark:text-gray-300">${p.telefono}</td>
-      <td class="p-4 text-sm text-gray-600 dark:text-gray-300">${p.numeros.join(', ')}</td>
-      <td class="p-4 text-sm ${colorEstado}">${p.estado.charAt(0).toUpperCase() + p.estado.slice(1)}</td>
+    const card = document.createElement('div');
+    card.className = "bg-white dark:bg-gray-800 rounded-lg shadow p-4";
+    
+    // Usar grid-cols-4 para alinear con el header
+    // 'truncate' evita que nombres largos rompan el layout
+    card.innerHTML = `
+      <div class="grid grid-cols-4 gap-4 items-center text-xs md:text-sm">
+        <div class="font-medium text-gray-900 dark:text-white truncate" title="${p.nombre}">
+          ${p.nombre}
+        </div>
+        <div class="text-gray-600 dark:text-gray-300 truncate">
+          ${p.telefono}
+        </div>
+        <div class="text-gray-600 dark:text-gray-300 truncate">
+          ${p.numeros.join(', ')}
+        </div>
+        <div>
+          <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${bgEstado} ${colorEstado}">
+            ${estadoTexto}
+          </span>
+        </div>
+      </div>
     `;
-    tablaParticipantes.appendChild(fila);
+    tablaParticipantes.appendChild(card);
   });
 }
+
 
 /* =========================================================
    Modal registro de venta (Admin)
@@ -611,7 +677,10 @@ function actualizarSelectsDinamicos() {
 
   selects.forEach(select => {
     const valorActual = select.value;
-    let optionsHTML = '<option value="" disabled>Selecciona un número</coption>';
+    
+    // Bug corregido de la v12
+    let optionsHTML = '<option value="" disabled>Selecciona un número</option>';
+
     if (valorActual) optionsHTML += `<option value="${valorActual}" selected>${valorActual}</option>`;
 
     numerosDisponibles.forEach(num => {
@@ -695,7 +764,7 @@ function handleGuardarVenta(e) {
     /* Estilos para modo oscuro en filtros */
     .dark .filtro-btn-admin[data-filtro="todos"] { border-color: #9CA3AF; color: #E5E7EB; }
     .dark .filtro-btn-admin[data-filtro="disponible"] { border-color: #4B5563; color: #D1D5DB; }
-    .dark .filtro-btn-admin.filtro-admin-activo[data-filtro="todos"], .dark .filtro-btn-admin:hover[data-filtro="todos"] { background-color: #9CA3AF; color: white !impor! }
+    .dark .filtro-btn-admin.filtro-admin-activo[data-filtro="todos"], .dark .filtro-btn-admin:hover[data-filtro="todos"] { background-color: #9CA3AF; color: white !important; }
     .dark .filtro-btn-admin.filtro-admin-activo[data-filtro="disponible"], .dark .filtro-btn-admin:hover[data-filtro="disponible"] { background-color: #6B7280; color: white !important; }
   `;
   document.head.appendChild(style);

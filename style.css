@@ -1,7 +1,9 @@
 body {font-family: 'Roboto', sans-serif;}
 #sidebar {transition: width 0.3s;}
 #sidebar.collapsed {width: 4rem;}
-#sidebar:not(.collapsed) {width: 16rem;}
+/* ============ CAMBIO 2a: Ancho del Menú ============ */
+#sidebar:not(.collapsed) {width: 15rem;} /* Ajustado de 16rem a 15rem */
+
 #sidebar.collapsed .sidebar-text {display: none;}
 #sidebar.collapsed .sidebar-icon {margin: 0 auto;}
 .no-scrollbar::-webkit-scrollbar {display: none;}
@@ -68,11 +70,21 @@ body {font-family: 'Roboto', sans-serif;}
   transform: scale(1.1);
 }
 
-/* 4. Estilos para el botón de toggle flotante (A) */
+/* 4. Estilos para el botón de toggle flotante (PC) */
 .toggle-sidebar-btn {
   top: 1rem; /* 16px */
   left: 1rem; /* 16px */
   transition: all 0.3s ease-in-out;
+  /* ============ CAMBIO 2a: Ajuste de posición ============ */
+  /* Ajustar de 16rem a 15rem */
+}
+#sidebar:not(.collapsed) ~ main .toggle-sidebar-btn {
+  left: 15rem; 
+}
+@media (min-width: 768px) {
+  #sidebar:not(.collapsed) ~ main .toggle-sidebar-btn {
+    left: 1rem;
+  }
 }
 
 /* 5. Clases para los números en modo oscuro */
@@ -89,7 +101,6 @@ body {font-family: 'Roboto', sans-serif;}
     color: #E5E7EB; /* text-gray-200 */
     border-color: #4B5563; /* border-gray-600 */
 }
-/* Opcional: hover para números disponibles en modo oscuro */
 .dark .numero-rifa-publico:not(.ocupado):not(.revisando):not(.seleccionado):hover {
     background-color: #374151; /* bg-gray-700 */
 }
@@ -129,7 +140,8 @@ body {font-family: 'Roboto', sans-serif;}
     font-size: 1.25rem; /* 20px */
 }
 /* (Ajustar el icono de "Nosotros" que es una imagen) */
-#sidebar.collapsed a[data-view="view-nosotros"] .sidebar-icon {
+#sidebar.collapsed a[data-view="view-nosotros"] .sidebar-icon,
+#sidebar.collapsed a[href="index.html?view=view-nosotros"] .sidebar-icon {
     width: 1.75rem; /* 28px */
     height: 1.75rem; /* 28px */
 }
@@ -140,5 +152,3 @@ body {font-family: 'Roboto', sans-serif;}
 }
 
 /* ============ FIN DE NUEVAS CORRECCIONES (v14) ============ */
-
-/* --- FIN DE NUEVOS ESTILOS --- */

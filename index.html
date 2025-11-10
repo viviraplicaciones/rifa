@@ -33,7 +33,7 @@
   
   <script>
     tailwind.config = {
-      darkMode: 'class', // Habilita el modo oscuro basado en la clase '.dark' en <html>
+      darkMode: 'class',
     }
   </script>
 
@@ -81,14 +81,14 @@
      <p class="sidebar-text text-xs uppercase text-fuchsia-300 px-3 mb-2">
       Comunidad
      </p>
-     <a class="flex items-center p-2 rounded-lg hover:bg-fuchsia-600" href="index_01.html">
+     <a class="flex items-center p-2 rounded-lg hover:bg-fuchsia-600 nav-link" href="index_01.html">
       <i class="fa-solid fa-globe fa-lg sidebar-icon">
       </i>
       <span class="sidebar-text text-lg ml-4">
        Nuestra Web
       </span>
      </a>
-     <a class="flex items-center p-2 rounded-lg hover:bg-fuchsia-600" href="https://www.instagram.com/marianma_crochet/" target="_blank">
+     <a class="flex items-center p-2 rounded-lg hover:bg-fuchsia-600 nav-link" href="https://www.instagram.com/marianma_crochet/" target="_blank">
       <i class="fa-brands fa-instagram fa-lg sidebar-icon">
       </i>
       <span class="sidebar-text text-lg ml-4">
@@ -153,13 +153,7 @@
        Tema
       </span>
      </a>
-     <a class="flex items-center p-2 rounded-lg hover:bg-fuchsia-600 nav-link" data-view="view-nosotros" href="#">
-      <img alt="Icono Marian Crochet" class="w-6 h-6 rounded-full sidebar-icon" src="icono.jpg"/>
-      <span class="sidebar-text text-lg ml-4">
-       Nosotros
-      </span>
-     </a>
-    </div>
+     </div>
    </nav>
    
    <div class="mt-auto p-4 flex flex-col items-center border-t border-fuchsia-500">
@@ -170,12 +164,12 @@
    </div>
   </aside>
   
-  <button class="fixed z-20 p-2 bg-fuchsia-700 text-white rounded-md toggle-sidebar-btn" id="toggle-sidebar-global">
+  <button class="fixed z-20 p-2 bg-fuchsia-700 text-white rounded-md toggle-sidebar-btn hidden md:block" id="toggle-sidebar-global">
    <i class="fa-solid fa-bars">
    </i>
   </button>
   
-  <main class="flex-1 flex flex-col h-full overflow-y-auto">
+  <main class="flex-1 flex flex-col h-full overflow-y-auto" id="main-content">
    
    <div class="view active p-0" id="view-inicio">
     <div class="w-full max-w-6xl mx-auto bg-white md:rounded-2xl shadow-xl overflow-hidden dark:bg-gray-800">
@@ -337,21 +331,19 @@
     </div>
     
     <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl overflow-hidden p-4">
-     <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-4 mb-3">
-      <div class="grid grid-cols-4 gap-4 text-left text-xs md:text-sm font-semibold text-gray-600 uppercase dark:text-gray-300">
-       <span>
-        Nombre
-       </span>
-       <span>
-        Teléfono
-       </span>
-       <span>
-        Números
-       </span>
-       <span>
-        Estado
-       </span>
-      </div>
+     <div class="hidden md:grid grid-cols-4 gap-4 bg-gray-50 dark:bg-gray-700 rounded-lg p-4 mb-3 text-left text-xs md:text-sm font-semibold text-gray-600 uppercase dark:text-gray-300">
+      <span>
+       Nombre
+      </span>
+      <span>
+       Teléfono
+      </span>
+      <span>
+       Números
+      </span>
+      <span>
+       Estado
+      </span>
      </div>
      
      <div class="space-y-3" id="tabla-participantes-cards">
@@ -409,19 +401,7 @@
     </div>
    </div>
    
-   <div class="view p-0" id="view-nosotros">
-    <div class="bg-white p-10 md:rounded-2xl shadow-xl text-center dark:bg-gray-800">
-     <img alt="Icono Marian Crochet" class="w-24 h-24 rounded-full mx-auto mb-4 shadow-lg" src="icono.jpg"/>
-     <h2 class="text-2xl font-semibold text-gray-700 dark:text-gray-200">
-      Nuestra Historia
-     </h2>
-     <p class="text-gray-600 mt-2 max-w-2xl mx-auto dark:text-gray-300">
-      Somos "Marian Crochet", con más de tres años de experiencia en crochet, creando piezas únicas y coloridas hechas con dedicación. Nuestros amigurumis y accesorios buscan transmitir cariño y generar alegría en quienes los reciben.
-     </p>
-    </div>
-   </div>
-   
-  </main>
+   </main>
   
   <div class="modal fixed inset-0 z-50 overflow-y-auto bg-black bg-opacity-60" id="modal-mas-info">
    <div class="relative p-4 w-full max-w-4xl mx-auto my-12">
@@ -528,6 +508,14 @@
         </li>
        </ol>
       </div>
+     </div>
+     <div class="flex items-center justify-end space-x-4 p-4 border-t dark:border-gray-700">
+      <button class="modal-close text-gray-700 bg-gray-100 hover:bg-gray-200 font-medium rounded-lg px-5 py-2.5 dark:bg-gray-600 dark:text-gray-300 dark:hover:bg-gray-500" data-modal-id="modal-mas-info" type="button">
+       Cerrar
+      </button>
+      <button class="text-white bg-lime-500 hover:bg-lime-600 font-medium rounded-lg px-6 py-2.5" id="btn-modal-ir-numeros" type="button">
+       Números
+      </button>
      </div>
     </div>
    </div>
@@ -696,7 +684,15 @@
    </button>
   </div>
   
+  <button class="fixed z-20 bottom-4 right-4 p-3 bg-fuchsia-700 text-white rounded-lg shadow-lg md:hidden aspect-square" id="toggle-sidebar-mobile">
+   <i class="fa-solid fa-bars fa-lg">
+   </i>
+  </button>
+  
   <script type="module" src="script.js">
   </script>
+  <script type="module" src="tablas-numericas.js">
+  </script>
+  
  </body>
 </html>

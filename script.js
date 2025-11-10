@@ -1,5 +1,5 @@
 /* =========================================================
-   script.js (Con todas las nuevas funciones)
+   script.js (Con todas las nuevas funciones v15)
    ========================================================= */
 
 let boletosRifa = [];
@@ -11,6 +11,8 @@ const PRECIO_BOLETO = 6000;
    --------------------------------------------------------- */
 let sidebar;
 let toggleSidebarGlobalBtn;
+let toggleSidebarMobileBtn; // Nuevo botón flotante
+let mainContent;
 let navLinks;
 let views;
 let toastEl;
@@ -26,7 +28,7 @@ let btnProcederPago;
 let switchOcultarComprados;
 let cuadriculaAdmin;
 let filtrosAdminContainer;
-let tablaParticipantes; // AHORA ES 'tabla-participantes-cards'
+let tablaParticipantes; // Contenedor de tarjetas
 let btnRegistrarVentaGlobal;
 let modalRegistrarVenta;
 let formRegistrarVenta;
@@ -35,6 +37,7 @@ let btnAnadirNumero;
 let listaNumerosModal;
 let btnMasInfo;
 let modalMasInfo;
+let btnModalIrNumeros; // Nuevo botón en modal
 let modalCloseBtns;
 let btnCompartir;
 
@@ -62,11 +65,12 @@ document.addEventListener('DOMContentLoaded', () => {
   cachearElementosDOM();
   registrarEventListeners();
   
-  // ===== CAMBIO PUNTO 1: Menú colapsado en móvil =====
+  // ===== CAMBIO 1: Menú colapsado en móvil =====
   if (window.innerWidth < 768) {
     sidebar?.classList.add('collapsed');
+  } else {
+    // Asegurar que el botón de PC esté en la posición correcta si se carga en escritorio
     toggleSidebarGlobalBtn?.classList.add('left-4');
-    toggleSidebarGlobalBtn?.classList.remove('md:left-64');
   }
   
   // Inicialización de Modo Oscuro
@@ -89,7 +93,7 @@ document.addEventListener('DOMContentLoaded', () => {
     adminLinksContainer?.classList.remove('hidden');
   }
 
-  // ============ Lógica de Deep Linking ============
+  // Lógica de Deep Linking (Mejorada)
   const params = new URLSearchParams(window.location.search);
   const viewParam = params.get('view');
   const modalParam = params.get('modal');
@@ -102,12 +106,17 @@ document.addEventListener('DOMContentLoaded', () => {
   
   actualizarVistaActiva(initialView); // Esto ya incluye el scroll-to-top (Punto 4)
   
+  // ===== CAMBIO 1b: Lógica de Modal (Corregida) =====
+  // Solo abrir modal si el parámetro existe Y NO estamos en móvil (donde el menú está cerrado)
+  // O si el usuario está en móvil y el parámetro existe (dejaremos que el usuario abra el menú)
   if (modalParam) {
     if (modalParam === 'admin' && modalAdminLogin) {
       modalAdminLogin.classList.add('flex');
     } else if (modalParam === 'reportar' && modalReportarFallo) {
       modalReportarFallo.classList.add('flex');
     }
+    // Limpiar la URL para que no vuelva a aparecer al recargar
+    window.history.replaceState({}, document.title, window.location.pathname);
   }
   
   // Inicializaciones visuales
@@ -157,6 +166,8 @@ function inicializarBoletos() {
 function cachearElementosDOM() {
   sidebar = document.getElementById('sidebar');
   toggleSidebarGlobalBtn = document.getElementById('toggle-sidebar-global');
+  toggleSidebarMobileBtn = document.getElementById('toggle-sidebar-mobile'); // Cachear botón móvil
+  mainContent = document.getElementById('main-content'); // Cachear main
   navLinks = document.querySelectorAll('.nav-link');
   views = document.querySelectorAll('.view');
   toastEl = document.getElementById('toast-notificacion');
@@ -171,8 +182,7 @@ function cachearElementosDOM() {
   switchOcultarComprados = document.getElementById('ocultar-comprados');
   cuadriculaAdmin = document.getElementById('cuadricula-numeros-admin');
   filtrosAdminContainer = document.querySelector('#view-rifas-pv .flex-wrap');
-  // ===== CAMBIO PUNTO 3: ID del contenedor de tarjetas =====
-  tablaParticipantes = document.getElementById('tabla-participantes-cards');
+  tablaParticipantes = document.getElementById('tabla-participantes-cards'); // ID actualizado
   btnRegistrarVentaGlobal = document.getElementById('btn-registrar-venta-global');
   modalRegistrarVenta = document.getElementById('modal-registrar-venta');
   formRegistrarVenta = document.getElementById('form-registrar-venta');
@@ -181,10 +191,10 @@ function cachearElementosDOM() {
   listaNumerosModal = document.getElementById('lista-numeros-disponibles-modal');
   btnMasInfo = document.getElementById('btn-mas-info');
   modalMasInfo = document.getElementById('modal-mas-info');
+  btnModalIrNumeros = document.getElementById('btn-modal-ir-numeros'); // Cachear botón modal
   modalCloseBtns = document.querySelectorAll('.modal-close');
   btnCompartir = document.getElementById('btn-compartir');
   
-  /* Nuevos caches (F, G, Modo Oscuro) */
   btnReportarFallo = document.getElementById('btn-reportar-fallo');
   modalReportarFallo = document.getElementById('modal-reportar-fallo');
   formReportarFallo = document.getElementById('form-reportar-fallo');
@@ -201,20 +211,23 @@ function cachearElementosDOM() {
    ========================================================= */
 function registrarEventListeners() {
   toggleSidebarGlobalBtn?.addEventListener('click', toggleSidebarGlobal);
+  toggleSidebarMobileBtn?.addEventListener('click', toggleSidebarGlobal); // Ambos botones hacen lo mismo
 
   navLinks.forEach(link => {
     link.addEventListener('click', (e) => {
-      e.preventDefault();
+      
       const viewId = link.getAttribute('data-view');
+      // ===== CAMBIO 2d/2e/4: BUG PREVENTDEFAULT ARREGLADO =====
+      // Solo prevenir el default SI es un link de vista interna
       if (viewId) {
+        e.preventDefault();
         actualizarVistaActiva(viewId);
         // Lógica de colapso solo en móvil
         if (window.innerWidth < 768 && sidebar && !sidebar.classList.contains('collapsed')) {
           sidebar.classList.add('collapsed');
-          toggleSidebarGlobalBtn?.classList.remove('md:left-64');
-          toggleSidebarGlobalBtn?.classList.add('left-4');
         }
       }
+      // Si no tiene viewId, el link (href="index_01.html" o "https://instagram...") funciona normal
     });
   });
 
@@ -240,6 +253,12 @@ function registrarEventListeners() {
   btnAnadirNumero?.addEventListener('click', () => anadirCampoNumero(null));
   btnMasInfo?.addEventListener('click', () => modalMasInfo?.classList.add('flex'));
 
+  // ===== CAMBIO 3: Listener para botón "Números" en Modal =====
+  btnModalIrNumeros?.addEventListener('click', () => {
+    modalMasInfo?.classList.remove('flex');
+    actualizarVistaActiva('view-comprar-numeros');
+  });
+
   modalCloseBtns.forEach(btn => {
     btn.addEventListener('click', () => {
       const modalId = btn.getAttribute('data-modal-id');
@@ -258,6 +277,7 @@ function registrarEventListeners() {
     handleCompartir();
   });
 
+  // ===== CAMBIO 1a: Listener de Reportar Fallos (Corregido) =====
   btnReportarFallo?.addEventListener('click', (e) => {
     e.preventDefault();
     modalReportarFallo?.classList.add('flex');
@@ -317,18 +337,18 @@ function registrarEventListeners() {
    ========================================================= */
 function toggleSidebarGlobal() {
   sidebar?.classList.toggle('collapsed');
+  // Lógica de botón de PC
   if (sidebar?.classList.contains('collapsed')) {
-    toggleSidebarGlobalBtn?.classList.remove('md:left-64');
+    toggleSidebarGlobalBtn?.classList.remove('md:left-[15rem]');
     toggleSidebarGlobalBtn?.classList.add('left-4', 'md:left-4');
   } else {
     toggleSidebarGlobalBtn?.classList.remove('left-4');
-    toggleSidebarGlobalBtn?.classList.add('md:left-64');
+    toggleSidebarGlobalBtn?.classList.add('md:left-[15rem]');
   }
 }
 
 function actualizarVistaActiva(viewId) {
-  // ===== CAMBIO PUNTO 4: Scroll al Top =====
-  const mainContent = document.querySelector('main');
+  // ===== CAMBIO 4: Scroll al Top =====
   if (mainContent) mainContent.scrollTop = 0;
   
   views.forEach(view => view.classList.remove('active'));
@@ -376,7 +396,7 @@ function mostrarToast(mensaje, esError = false) {
 async function handleCompartir() {
   const shareTitle = 'Fabulosa Rifa de Navidad';
   const shareText = '¡Participa en esta increíble rifa y gánate 9 adornos navideños Amigurumi!';
-  const shareUrl = window.location.href;
+  const shareUrl = window.location.href.split('?')[0]; // Limpiar params
 
   try {
     const response = await fetch('banner.jpg');
@@ -541,14 +561,14 @@ function handleFiltroAdmin(e) {
    Tabla participantes
    ========================================================= */
 
-// ===== CAMBIO PUNTO 3: Función re-escrita para usar Tarjetas =====
+// ===== CAMBIO 6: Función re-escrita para usar Tarjetas Apiladas =====
 function renderTablaParticipantes() {
   if (!tablaParticipantes) return; // ID es 'tabla-participantes-cards'
   tablaParticipantes.innerHTML = '';
 
   if (participantes.length === 0) {
     tablaParticipantes.innerHTML = `
-      <div class="bg-white dark:bg-gray-800 rounded-lg p-6 text-center text-gray-500 dark:text-gray-400 shadow">
+      <div class="bg-gray-50 dark:bg-gray-900 rounded-lg p-6 text-center text-gray-500 dark:text-gray-400">
         Aún no hay participantes registrados.
       </div>
     `;
@@ -576,12 +596,40 @@ function renderTablaParticipantes() {
     const estadoTexto = p.estado.charAt(0).toUpperCase() + p.estado.slice(1);
 
     const card = document.createElement('div');
-    card.className = "bg-white dark:bg-gray-800 rounded-lg shadow p-4";
+    // Tarjeta individual
+    card.className = "bg-gray-50 dark:bg-gray-900 rounded-lg p-4 shadow";
     
-    // Usar grid-cols-4 para alinear con el header
-    // 'truncate' evita que nombres largos rompan el layout
+    // Layout apilado para móvil, como en la imagen de ejemplo
     card.innerHTML = `
-      <div class="grid grid-cols-4 gap-4 items-center text-xs md:text-sm">
+      <div class="space-y-2 text-sm">
+        <p class="font-bold text-gray-900 dark:text-white truncate" title="${p.nombre}">
+          <span class="text-gray-500 dark:text-gray-400 font-medium">NOMBRE: </span>
+          ${p.nombre}
+        </p>
+        <p class="text-gray-700 dark:text-gray-300 truncate">
+          <span class="text-gray-500 dark:text-gray-400 font-medium">TELÉFONO: </span>
+          ${p.telefono}
+        </p>
+        <p class="text-gray-700 dark:text-gray-300 truncate">
+          <span class="text-gray-500 dark:text-gray-400 font-medium">NÚMEROS: </span>
+          ${p.numeros.join(', ')}
+        </p>
+        <div class="flex items-center">
+          <span class="text-gray-500 dark:text-gray-400 font-medium mr-2">ESTADO: </span>
+          <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${bgEstado} ${colorEstado}">
+            ${estadoTexto}
+          </span>
+        </div>
+      </div>
+    `;
+    
+    // Ocultar esta tarjeta en pantallas md y más grandes
+    card.classList.add('md:hidden');
+    
+    // Crear la fila de tabla para escritorio (la que estaba oculta antes)
+    const tableRow = document.createElement('div');
+    tableRow.className = "hidden md:grid grid-cols-4 gap-4 items-center text-xs md:text-sm p-4"; // 'hidden md:grid'
+    tableRow.innerHTML = `
         <div class="font-medium text-gray-900 dark:text-white truncate" title="${p.nombre}">
           ${p.nombre}
         </div>
@@ -596,9 +644,16 @@ function renderTablaParticipantes() {
             ${estadoTexto}
           </span>
         </div>
-      </div>
     `;
-    tablaParticipantes.appendChild(card);
+
+    tablaParticipantes.appendChild(card); // Añadir tarjeta móvil
+    tablaParticipantes.appendChild(tableRow); // Añadir fila de escritorio
+    
+    // Separador (opcional, pero bueno para escritorio)
+    const separator = document.createElement('hr');
+    separator.className = "hidden md:block dark:border-gray-700";
+    tablaParticipantes.appendChild(separator);
+
   });
 }
 
@@ -678,7 +733,6 @@ function actualizarSelectsDinamicos() {
   selects.forEach(select => {
     const valorActual = select.value;
     
-    // Bug corregido de la v12
     let optionsHTML = '<option value="" disabled>Selecciona un número</option>';
 
     if (valorActual) optionsHTML += `<option value="${valorActual}" selected>${valorActual}</option>`;
@@ -712,7 +766,7 @@ function handleGuardarVenta(e) {
   
   for (const numero of numerosSeleccionados) {
     const boleto = boletosRifa.find(b => b.numero === numero);
-    if (boleto.estado !== 'disponible') {
+    if (!boleto || boleto.estado !== 'disponible') {
         mostrarToast(`El número ${numero} ya no está disponible.`, true);
         actualizarSelectsDinamicos();
         return;

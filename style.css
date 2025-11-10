@@ -82,4 +82,53 @@ body {font-family: 'Roboto', sans-serif;}
   border-color: #4B5563; /* border-gray-600 */
 }
 
+/* ============ INICIO DE NUEVAS CORRECCIONES ============ */
+
+/* PUNTO 1: Arreglar color de números (disponibles) en modo oscuro */
+.dark .numero-rifa-publico:not(.ocupado):not(.revisando):not(.seleccionado) {
+    color: #E5E7EB; /* text-gray-200 */
+    border-color: #4B5563; /* border-gray-600 */
+}
+/* Opcional: hover para números disponibles en modo oscuro */
+.dark .numero-rifa-publico:not(.ocupado):not(.revisando):not(.seleccionado):hover {
+    background-color: #374151; /* bg-gray-700 */
+}
+
+/* PUNTO 3: Espaciado de iconos del menú colapsado */
+
+/* 1. Resetear el padding del <nav> y el espacio entre hijos */
+#sidebar.collapsed nav {
+    padding-left: 0;
+    padding-right: 0;
+    space-y: 0; 
+}
+
+/* 2. Ocultar los títulos de sección (p, admin-login) y bordes */
+#sidebar.collapsed nav > div > p,
+#sidebar.collapsed nav > div > a#btn-admin-login {
+    display: none;
+}
+#sidebar.collapsed nav > div {
+    padding-top: 0;
+    margin-top: 0;
+    border-top: none;
+}
+
+/* 3. Aplicar un padding vertical IGUAL a TODOS los enlaces */
+#sidebar.collapsed nav > a,
+#sidebar.collapsed nav > div > a {
+    padding-top: 0.875rem;    /* 14px */
+    padding-bottom: 0.875rem; /* 14px */
+    /* Quitar padding horizontal para que .sidebar-icon pueda centrarse */
+    padding-left: 0;
+    padding-right: 0;
+}
+
+/* 4. Ocultar los links de admin (que ya están en un div) */
+#sidebar.collapsed #admin-links-container {
+    display: none !important; 
+}
+
+/* ============ FIN DE NUEVAS CORRECCIONES ============ */
+
 /* --- FIN DE NUEVOS ESTILOS --- */

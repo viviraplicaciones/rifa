@@ -1,5 +1,5 @@
 /* =========================================================
-   script.js (v25 - Conectado a Firebase)
+   script.js (v28 - Animación Suerte)
    ========================================================= */
 
 // Importar la base de datos (db) y funciones de Firebase
@@ -21,16 +21,18 @@ import {
   handleSeleccionPublica,
   actualizarSeleccionPublica,
   handleProcederPago,
+  handleGuardarCompraUsuario,
   renderCuadriculaAdmin,
   handleFiltroAdmin,
   renderTablaParticipantes,
   abrirModalRegistro,
   handleGuardarVenta,
-  anadirCampoNumero
+  anadirCampoNumero,
+  handleBotonSuerte 
 } from './tablas-numericas.js';
 
 /* ---------------------------------------------------------
-   Estado Global de la Aplicación (Ahora poblado por Firebase)
+   Estado Global de la Aplicación
    --------------------------------------------------------- */
 let boletosRifa = [];
 let participantes = [];
@@ -41,55 +43,29 @@ let numerosSeleccionadosPublica = [];
    Variables DOM (Caché)
    --------------------------------------------------------- */
 let sidebar;
-let toggleSidebarGlobalBtn;
-let toggleSidebarMobileBtn;
-let mainContent;
-let navLinks;
-let views;
-let toastEl;
-let toastMsg;
-let toastCloseBtn;
-let cuadriculaPublica;
-let listaSeleccionPublica;
-let badgeCantidad;
-let subtotalEl;
-let precioNumeroEl;
-let btnProcederPago;
-let switchOcultarComprados;
-let cuadriculaAdmin;
-let filtrosAdminContainer;
-let tablaParticipantes;
-let btnRegistrarVentaGlobal;
-let modalRegistrarVenta;
-let formRegistrarVenta;
-let camposNumerosDinamicos;
-let btnAnadirNumero;
-let listaNumerosModal;
-let btnMasInfo;
-let modalMasInfo;
-let btnModalIrNumeros;
-let modalCloseBtns;
-let btnCompartir;
-let btnReportarFallo;
-let modalReportarFallo;
-let formReportarFallo;
-let btnAdminLogin;
-let modalAdminLogin;
-let formAdminLogin;
-let adminLinksContainer;
-let btnDarkMode;
-let iconDarkMode;
-let slides;
-let currentSlide = 0;
-let slideCount = 0;
+let toggleSidebarGlobalBtn, toggleSidebarMobileBtn, mainContent, navLinks, views,
+    toastEl, toastMsg, toastCloseBtn, cuadriculaPublica, listaSeleccionPublica,
+    badgeCantidad, subtotalEl, precioNumeroEl, btnProcederPago, switchOcultarComprados,
+    cuadriculaAdmin, filtrosAdminContainer, tablaParticipantes, btnRegistrarVentaGlobal,
+    modalRegistrarVenta, formRegistrarVenta, camposNumerosDinamicos, btnAnadirNumero,
+    listaNumerosModal, btnMasInfo, modalMasInfo, btnModalIrNumeros, modalCloseBtns,
+    btnCompartir, btnReportarFallo, modalReportarFallo, formReportarFallo,
+    btnAdminLogin, modalAdminLogin, formAdminLogin, adminLinksContainer,
+    btnDarkMode, iconDarkMode, slides, currentSlide = 0, slideCount = 0;
+
+let modalIngresarDatos;
+let formIngresarDatos;
+
+let btnSuerte;
+let modalSuerte;
+let modalSuerteNumero;
+let imgSuerte; // <-- NUEVA VARIABLE
 
 
 /* =========================================================
    Inicialización al cargar el documento
    ========================================================= */
 document.addEventListener('DOMContentLoaded', () => {
-  // YA NO INICIALIZAMOS BOLETOS LOCALMENTE
-  
   cachearElementosDOM();
   
   // Inyectar dependencias en el módulo de UI común
@@ -102,25 +78,20 @@ document.addEventListener('DOMContentLoaded', () => {
     PRECIO_BOLETO: PRECIO_BOLETO,
     numerosSeleccionadosPublica: numerosSeleccionadosPublica,
     mostrarToast: mostrarToast,
-    cuadriculaPublica: cuadriculaPublica,
-    switchOcultarComprados: switchOcultarComprados,
-    listaSeleccionPublica: listaSeleccionPublica,
-    badgeCantidad: badgeCantidad,
-    subtotalEl: subtotalEl,
-    btnProcederPago: btnProcederPago,
-    precioNumeroEl: precioNumeroEl,
-    cuadriculaAdmin: cuadriculaAdmin,
-    filtrosAdminContainer: filtrosAdminContainer,
-    tablaParticipantes: tablaParticipantes,
-    modalRegistrarVenta: modalRegistrarVenta,
-    formRegistrarVenta: formRegistrarVenta,
-    camposNumerosDinamicos: camposNumerosDinamicos,
-    listaNumerosModal: listaNumerosModal
+    // Elementos DOM
+    cuadriculaPublica, switchOcultarComprados, listaSeleccionPublica, badgeCantidad,
+    subtotalEl, btnProcederPago, precioNumeroEl, cuadriculaAdmin, filtrosAdminContainer,
+    tablaParticipantes, modalRegistrarVenta, formRegistrarVenta,
+    camposNumerosDinamicos, listaNumerosModal,
+    modalIngresarDatos, formIngresarDatos,
+    btnSuerte, modalSuerte, modalSuerteNumero,
+    // --- NUEVO ELEMENTO ---
+    imgSuerte // <-- Pasar la imagen del dado
   });
   
   registrarEventListeners();
   
-  // Corrección Menú PC (Debe iniciar abierto)
+  // Corrección Menú PC
   if (window.innerWidth < 768) {
     sidebar?.classList.add('collapsed');
   } else {
@@ -142,7 +113,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (viewParam && document.getElementById(viewParam)) {
     initialView = viewParam;
   }
-  actualizarVistaActiva(initialView);
+  actualizarVistaActiva(initialView, true); 
   
   if (modalParam) {
     if (modalParam === 'admin' && modalAdminLogin) {
@@ -157,7 +128,7 @@ document.addEventListener('DOMContentLoaded', () => {
   escucharBoletos();
   escucharParticipantes();
 
-  // Slider (esto es local, se queda igual)
+  // Slider
   slides = document.querySelectorAll('.slider-image');
   slideCount = slides.length;
   if (slideCount > 0) {
@@ -180,30 +151,20 @@ document.addEventListener('DOMContentLoaded', () => {
    Datos (Ahora con Firebase)
    ========================================================= */
 
-/**
- * Escucha los cambios en la colección 'boletos' en tiempo real
- */
 function escucharBoletos() {
-  // Creamos una consulta (query) a la colección 'boletos', ordenados por 'numero'
   const q = query(collection(db, "boletos"), orderBy("numero", "asc"));
-
   onSnapshot(q, (querySnapshot) => {
     const boletosTemporales = [];
     querySnapshot.forEach((doc) => {
-      // guardamos el id del documento (ej: "01", "02")
       boletosTemporales.push({ id: doc.id, ...doc.data() });
     });
-    
-    // Vaciamos el array global y lo llenamos con los datos frescos
-    boletosRifa.length = 0; // Vacía el array sin perder la referencia
+    boletosRifa.length = 0; 
     boletosRifa.push(...boletosTemporales);
     
-    // Ahora que TENEMOS datos, actualizamos la UI
     renderCuadriculaPublica();
-    renderCuadriculaAdmin('todos'); // O el filtro que esté activo
+    renderCuadriculaAdmin('todos'); 
     actualizarSeleccionPublica();
     
-    // (Opcional) si el modal está abierto, actualiza la lista de disponibles
     const modalLista = document.getElementById('lista-numeros-disponibles-modal');
     if (modalLista && modalRegistrarVenta.classList.contains('flex')) {
         const disponibles = boletosRifa.filter(b => b.estado === 'disponible').map(b => b.numero);
@@ -212,30 +173,22 @@ function escucharBoletos() {
   });
 }
 
-/**
- * Escucha los cambios en la colección 'participantes' en tiempo real
- */
 function escucharParticipantes() {
   const q = query(collection(db, "participantes"), orderBy("nombre", "asc"));
-  
   onSnapshot(q, (querySnapshot) => {
     const participantesTemporales = [];
     querySnapshot.forEach((doc) => {
       participantesTemporales.push({ id: doc.id, ...doc.data() });
     });
-    
-    // Llenamos el array de participantes
     participantes.length = 0;
     participantes.push(...participantesTemporales);
-    
-    // Actualizamos la tabla de participantes
     renderTablaParticipantes();
   });
 }
 
 
 /* =========================================================
-   Cacheo de elementos DOM (Sin cambios)
+   Cacheo de elementos DOM
    ========================================================= */
 function cachearElementosDOM() {
   sidebar = document.getElementById('sidebar');
@@ -277,16 +230,25 @@ function cachearElementosDOM() {
   adminLinksContainer = document.getElementById('admin-links-container');
   btnDarkMode = document.getElementById('btn-dark-mode');
   iconDarkMode = document.getElementById('icon-dark-mode');
+  
+  modalIngresarDatos = document.getElementById('modal-ingresar-datos');
+  formIngresarDatos = document.getElementById('form-ingresar-datos');
+
+  btnSuerte = document.getElementById('btn-suerte');
+  modalSuerte = document.getElementById('modal-suerte');
+  modalSuerteNumero = document.getElementById('modal-suerte-numero');
+  
+  // --- CACHEAR IMAGEN DEL DADO ---
+  imgSuerte = document.getElementById('img-suerte');
 }
 
 /* =========================================================
-   Registro de event listeners (Sin cambios)
+   Registro de event listeners
    ========================================================= */
 function registrarEventListeners() {
   // --- UI Común (Sidebar, DarkMode) ---
   toggleSidebarGlobalBtn?.addEventListener('click', () => toggleSidebarGlobal(sidebar, toggleSidebarGlobalBtn, null));
   toggleSidebarMobileBtn?.addEventListener('click', () => toggleSidebarGlobal(sidebar, toggleSidebarGlobalBtn, null));
-  
   registerDarkModeHandler(btnDarkMode, iconDarkMode);
 
   // --- Navegación SPA ---
@@ -312,10 +274,18 @@ function registrarEventListeners() {
   // --- Lógica de Rifa (Eventos delegados a módulos importados) ---
   cuadriculaPublica?.addEventListener('click', handleSeleccionPublica);
   switchOcultarComprados?.addEventListener('change', renderCuadriculaPublica);
+  
+  // --- Flujo de Pago ---
   btnProcederPago?.addEventListener('click', handleProcederPago);
+  formIngresarDatos?.addEventListener('submit', handleGuardarCompraUsuario);
+
+  // --- Botón Suerte ---
+  btnSuerte?.addEventListener('click', handleBotonSuerte); // <-- El listener se queda aquí
+
+  // --- ADMIN ---
   filtrosAdminContainer?.addEventListener('click', handleFiltroAdmin);
   btnRegistrarVentaGlobal?.addEventListener('click', () => abrirModalRegistro());
-  formRegistrarVenta?.addEventListener('submit', handleGuardarVenta); // Esto llama a la función en tablas-numericas.js
+  formRegistrarVenta?.addEventListener('submit', handleGuardarVenta); 
   btnAnadirNumero?.addEventListener('click', () => anadirCampoNumero(null));
 
   // --- Modales (Lógica local) ---
@@ -378,8 +348,14 @@ function registrarEventListeners() {
    Funciones UI: (Vistas, Toast, Compartir)
    ========================================================= */
 
-function actualizarVistaActiva(viewId) {
-  if (mainContent) mainContent.scrollTop = 0;
+/**
+ * Actualiza la vista activa y muestra/oculta el botón de suerte.
+ * @param {string} viewId - El ID de la vista a mostrar.
+ * @param {boolean} [isInitialLoad=false] - Indica si es la carga inicial de la página.
+ */
+function actualizarVistaActiva(viewId, isInitialLoad = false) {
+  if (mainContent && !isInitialLoad) mainContent.scrollTop = 0;
+  
   views.forEach(view => view.classList.remove('active'));
   document.getElementById(viewId)?.classList.add('active');
 
@@ -389,9 +365,21 @@ function actualizarVistaActiva(viewId) {
       link.classList.add('active', 'bg-fuchsia-600');
     }
   });
+
+  // --- LÓGICA DEL BOTÓN SUERTE ---
+  if (viewId === 'view-comprar-numeros') {
+    btnSuerte?.classList.remove('hidden');
+    // Pequeña animación de entrada
+    setTimeout(() => {
+        btnSuerte?.classList.remove('translate-y-1/2');
+        btnSuerte?.classList.add('-translate-y-1/2', 'hover:-translate-y-[55%]');
+    }, 50);
+  } else {
+    btnSuerte?.classList.add('hidden', 'translate-y-1/2');
+    btnSuerte?.classList.remove('-translate-y-1/2', 'hover:-translate-y-[55%]');
+  }
 }
 
-// (Corrección Toast Fijo)
 function mostrarToast(mensaje, esError = false) {
   if (!toastEl || !toastMsg) return;
 
@@ -410,12 +398,10 @@ function mostrarToast(mensaje, esError = false) {
     icon?.classList.add('fa-solid', 'fa-check');
   }
 
-  // Hacer el toast visible Y CLICABLE
   toastEl.classList.remove('opacity-0', 'pointer-events-none');
   toastEl.classList.add('opacity-100', 'pointer-events-auto');
   
   setTimeout(() => { 
-    // Ocultar el toast Y DEVOLVERLO A "INTOCABLE"
     toastEl.classList.remove('opacity-100', 'pointer-events-auto');
     toastEl.classList.add('opacity-0', 'pointer-events-none');
   }, 2000);

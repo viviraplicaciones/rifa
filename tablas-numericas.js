@@ -1,10 +1,7 @@
 /* ========================================
-   tablas-numericas.js (Conectado a Firebase)
+   tablas-numericas.js (v28 - Animación Suerte)
    ======================================= */
 
-// =========================================================
-// INICIO DE CAMBIOS FIREBASE
-// =========================================================
 // Importar la base de datos (db) y funciones de Firestore
 import { 
     db, 
@@ -13,20 +10,22 @@ import {
     doc, 
     writeBatch 
 } from './firebase-init.js';
-// =========================================================
 
-// Variables de estado y DOM (privadas del módulo)
+// Variables de estado y DOM
 let _boletosRifa = [];
 let _participantes = [];
 let _PRECIO_BOLETO = 6000;
 let _numerosSeleccionadosPublica = [];
 let _mostrarToast = () => {};
+let _isSuerteDisabled = false; // Previene doble clic en el botón Suerte
 
 // DOM Elements
 let _cuadriculaPublica, _switchOcultarComprados, _listaSeleccionPublica, _badgeCantidad,
     _subtotalEl, _btnProcederPago, _precioNumeroEl, _cuadriculaAdmin, _filtrosAdminContainer,
     _tablaParticipantes, _modalRegistrarVenta, _formRegistrarVenta,
-    _camposNumerosDinamicos, _listaNumerosModal;
+    _camposNumerosDinamicos, _listaNumerosModal,
+    _modalIngresarDatos, _formIngresarDatos,
+    _btnSuerte, _modalSuerte, _modalSuerteNumero, _imgSuerte;
 
 
 /**
@@ -54,6 +53,12 @@ export function initRifa(config) {
   _formRegistrarVenta = config.formRegistrarVenta;
   _camposNumerosDinamicos = config.camposNumerosDinamicos;
   _listaNumerosModal = config.listaNumerosModal;
+  _modalIngresarDatos = config.modalIngresarDatos;
+  _formIngresarDatos = config.formIngresarDatos;
+  _btnSuerte = config.btnSuerte;
+  _modalSuerte = config.modalSuerte;
+  _modalSuerteNumero = config.modalSuerteNumero;
+  _imgSuerte = config.imgSuerte; // <-- Imagen del dado
 
   // Inicializar precio en la UI
   if (_precioNumeroEl) {
@@ -63,7 +68,6 @@ export function initRifa(config) {
 
 /* =========================================================
    Rifas (cuadrícula pública)
-   (Las funciones de render y selección no cambian)
    ========================================================= */
 export function renderCuadriculaPublica() {
   if (!_cuadriculaPublica) return;
@@ -160,26 +164,126 @@ export function actualizarSeleccionPublica() {
   _subtotalEl.textContent = `$ ${(cantidad * _PRECIO_BOLETO).toLocaleString('es-CO')}`;
 }
 
-/**
- * Lógica del botón "Proceder al Pago"
- * (Esta función la cambiaremos en el siguiente paso)
- */
-export function handleProcederPago() {
-  if (_numerosSeleccionadosPublica.length > 0) {
-    _mostrarToast(`Simulación de pago para ${_numerosSeleccionadosPublica.length} números.`);
-    
-    _numerosSeleccionadosPublica.length = 0; 
-    
+
+/* =========================================================
+   BOTÓN DE LA SUERTE (CON ANIMACIÓN)
+   ========================================================= */
+export function handleBotonSuerte() {
+  // Si la animación ya está ocurriendo, no hacer nada
+  if (_isSuerteDisabled) return;
+
+  const disponibles = getNumerosDisponibles();
+  const numerosParaElegir = disponibles.filter(num => !_numerosSeleccionadosPublica.includes(num));
+
+  if (numerosParaElegir.length === 0) {
+    _mostrarToast("¡No quedan números disponibles por elegir!", true);
+    return;
+  }
+  
+  // 1. Deshabilitar el botón y empezar la animación
+  _isSuerteDisabled = true;
+  if (_imgSuerte) {
+    // Forzar el reinicio del GIF añadiendo un timestamp
+    _imgSuerte.src = `dado.gif?t=${new Date().getTime()}`;
+  }
+
+  // 2. Esperar a que la animación ocurra
+  setTimeout(() => {
+    // 3. Seleccionar el número
+    const randomIndex = Math.floor(Math.random() * numerosParaElegir.length);
+    const numeroSuerte = numerosParaElegir[randomIndex];
+    _numerosSeleccionadosPublica.push(numeroSuerte);
+
+    // 4. Mostrar el modal de resultado
+    if (_modalSuerteNumero) _modalSuerteNumero.textContent = numeroSuerte;
+    _modalSuerte?.classList.add('flex');
+
+    // 5. Refrescar la UI
     renderCuadriculaPublica();
     actualizarSeleccionPublica();
+    
+    // 6. Volver a la imagen estática
+    if (_imgSuerte) {
+      _imgSuerte.src = 'dado.png';
+    }
+    
+    // 7. Ocultar el modal de resultado después de 2 seg
+    setTimeout(() => {
+      _modalSuerte?.classList.remove('flex');
+    }, 2000);
+
+    // 8. Rehabilitar el botón
+    _isSuerteDisabled = false;
+
+  }, 1500); // 1.5 segundos de animación del dado
+}
+
+
+/* =========================================================
+   FLUJO DE PAGO (Usuario)
+   ========================================================= */
+
+export function handleProcederPago() {
+  if (_numerosSeleccionadosPublica.length > 0) {
+    _modalIngresarDatos?.classList.add('flex');
+    _formIngresarDatos?.reset();
+    document.getElementById('usuario-nombre')?.focus();
   } else {
     _mostrarToast("Por favor, selecciona al menos un número.", true);
   }
 }
 
+export async function handleGuardarCompraUsuario(e) {
+  e.preventDefault();
+  if (!_formIngresarDatos || _numerosSeleccionadosPublica.length === 0) return;
+
+  const nombre = document.getElementById('usuario-nombre').value;
+  const telefono = document.getElementById('usuario-telefono').value;
+  const estado = "revisando"; 
+
+  for (const numero of _numerosSeleccionadosPublica) {
+    const boleto = _boletosRifa.find(b => b.numero === numero);
+    if (!boleto || boleto.estado !== 'disponible') {
+        _mostrarToast(`El número ${numero} ya no está disponible.`, true);
+        return; 
+    }
+  }
+
+  try {
+    const nuevoParticipante = {
+      nombre: nombre,
+      telefono: telefono,
+      numeros: _numerosSeleccionadosPublica,
+      estado: estado
+    };
+    
+    const docRef = await addDoc(collection(db, "participantes"), nuevoParticipante);
+
+    const batch = writeBatch(db);
+    _numerosSeleccionadosPublica.forEach(numero => {
+      const boletoRef = doc(db, "boletos", numero); 
+      batch.update(boletoRef, {
+        estado: estado,
+        participanteId: docRef.id 
+      });
+    });
+    
+    await batch.commit();
+
+    _modalIngresarDatos.classList.remove('flex');
+    _numerosSeleccionadosPublica.length = 0; 
+    
+    _mostrarToast("¡Números apartados! Te contactaremos pronto.");
+    
+  } catch (error) {
+    console.error("Error al guardar la compra: ", error);
+    _mostrarToast("Error al apartar los números. Intenta de nuevo.", true);
+  }
+}
+
+
 /* =========================================================
    Admin: cuadricula admin y filtros
-   (Las funciones de render no cambian)
    ========================================================= */
 export function renderCuadriculaAdmin(filtro) {
   if (!_cuadriculaAdmin) return;
@@ -215,7 +319,6 @@ export function handleFiltroAdmin(e) {
 
 /* =========================================================
    Tabla participantes
-   (La función de render no cambia)
    ========================================================= */
 export function renderTablaParticipantes() {
   if (!_tablaParticipantes) return; 
@@ -229,7 +332,7 @@ export function renderTablaParticipantes() {
     `;
     return;
   }
-  // ... (El resto de la función renderTablaParticipantes es idéntica) ...
+
   _participantes.forEach(p => {
     let colorEstado = 'text-gray-700 dark:text-gray-300';
     let bgEstado = 'bg-gray-100 dark:bg-gray-600';
@@ -247,9 +350,12 @@ export function renderTablaParticipantes() {
         bgEstado = 'bg-red-100 dark:bg-red-900';
         break;
     }
+    
     const estadoTexto = p.estado.charAt(0).toUpperCase() + p.estado.slice(1);
+
     const card = document.createElement('div');
     card.className = "bg-gray-50 dark:bg-gray-900 rounded-lg p-4 shadow";
+    
     card.innerHTML = `
       <div class="space-y-2 text-sm">
         <p class="font-bold text-gray-900 dark:text-white truncate" title="${p.nombre}">
@@ -272,9 +378,11 @@ export function renderTablaParticipantes() {
         </div>
       </div>
     `;
+    
     card.classList.add('md:hidden');
+    
     const tableRow = document.createElement('div');
-    tableRow.className = "hidden md:grid grid-cols-4 gap-4 items-center text-xs md:text-sm p-4";
+    tableRow.className = "hidden md:grid grid-cols-4 gap-4 items-center text-xs md:text-sm p-4"; 
     tableRow.innerHTML = `
         <div class="font-medium text-gray-900 dark:text-white truncate" title="${p.nombre}">
           ${p.nombre}
@@ -291,18 +399,20 @@ export function renderTablaParticipantes() {
           </span>
         </div>
     `;
-    _tablaParticipantes.appendChild(card);
-    _tablaParticipantes.appendChild(tableRow);
+
+    _tablaParticipantes.appendChild(card); 
+    _tablaParticipantes.appendChild(tableRow); 
+    
     const separator = document.createElement('hr');
     separator.className = "hidden md:block dark:border-gray-700";
     _tablaParticipantes.appendChild(separator);
+
   });
 }
 
 
 /* =========================================================
    Modal registro de venta (Admin)
-   (Las funciones del modal no cambian, excepto handleGuardarVenta)
    ========================================================= */
 export function abrirModalRegistro() {
   if (!_modalRegistrarVenta || !_formRegistrarVenta || !_camposNumerosDinamicos) return;
@@ -314,6 +424,7 @@ export function abrirModalRegistro() {
 }
 
 function getNumerosDisponibles() {
+  // Esta función ahora es usada por 'handleBotonSuerte' y 'abrirModalRegistro'
   return _boletosRifa.filter(b => b.estado === 'disponible').map(b => b.numero);
 }
 
@@ -328,16 +439,20 @@ function actualizarListaDisponiblesModal() {
 }
 
 export function anadirCampoNumero(numeroSeleccionado) {
-  // ... (Función sin cambios) ...
   if (!_camposNumerosDinamicos) return;
+
   const numerosYaSeleccionadosEnModal = Array.from(_camposNumerosDinamicos.querySelectorAll('select'))
     .map(select => select.value)
     .filter(val => val !== '');
+
   const numerosDisponibles = getNumerosDisponibles().filter(num => !numerosYaSeleccionadosEnModal.includes(num) || num === numeroSeleccionado);
+
   const divCampo = document.createElement('div');
   divCampo.className = 'flex items-center gap-2';
+
   const select = document.createElement('select');
   select.className = 'w-full p-3 border border-gray-300 rounded-lg text-gray-900 bg-white dark:bg-gray-700 dark:border-gray-600 dark:text-white select-numero-dinamico';
+
   let optionsHTML = '<option value="" disabled>Selecciona un número</option>';
   if (numeroSeleccionado) {
     optionsHTML += `<option value="${numeroSeleccionado}" selected>${numeroSeleccionado}</option>`;
@@ -347,44 +462,45 @@ export function anadirCampoNumero(numeroSeleccionado) {
   });
   select.innerHTML = optionsHTML;
   if (!numeroSeleccionado) select.value = "";
+
   select.addEventListener('change', () => { actualizarSelectsDinamicos(); });
+
   const btnEliminar = document.createElement('button');
   btnEliminar.type = 'button';
   btnEliminar.className = 'text-red-500 hover:text-red-700 p-2';
   btnEliminar.innerHTML = '<i class="fa-solid fa-trash"></i>';
   btnEliminar.onclick = () => { divCampo.remove(); actualizarSelectsDinamicos(); };
+
   divCampo.appendChild(select);
   divCampo.appendChild(btnEliminar);
   _camposNumerosDinamicos.appendChild(divCampo);
 }
 
 function actualizarSelectsDinamicos() {
-  // ... (Función sin cambios) ...
   if (!_camposNumerosDinamicos) return;
+
   const selects = _camposNumerosDinamicos.querySelectorAll('.select-numero-dinamico');
   const valoresSeleccionados = Array.from(selects).map(s => s.value).filter(v => v !== '');
   const numerosDisponibles = getNumerosDisponibles();
+
   selects.forEach(select => {
     const valorActual = select.value;
+    
     let optionsHTML = '<option value="" disabled>Selecciona un número</option>';
+
     if (valorActual) optionsHTML += `<option value="${valorActual}" selected>${valorActual}</option>`;
+
     numerosDisponibles.forEach(num => {
       if (!valoresSeleccionados.includes(num) || num === valorActual) {
         if (num !== valorActual) optionsHTML += `<option value="${num}">${num}</option>`;
       }
     });
+
     select.innerHTML = optionsHTML;
     select.value = valorActual;
   });
 }
 
-
-// =========================================================
-// CAMBIO IMPORTANTE: 'handleGuardarVenta' AHORA USA FIREBASE
-// =========================================================
-/**
- * Guarda el nuevo participante y actualiza los boletos en Firebase.
- */
 export async function handleGuardarVenta(e) {
   e.preventDefault();
   if (!_formRegistrarVenta) return;
@@ -401,7 +517,6 @@ export async function handleGuardarVenta(e) {
     return;
   }
   
-  // Verificación (se mantiene igual, usa el array local _boletosRifa que está sincronizado)
   for (const numero of numerosSeleccionados) {
     const boleto = _boletosRifa.find(b => b.numero === numero);
     if (!boleto || boleto.estado !== 'disponible') {
@@ -411,9 +526,7 @@ export async function handleGuardarVenta(e) {
     }
   }
 
-  // --- Inicio de lógica de Firebase ---
   try {
-    // 1. Crear el nuevo documento de participante
     const nuevoParticipante = {
       nombre: nombre,
       telefono: telefono,
@@ -421,34 +534,23 @@ export async function handleGuardarVenta(e) {
       estado: estado
     };
     
-    // Añade el participante a la colección 'participantes' y obtiene la referencia
     const docRef = await addDoc(collection(db, "participantes"), nuevoParticipante);
 
-    // 2. Actualizar los boletos usando un Lote (Batch)
-    // Esto es "atómico": o se actualizan TODOS los boletos, o no se actualiza NINGUNO.
     const batch = writeBatch(db);
     
     numerosSeleccionados.forEach(numero => {
-      // El ID del documento del boleto es su número (ej: "01", "02")
       const boletoRef = doc(db, "boletos", numero); 
       batch.update(boletoRef, {
         estado: estado,
-        participanteId: docRef.id // Guardamos el ID del participante que acabamos de crear
+        participanteId: docRef.id 
       });
     });
     
-    // 3. Ejecutar el lote
     await batch.commit();
-
-    // --- Fin de lógica de Firebase ---
-    
-    // YA NO NECESITAMOS LLAMAR A LOS RENDERERS
-    // El 'onSnapshot' en script.js lo hará automáticamente
     
     _modalRegistrarVenta.classList.remove('flex');
     _mostrarToast("¡Venta registrada con éxito!");
 
-    // (Esto sí se queda)
     _filtrosAdminContainer.querySelectorAll('.filtro-btn-admin').forEach(btn => btn.classList.remove('filtro-admin-activo'));
     const todosBtn = document.querySelector('.filtro-btn-admin[data-filtro="todos"]');
     if (todosBtn) todosBtn.classList.add('filtro-admin-activo');

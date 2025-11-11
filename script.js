@@ -1,6 +1,15 @@
 /* =========================================================
-   script.js (v24 - Corrección Menú PC)
+   script.js (v25 - Conectado a Firebase)
    ========================================================= */
+
+// Importar la base de datos (db) y funciones de Firebase
+import { 
+    db, 
+    collection, 
+    onSnapshot, 
+    query, 
+    orderBy 
+} from './firebase-init.js';
 
 // Importar lógica de UI compartida
 import { toggleSidebarGlobal, initDarkMode, registerDarkModeHandler } from './common-ui.js';
@@ -21,7 +30,7 @@ import {
 } from './tablas-numericas.js';
 
 /* ---------------------------------------------------------
-   Estado Global de la Aplicación
+   Estado Global de la Aplicación (Ahora poblado por Firebase)
    --------------------------------------------------------- */
 let boletosRifa = [];
 let participantes = [];
@@ -34,7 +43,6 @@ let numerosSeleccionadosPublica = [];
 let sidebar;
 let toggleSidebarGlobalBtn;
 let toggleSidebarMobileBtn;
-// 'sidebarOverlay' se eliminó intencionalmente
 let mainContent;
 let navLinks;
 let views;
@@ -75,11 +83,13 @@ let slides;
 let currentSlide = 0;
 let slideCount = 0;
 
+
 /* =========================================================
    Inicialización al cargar el documento
    ========================================================= */
 document.addEventListener('DOMContentLoaded', () => {
-  inicializarBoletos();
+  // YA NO INICIALIZAMOS BOLETOS LOCALMENTE
+  
   cachearElementosDOM();
   
   // Inyectar dependencias en el módulo de UI común
@@ -110,20 +120,14 @@ document.addEventListener('DOMContentLoaded', () => {
   
   registrarEventListeners();
   
-  // =========================================================
-  // CORRECCIÓN MENÚ PC (Debe iniciar abierto)
-  // =========================================================
+  // Corrección Menú PC (Debe iniciar abierto)
   if (window.innerWidth < 768) {
-    // Es Móvil: Inicia colapsado
     sidebar?.classList.add('collapsed');
   } else {
-    // Es PC: Inicia abierto
     sidebar?.classList.remove('collapsed');
-    // Asegurar que el botón de toggle esté en la posición correcta
     toggleSidebarGlobalBtn?.classList.remove('left-4', 'md:left-4');
     toggleSidebarGlobalBtn?.classList.add('md:left-[15rem]');
   }
-  // =========================================================
   
   if (sessionStorage.getItem('isAdmin') === 'true') {
     adminLinksContainer?.classList.remove('hidden');
@@ -149,13 +153,11 @@ document.addEventListener('DOMContentLoaded', () => {
     window.history.replaceState({}, document.title, window.location.pathname);
   }
   
-  // Renderizados iniciales
-  renderCuadriculaPublica();
-  renderCuadriculaAdmin('todos');
-  renderTablaParticipantes();
-  actualizarSeleccionPublica();
+  // Empezar a escuchar los datos de Firebase
+  escucharBoletos();
+  escucharParticipantes();
 
-  // Slider
+  // Slider (esto es local, se queda igual)
   slides = document.querySelectorAll('.slider-image');
   slideCount = slides.length;
   if (slideCount > 0) {
@@ -175,25 +177,70 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 /* =========================================================
-   Datos
+   Datos (Ahora con Firebase)
    ========================================================= */
-function inicializarBoletos() {
-  boletosRifa = [];
-  for (let i = 0; i < 100; i++) {
-    const numero = String(i).padStart(2, '0');
-    boletosRifa.push({ id: numero, numero: numero, estado: 'disponible', participanteId: null });
-  }
-  participantes = [];
+
+/**
+ * Escucha los cambios en la colección 'boletos' en tiempo real
+ */
+function escucharBoletos() {
+  // Creamos una consulta (query) a la colección 'boletos', ordenados por 'numero'
+  const q = query(collection(db, "boletos"), orderBy("numero", "asc"));
+
+  onSnapshot(q, (querySnapshot) => {
+    const boletosTemporales = [];
+    querySnapshot.forEach((doc) => {
+      // guardamos el id del documento (ej: "01", "02")
+      boletosTemporales.push({ id: doc.id, ...doc.data() });
+    });
+    
+    // Vaciamos el array global y lo llenamos con los datos frescos
+    boletosRifa.length = 0; // Vacía el array sin perder la referencia
+    boletosRifa.push(...boletosTemporales);
+    
+    // Ahora que TENEMOS datos, actualizamos la UI
+    renderCuadriculaPublica();
+    renderCuadriculaAdmin('todos'); // O el filtro que esté activo
+    actualizarSeleccionPublica();
+    
+    // (Opcional) si el modal está abierto, actualiza la lista de disponibles
+    const modalLista = document.getElementById('lista-numeros-disponibles-modal');
+    if (modalLista && modalRegistrarVenta.classList.contains('flex')) {
+        const disponibles = boletosRifa.filter(b => b.estado === 'disponible').map(b => b.numero);
+        modalLista.textContent = `Disponibles: ${disponibles.join(', ')}`;
+    }
+  });
 }
 
+/**
+ * Escucha los cambios en la colección 'participantes' en tiempo real
+ */
+function escucharParticipantes() {
+  const q = query(collection(db, "participantes"), orderBy("nombre", "asc"));
+  
+  onSnapshot(q, (querySnapshot) => {
+    const participantesTemporales = [];
+    querySnapshot.forEach((doc) => {
+      participantesTemporales.push({ id: doc.id, ...doc.data() });
+    });
+    
+    // Llenamos el array de participantes
+    participantes.length = 0;
+    participantes.push(...participantesTemporales);
+    
+    // Actualizamos la tabla de participantes
+    renderTablaParticipantes();
+  });
+}
+
+
 /* =========================================================
-   Cacheo de elementos DOM
+   Cacheo de elementos DOM (Sin cambios)
    ========================================================= */
 function cachearElementosDOM() {
   sidebar = document.getElementById('sidebar');
   toggleSidebarGlobalBtn = document.getElementById('toggle-sidebar-global');
   toggleSidebarMobileBtn = document.getElementById('toggle-sidebar-mobile');
-  // sidebarOverlay se eliminó
   mainContent = document.getElementById('main-content');
   navLinks = document.querySelectorAll('.nav-link');
   views = document.querySelectorAll('.view');
@@ -233,7 +280,7 @@ function cachearElementosDOM() {
 }
 
 /* =========================================================
-   Registro de event listeners
+   Registro de event listeners (Sin cambios)
    ========================================================= */
 function registrarEventListeners() {
   // --- UI Común (Sidebar, DarkMode) ---
@@ -249,7 +296,6 @@ function registrarEventListeners() {
       if (viewId) {
         e.preventDefault();
         actualizarVistaActiva(viewId);
-        // Esta lógica es solo para móvil, no afectará a PC
         if (window.innerWidth < 768 && sidebar && !sidebar.classList.contains('collapsed')) {
           toggleSidebarGlobal(sidebar, toggleSidebarGlobalBtn, null);
         }
@@ -259,7 +305,6 @@ function registrarEventListeners() {
 
   // --- Toast ---
   toastCloseBtn?.addEventListener('click', () => {
-    // Corrección Toast (Añadir opacity-0 al cerrar)
     toastEl.classList.remove('opacity-100', 'pointer-events-auto');
     toastEl.classList.add('opacity-0', 'pointer-events-none');
   });
@@ -270,7 +315,7 @@ function registrarEventListeners() {
   btnProcederPago?.addEventListener('click', handleProcederPago);
   filtrosAdminContainer?.addEventListener('click', handleFiltroAdmin);
   btnRegistrarVentaGlobal?.addEventListener('click', () => abrirModalRegistro());
-  formRegistrarVenta?.addEventListener('submit', handleGuardarVenta);
+  formRegistrarVenta?.addEventListener('submit', handleGuardarVenta); // Esto llama a la función en tablas-numericas.js
   btnAnadirNumero?.addEventListener('click', () => anadirCampoNumero(null));
 
   // --- Modales (Lógica local) ---
@@ -346,9 +391,7 @@ function actualizarVistaActiva(viewId) {
   });
 }
 
-// =========================================================
-// CORRECCIÓN TOAST (Se mantiene la v23)
-// =========================================================
+// (Corrección Toast Fijo)
 function mostrarToast(mensaje, esError = false) {
   if (!toastEl || !toastMsg) return;
 

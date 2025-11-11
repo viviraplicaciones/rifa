@@ -1,7 +1,19 @@
 /* ========================================
-   tablas-numericas.js
-   Lógica de la Rifa (Cuadrículas, Selección, Admin)
+   tablas-numericas.js (Conectado a Firebase)
    ======================================= */
+
+// =========================================================
+// INICIO DE CAMBIOS FIREBASE
+// =========================================================
+// Importar la base de datos (db) y funciones de Firestore
+import { 
+    db, 
+    collection, 
+    addDoc, 
+    doc, 
+    writeBatch 
+} from './firebase-init.js';
+// =========================================================
 
 // Variables de estado y DOM (privadas del módulo)
 let _boletosRifa = [];
@@ -19,8 +31,6 @@ let _cuadriculaPublica, _switchOcultarComprados, _listaSeleccionPublica, _badgeC
 
 /**
  * Inicializa el módulo de la rifa con las dependencias necesarias.
- * (Dependency Injection)
- * @param {object} config - Objeto con el estado, elementos DOM y utilidades.
  */
 export function initRifa(config) {
   _boletosRifa = config.boletosRifa;
@@ -53,6 +63,7 @@ export function initRifa(config) {
 
 /* =========================================================
    Rifas (cuadrícula pública)
+   (Las funciones de render y selección no cambian)
    ========================================================= */
 export function renderCuadriculaPublica() {
   if (!_cuadriculaPublica) return;
@@ -132,7 +143,6 @@ export function actualizarSeleccionPublica() {
       closeBtn.onclick = (e) => {
         e.stopPropagation();
         const numAEliminar = tiquet.dataset.numero;
-        // Modificar el array en lugar de re-asignarlo
         const idx = _numerosSeleccionadosPublica.indexOf(numAEliminar);
         if (idx > -1) _numerosSeleccionadosPublica.splice(idx, 1);
         
@@ -152,12 +162,12 @@ export function actualizarSeleccionPublica() {
 
 /**
  * Lógica del botón "Proceder al Pago"
+ * (Esta función la cambiaremos en el siguiente paso)
  */
 export function handleProcederPago() {
   if (_numerosSeleccionadosPublica.length > 0) {
     _mostrarToast(`Simulación de pago para ${_numerosSeleccionadosPublica.length} números.`);
     
-    // Importante: Modificar el array "in-place" para mantener la referencia
     _numerosSeleccionadosPublica.length = 0; 
     
     renderCuadriculaPublica();
@@ -169,6 +179,7 @@ export function handleProcederPago() {
 
 /* =========================================================
    Admin: cuadricula admin y filtros
+   (Las funciones de render no cambian)
    ========================================================= */
 export function renderCuadriculaAdmin(filtro) {
   if (!_cuadriculaAdmin) return;
@@ -204,6 +215,7 @@ export function handleFiltroAdmin(e) {
 
 /* =========================================================
    Tabla participantes
+   (La función de render no cambia)
    ========================================================= */
 export function renderTablaParticipantes() {
   if (!_tablaParticipantes) return; 
@@ -217,7 +229,7 @@ export function renderTablaParticipantes() {
     `;
     return;
   }
-
+  // ... (El resto de la función renderTablaParticipantes es idéntica) ...
   _participantes.forEach(p => {
     let colorEstado = 'text-gray-700 dark:text-gray-300';
     let bgEstado = 'bg-gray-100 dark:bg-gray-600';
@@ -235,9 +247,7 @@ export function renderTablaParticipantes() {
         bgEstado = 'bg-red-100 dark:bg-red-900';
         break;
     }
-    
     const estadoTexto = p.estado.charAt(0).toUpperCase() + p.estado.slice(1);
-
     const card = document.createElement('div');
     card.className = "bg-gray-50 dark:bg-gray-900 rounded-lg p-4 shadow";
     card.innerHTML = `
@@ -263,7 +273,6 @@ export function renderTablaParticipantes() {
       </div>
     `;
     card.classList.add('md:hidden');
-    
     const tableRow = document.createElement('div');
     tableRow.className = "hidden md:grid grid-cols-4 gap-4 items-center text-xs md:text-sm p-4";
     tableRow.innerHTML = `
@@ -282,19 +291,28 @@ export function renderTablaParticipantes() {
           </span>
         </div>
     `;
-
     _tablaParticipantes.appendChild(card);
     _tablaParticipantes.appendChild(tableRow);
-    
     const separator = document.createElement('hr');
     separator.className = "hidden md:block dark:border-gray-700";
     _tablaParticipantes.appendChild(separator);
   });
 }
 
+
 /* =========================================================
    Modal registro de venta (Admin)
+   (Las funciones del modal no cambian, excepto handleGuardarVenta)
    ========================================================= */
+export function abrirModalRegistro() {
+  if (!_modalRegistrarVenta || !_formRegistrarVenta || !_camposNumerosDinamicos) return;
+  _formRegistrarVenta.reset();
+  _camposNumerosDinamicos.innerHTML = '';
+  actualizarListaDisponiblesModal();
+  anadirCampoNumero(null);
+  _modalRegistrarVenta.classList.add('flex');
+}
+
 function getNumerosDisponibles() {
   return _boletosRifa.filter(b => b.estado === 'disponible').map(b => b.numero);
 }
@@ -309,59 +327,17 @@ function actualizarListaDisponiblesModal() {
   }
 }
 
-export function abrirModalRegistro() {
-  if (!_modalRegistrarVenta || !_formRegistrarVenta || !_camposNumerosDinamicos) return;
-  _formRegistrarVenta.reset();
-  _camposNumerosDinamicos.innerHTML = '';
-  actualizarListaDisponiblesModal();
-  anadirCampoNumero(null);
-  _modalRegistrarVenta.classList.add('flex');
-}
-
-function actualizarSelectsDinamicos() {
-  if (!_camposNumerosDinamicos) return;
-
-  const selects = _camposNumerosDinamicos.querySelectorAll('.select-numero-dinamico');
-  const valoresSeleccionados = Array.from(selects).map(s => s.value).filter(v => v !== '');
-  const numerosDisponibles = getNumerosDisponibles();
-
-  selects.forEach(select => {
-    const valorActual = select.value;
-    
-    let optionsHTML = '<option value="" disabled>Selecciona un número</option>';
-    if (valorActual) optionsHTML += `<option value="${valorActual}" selected>${valorActual}</option>`;
-
-    numerosDisponibles.forEach(num => {
-      if (!valoresSeleccionados.includes(num) || num === valorActual) {
-        if (num !== valorActual) optionsHTML += `<option value="${num}">${num}</option>`;
-      }
-    });
-
-    select.innerHTML = optionsHTML;
-    select.value = valorActual;
-  });
-}
-
 export function anadirCampoNumero(numeroSeleccionado) {
+  // ... (Función sin cambios) ...
   if (!_camposNumerosDinamicos) return;
-
   const numerosYaSeleccionadosEnModal = Array.from(_camposNumerosDinamicos.querySelectorAll('select'))
     .map(select => select.value)
     .filter(val => val !== '');
-
   const numerosDisponibles = getNumerosDisponibles().filter(num => !numerosYaSeleccionadosEnModal.includes(num) || num === numeroSeleccionado);
-
   const divCampo = document.createElement('div');
   divCampo.className = 'flex items-center gap-2';
-
   const select = document.createElement('select');
   select.className = 'w-full p-3 border border-gray-300 rounded-lg text-gray-900 bg-white dark:bg-gray-700 dark:border-gray-600 dark:text-white select-numero-dinamico';
-  
-  // =========================================================
-  // Corrección 3: La siguiente línea ha sido eliminada
-  // select.required = true;
-  // =========================================================
-
   let optionsHTML = '<option value="" disabled>Selecciona un número</option>';
   if (numeroSeleccionado) {
     optionsHTML += `<option value="${numeroSeleccionado}" selected>${numeroSeleccionado}</option>`;
@@ -371,21 +347,45 @@ export function anadirCampoNumero(numeroSeleccionado) {
   });
   select.innerHTML = optionsHTML;
   if (!numeroSeleccionado) select.value = "";
-
   select.addEventListener('change', () => { actualizarSelectsDinamicos(); });
-
   const btnEliminar = document.createElement('button');
   btnEliminar.type = 'button';
   btnEliminar.className = 'text-red-500 hover:text-red-700 p-2';
   btnEliminar.innerHTML = '<i class="fa-solid fa-trash"></i>';
   btnEliminar.onclick = () => { divCampo.remove(); actualizarSelectsDinamicos(); };
-
   divCampo.appendChild(select);
   divCampo.appendChild(btnEliminar);
   _camposNumerosDinamicos.appendChild(divCampo);
 }
 
-export function handleGuardarVenta(e) {
+function actualizarSelectsDinamicos() {
+  // ... (Función sin cambios) ...
+  if (!_camposNumerosDinamicos) return;
+  const selects = _camposNumerosDinamicos.querySelectorAll('.select-numero-dinamico');
+  const valoresSeleccionados = Array.from(selects).map(s => s.value).filter(v => v !== '');
+  const numerosDisponibles = getNumerosDisponibles();
+  selects.forEach(select => {
+    const valorActual = select.value;
+    let optionsHTML = '<option value="" disabled>Selecciona un número</option>';
+    if (valorActual) optionsHTML += `<option value="${valorActual}" selected>${valorActual}</option>`;
+    numerosDisponibles.forEach(num => {
+      if (!valoresSeleccionados.includes(num) || num === valorActual) {
+        if (num !== valorActual) optionsHTML += `<option value="${num}">${num}</option>`;
+      }
+    });
+    select.innerHTML = optionsHTML;
+    select.value = valorActual;
+  });
+}
+
+
+// =========================================================
+// CAMBIO IMPORTANTE: 'handleGuardarVenta' AHORA USA FIREBASE
+// =========================================================
+/**
+ * Guarda el nuevo participante y actualiza los boletos en Firebase.
+ */
+export async function handleGuardarVenta(e) {
   e.preventDefault();
   if (!_formRegistrarVenta) return;
 
@@ -394,7 +394,6 @@ export function handleGuardarVenta(e) {
   const estado = document.getElementById('participante-estado').value;
 
   const selectsNumeros = _camposNumerosDinamicos.querySelectorAll('select');
-  // La lógica de 'filter' aquí ya se encarga de ignorar los selects vacíos
   const numerosSeleccionados = Array.from(selectsNumeros).map(select => select.value).filter(value => value !== '');
 
   if (numerosSeleccionados.length === 0) {
@@ -402,6 +401,7 @@ export function handleGuardarVenta(e) {
     return;
   }
   
+  // Verificación (se mantiene igual, usa el array local _boletosRifa que está sincronizado)
   for (const numero of numerosSeleccionados) {
     const boleto = _boletosRifa.find(b => b.numero === numero);
     if (!boleto || boleto.estado !== 'disponible') {
@@ -411,25 +411,50 @@ export function handleGuardarVenta(e) {
     }
   }
 
-  const nuevoParticipante = { id: `p${_participantes.length + 1}`, nombre: nombre, telefono: telefono, numeros: numerosSeleccionados, estado: estado };
-  _participantes.push(nuevoParticipante);
+  // --- Inicio de lógica de Firebase ---
+  try {
+    // 1. Crear el nuevo documento de participante
+    const nuevoParticipante = {
+      nombre: nombre,
+      telefono: telefono,
+      numeros: numerosSeleccionados,
+      estado: estado
+    };
+    
+    // Añade el participante a la colección 'participantes' y obtiene la referencia
+    const docRef = await addDoc(collection(db, "participantes"), nuevoParticipante);
 
-  numerosSeleccionados.forEach(numero => {
-    const boleto = _boletosRifa.find(b => b.numero === numero);
-    if (boleto) {
-      boleto.estado = estado;
-      boleto.participanteId = nuevoParticipante.id;
-    }
-  });
+    // 2. Actualizar los boletos usando un Lote (Batch)
+    // Esto es "atómico": o se actualizan TODOS los boletos, o no se actualiza NINGUNO.
+    const batch = writeBatch(db);
+    
+    numerosSeleccionados.forEach(numero => {
+      // El ID del documento del boleto es su número (ej: "01", "02")
+      const boletoRef = doc(db, "boletos", numero); 
+      batch.update(boletoRef, {
+        estado: estado,
+        participanteId: docRef.id // Guardamos el ID del participante que acabamos de crear
+      });
+    });
+    
+    // 3. Ejecutar el lote
+    await batch.commit();
 
-  renderTablaParticipantes();
-  renderCuadriculaAdmin('todos');
-  renderCuadriculaPublica();
-  actualizarSeleccionPublica();
-  _modalRegistrarVenta.classList.remove('flex');
-  _mostrarToast("¡Venta registrada con éxito!");
+    // --- Fin de lógica de Firebase ---
+    
+    // YA NO NECESITAMOS LLAMAR A LOS RENDERERS
+    // El 'onSnapshot' en script.js lo hará automáticamente
+    
+    _modalRegistrarVenta.classList.remove('flex');
+    _mostrarToast("¡Venta registrada con éxito!");
 
-  _filtrosAdminContainer.querySelectorAll('.filtro-btn-admin').forEach(btn => btn.classList.remove('filtro-admin-activo'));
-  const todosBtn = document.querySelector('.filtro-btn-admin[data-filtro="todos"]');
-  if (todosBtn) todosBtn.classList.add('filtro-admin-activo');
+    // (Esto sí se queda)
+    _filtrosAdminContainer.querySelectorAll('.filtro-btn-admin').forEach(btn => btn.classList.remove('filtro-admin-activo'));
+    const todosBtn = document.querySelector('.filtro-btn-admin[data-filtro="todos"]');
+    if (todosBtn) todosBtn.classList.add('filtro-admin-activo');
+    
+  } catch (error) {
+    console.error("Error al guardar la venta: ", error);
+    _mostrarToast("Error al guardar la venta. Intenta de nuevo.", true);
+  }
 }

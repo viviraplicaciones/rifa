@@ -1,5 +1,5 @@
 /* =========================================================
-   script.js (v28 - Animación Suerte)
+   script.js (v29 - PWA Service Worker)
    ========================================================= */
 
 // Importar la base de datos (db) y funciones de Firebase
@@ -145,6 +145,36 @@ document.addEventListener('DOMContentLoaded', () => {
       if (slides[currentSlide]) slides[currentSlide].classList.remove('hidden', 'opacity-0');
     }, 4000);
   }
+
+  // =========================================================
+// PASO 4: REGISTRAR EL SERVICE WORKER (PWA)
+// =========================================================
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    const swPath = `${window.location.pathname.replace(/\/[^/]*$/, '/') }sw.js`;
+    navigator.serviceWorker.register(swPath)
+      .then(registration => {
+        console.log('Service Worker PWA registrado con éxito, alcance:', registration.scope);
+      })
+      .catch(error => {
+        console.error('Fallo al registrar el Service Worker PWA:', error);
+      });
+  });
+}
+// =========================================================
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/sw.js')
+        .then(registration => {
+          console.log('Service Worker PWA registrado con éxito, alcance:', registration.scope);
+        })
+        .catch(error => {
+          console.error('Fallo al registrar el Service Worker PWA:', error);
+        });
+    });
+  }
+  // =========================================================
+
 });
 
 /* =========================================================
@@ -280,7 +310,7 @@ function registrarEventListeners() {
   formIngresarDatos?.addEventListener('submit', handleGuardarCompraUsuario);
 
   // --- Botón Suerte ---
-  btnSuerte?.addEventListener('click', handleBotonSuerte); // <-- El listener se queda aquí
+  btnSuerte?.addEventListener('click', handleBotonSuerte); 
 
   // --- ADMIN ---
   filtrosAdminContainer?.addEventListener('click', handleFiltroAdmin);

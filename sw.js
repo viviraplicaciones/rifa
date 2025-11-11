@@ -1,71 +1,61 @@
 /* =========================================================
-   sw.js (Service Worker)
+   sw.js (Service Worker - versión corregida para GitHub Pages)
    ========================================================= */
 
-// El nombre de nuestro caché. Cambia 'v1' a 'v2' si actualizas los archivos.
-const CACHE_NAME = 'rifa-navidena-v1';
+// Cambia la versión cuando actualices archivos (v2, v3, etc.)
+const CACHE_NAME = 'rifa-navidena-v2';
 
-// Todos los archivos que la PWA necesita para funcionar offline.
+// Archivos esenciales para el funcionamiento offline
 const FILES_TO_CACHE = [
-  '/', // La raíz del sitio
-  'index.html',
-  'index_01.html',
-  'manifest.json',
-  
+  './', // la raíz del proyecto (./ en lugar de /)
+  './index.html',
+  './index_01.html',
+  './manifest.json',
+
   // Scripts
-  'script.js',
-  'tablas-numericas.js',
-  'firebase-init.js',
-  'common-ui.js',
-  
+  './script.js',
+  './tablas-numericas.js',
+  './firebase-init.js',
+  './common-ui.js',
+
   // Estilos
-  'style.css',
-  
+  './style.css',
+
   // Imágenes principales
-  'logo.png',
-  'icono.jpg',
-  'banner.jpg',
-  'dado.png',
-  'dado.gif',
-  'vivirapp.png',
-  
-  // Imágenes de la Rifa (Slider)
-  '01.jpg',
-  '02.jpg',
-  '03.jpg',
-  '04.jpg',
-  '05.jpg',
-  
-  // Archivos externos (CDN)
-  'https://cdn.tailwindcss.com',
-  'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css'
+  './logo.png',
+  './icono.jpg',
+  './banner.jpg',
+  './dado.png',
+  './dado.gif',
+  './vivirapp.png',
+
+  // Imágenes del slider
+  './01.jpg',
+  './02.jpg',
+  './03.jpg',
+  './04.jpg',
+  './05.jpg'
 ];
 
-/**
- * Evento 'install': Se dispara cuando el Service Worker se instala por primera vez.
- * Aquí es donde "descargamos" todos los archivos al caché.
- */
+/* =========================================================
+   Evento: install
+   ========================================================= */
 self.addEventListener('install', (event) => {
   console.log('[ServiceWorker] Instalando...');
-  
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then((cache) => {
-        console.log('[ServiceWorker] Abriendo caché y guardando archivos principales.');
+        console.log('[ServiceWorker] Archivos almacenados en caché');
         return cache.addAll(FILES_TO_CACHE);
       })
-      .catch(err => {
-        console.error('[ServiceWorker] Falló el cacheo de archivos:', err);
-      })
+      .catch(err => console.error('[ServiceWorker] Error en instalación:', err))
   );
-  
   self.skipWaiting();
 });
 
-/**
- * Evento 'activate': Se dispara después de la instalación.
- * Aquí limpiamos cachés antiguos si hemos actualizado la versión (ej. de 'v1' a 'v2').
- */
+/* =========================================================
+   Evento: activate
+   ========================================================= */
 self.addEventListener('activate', (event) => {
   console.log('[ServiceWorker] Activando...');
   event.waitUntil(
@@ -78,52 +68,33 @@ self.addEventListener('activate', (event) => {
       }));
     })
   );
-  return self.clients.claim();
+  self.clients.claim();
 });
 
-/**
- * Evento 'fetch': Se dispara CADA VEZ que la app pide un recurso (un script, una imagen, etc.)
- * Aquí interceptamos la petición y servimos desde el caché si es posible.
- */
+/* =========================================================
+   Evento: fetch
+   ========================================================= */
 self.addEventListener('fetch', (event) => {
-  // Solo nos interesan las peticiones GET
-  if (event.request.method !== 'GET') {
-    return;
-  }
-  
-  // Estrategia: "Cache, falling back to Network"
-  // (Intenta buscar en caché primero, si no, va a la red)
+  if (event.request.method !== 'GET') return;
+
   event.respondWith(
     caches.match(event.request)
       .then((response) => {
-        
-        if (response) {
-          // ¡Encontrado en caché! Servir desde el caché.
-          // console.log(`[ServiceWorker] Sirviendo desde caché: ${event.request.url}`);
-          return response;
-        }
-
-        // No está en caché. Ir a la red.
-        // console.log(`[ServiceWorker] Buscando en red: ${event.request.url}`);
+        if (response) return response;
         return fetch(event.request)
           .then((networkResponse) => {
-            
-            // Si la respuesta de red es válida, la guardamos en caché para la próxima vez
-            if (networkResponse && networkResponse.status === 200) {
+            if (networkResponse && networkResponse.status === 200 && networkResponse.type === 'basic') {
               const responseToCache = networkResponse.clone();
               caches.open(CACHE_NAME)
                 .then((cache) => {
                   cache.put(event.request, responseToCache);
                 });
             }
-            
             return networkResponse;
+          })
+          .catch((error) => {
+            console.warn('[ServiceWorker] Error al obtener recurso:', event.request.url, error);
           });
-      })
-      .catch((error) => {
-        // Si falla (ej. sin conexión y no está en caché), simplemente falla.
-        console.warn(`[ServiceWorker] Fallo en fetch: ${event.request.url}`, error);
-        // Opcionalmente, aquí podríamos mostrar una página "offline" genérica.
       })
   );
 });

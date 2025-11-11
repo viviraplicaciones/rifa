@@ -2,7 +2,7 @@
   "name": "Rifa Navideña",
   "short_name": "Rifa",
   "description": "Participa en la Fabulosa Rifa de Navidad Amigurumi.",
-  "start_url": "/index.html",
+  "start_url": "./index.html",
   "display": "fullscreen",
   "background_color": "#FEF6FF",
   "theme_color": "#C026D3",

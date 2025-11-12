@@ -27,13 +27,11 @@
   <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
   <link href="style.css" rel="stylesheet"/>
-  
   <!-- ========PASO 4: CONEXIÓN PWA (Manifest)================== -->
   <link href="manifest.json" rel="manifest"/>
   <link href="images/logo.png" rel="apple-touch-icon"/>
   <meta content="#FEF6FF" name="theme-color"/>
   <!-- ========================================================= -->
-  
   <script>tailwind.config = {darkMode: 'class',}</script>
 
  </head>
@@ -48,8 +46,7 @@
       <img alt="RifaPRO Logo" class="w-full h-full object-cover" src="images/logo.png"/>
      </div>
      <span class="sidebar-text text-xl font-bold text-white tracking-wide">RIFA NAVIDEÑA</span>
-    </div>
-   </div>
+    </div></div>
    
    <nav class="flex-1 p-4 space-y-1">
     <a class="flex items-center p-2 rounded-lg hover:bg-fuchsia-600 nav-link active" data-view="view-inicio" href="#"><i class="fa-solid fa-house fa-lg sidebar-icon"></i><span class="sidebar-text text-lg ml-4">
@@ -84,11 +81,23 @@
       <a class="flex items-center p-2 rounded-lg hover:bg-fuchsia-600 nav-link" data-view="view-analiticos" href="#">
        <i class="fa-solid fa-chart-line fa-lg sidebar-icon"></i>
        <span class="sidebar-text text-lg ml-4">Anal&iacute;ticos</span></a>
-     </div>
-    </div>
+     </div></div>
     
     <div class="pt-4 mt-4 border-t border-fuchsia-500">
      <p class="sidebar-text text-xs uppercase text-fuchsia-300 px-3 mb-2">Soporte</p>
+
+<!-- ============== PASO 5: NUEVO TOGGLE DE NOTIFICACIONES(Añadido encima de 'Reportar Fallos') ======== -->
+<label for="toggle-notificaciones" class="flex items-center p-2 rounded-lg cursor-pointer hover:bg-fuchsia-600">
+<i class="fa-solid fa-bell fa-lg sidebar-icon sidebar-text"></i>
+<span class="sidebar-text text-lg ml-4">Notificaciones</span>
+<div class="relative ml-auto">
+<input class="sr-only peer" id="toggle-notificaciones" type="checkbox"/>
+<div class="w-11 h-6 bg-red-500 rounded-full peer peer-checked:bg-lime-500 transition-colors dark:bg-gray-600 peer-checked:dark:bg-lime-600"></div>
+<div class="absolute left-1 top-1 w-4 h-4 bg-white rounded-full transition-transform peer-checked:translate-x-full"></div>
+</div>
+</label>
+<!-- ========================================================= -->
+
      <a class="flex items-center p-2 rounded-lg hover:bg-fuchsia-600" href="#" id="btn-reportar-fallo">
       <i class="fa-solid fa-bug fa-lg sidebar-icon"></i>
       <span class="sidebar-text text-lg ml-4">Reportar Fallos</span></a>
@@ -101,14 +110,12 @@
    <div class="mt-auto p-4 flex flex-col items-center border-t border-fuchsia-500">
     <img alt="VivirApp Logo" class="h-8 mb-2" src="images/vivirapp.png"/>
     <span class="sidebar-text text-xs text-fuchsia-300 text-center">By VivirApp • 2025 • Colombia</span>
-   </div>
-  </aside>
+   </div></aside>
   
   <button class="fixed z-20 p-2 bg-fuchsia-700 text-white rounded-md toggle-sidebar-btn hidden md:block" id="toggle-sidebar-global"><i class="fa-solid fa-bars"></i></button>
   
   <main class="flex-1 flex flex-col h-full overflow-y-auto" id="main-content">
-<!-- =============================SECCIONES DE VISTAS (Views)(Con correcciones de padding y margin para Móvil/PC) =============================== -->
-   
+<!-- ===========SECCIONES DE VISTAS (Views)(Con correcciones de padding y margin para Móvil/PC) =============================== -->   
    <div class="view active p-0" id="view-inicio">
     <div class="mt-0 md:mt-8 w-full max-w-6xl mx-auto bg-white md:rounded-2xl shadow-xl overflow-hidden dark:bg-gray-800">
      <div class="md:flex">
@@ -128,10 +135,8 @@
        <!--<p class="mt-4 text-2xl font-bold text-fuchsia-600">Valor $ 6.000</p>-->
        <div class="mt-8">
         <button class="w-full bg-lime-500 text-white font-bold text-lg py-3 px-6 rounded-xl hover:bg-lime-600 transition duration-300 shadow-lg" id="btn-mas-info">M&aacute;s Informaci&oacute;n</button>
-       </div>
-      </div>
-     </div>
-    </div>
+   </div></div>
+   </div></div>
    </div>
    
    <div class="view p-0" id="view-comprar-numeros">
@@ -150,8 +155,7 @@
       <input class="sr-only switch-checkbox peer" id="ocultar-comprados" type="checkbox"/>
       <div class="w-10 h-6 bg-gray-300 rounded-full shadow-inner transition duration-300 peer-checked:bg-lime-500 dark:bg-gray-600"></div>
      <div class="switch-dot absolute w-4 h-4 bg-white rounded-full shadow left-1 top-1 transition duration-300 peer-checked:translate-x-full"></div>
-     </div>
-     </label>
+     </div></label>
      </div>
      <div class="grid grid-cols-[repeat(auto-fill,minmax(40px,1fr))] gap-2" id="cuadricula-numeros-publica"></div>
      </div>
@@ -171,8 +175,7 @@
      <button class="w-full bg-lime-500 text-white font-bold text-lg py-3 px-6 rounded-xl hover:bg-lime-600 transition duration-300 shadow-lg disabled:bg-gray-400" id="btn-proceder-pago">Proceder al pago</button>
      <p class="text-xs text-gray-500 mt-4 text-center dark:text-gray-400"><i class="fa-solid fa-circle-info mr-1">
      </i>Selecciona los n&uacute;meros que deseas comprar.</p>
-     </div>
-    </div>
+     </div></div>
    </div>
    
    <div class="view p-0 md:p-6" id="view-rifas-pv">
@@ -186,8 +189,7 @@
     <button class="filtro-btn-admin" data-filtro="pagado">Pagados</button>
     </div>
     <div class="grid grid-cols-[repeat(auto-fill,minmax(40px,1fr))] gap-2" id="cuadricula-numeros-admin"></div>
-    </div>
-   </div>
+    </div></div>
    
    <div class="view p-0 md:p-4" id="view-participantes">
     <div class="flex flex-col md:flex-row md:justify-between md:items-center mb-6 gap-4 p-4 md:p-0">
@@ -202,9 +204,8 @@
     <span>Números</span>
     <span>Estado</span>
     </div>
-     
-    <div class="space-y-3" id="tabla-participantes-cards"></div></div>    
-   </div>
+    <div class="space-y-3" id="tabla-participantes-cards"></div></div>
+  </div>
    
    <div class="view p-0 md:p-10" id="view-analiticos">
     <div class="bg-white p-10 md:rounded-2xl shadow-xl text-center dark:bg-gray-800">
@@ -230,12 +231,9 @@
     <div>
     <h5 class="text-lg font-semibold text-gray-800 dark:text-white">3. &iquest;D&oacute;nde veo mis n&uacute;meros?</h5>
     <p class="text-gray-600 mt-1 dark:text-gray-300">Al finalizar la compra, recibirás un mensaje a Whatsapp con el listado de tu(s) número(s) registrado(s).</p>
-    </div>
-    </div>
-    </div>
-   </div>
-   
-   </main>  
+    </div></div>
+    </div></div>
+</main>  
   <!-- ======================= INICIO DEL CÓDIGO DE MODALES (Restaurando el código que faltaba) ========== -->
   <div class="modal fixed inset-0 z-50 overflow-y-auto bg-black bg-opacity-60" id="modal-mas-info">
    <div class="relative p-4 w-full max-w-4xl mx-auto my-12">
@@ -272,15 +270,12 @@
    <li>Realiza el pago (Total).</li>
    <li>Le llegara un comprobante a su Whatsapp (guárdelo, tu número pasará de 'revisando' a 'pagado').</li>
    </ol>
-   </div>
-   </div>
+   </div></div>
    <div class="flex items-center justify-end space-x-4 p-4 border-t dark:border-gray-700">
    <button class="modal-close text-gray-700 bg-gray-100 hover:bg-gray-200 font-medium rounded-lg px-5 py-2.5 dark:bg-gray-600 dark:text-gray-300 dark:hover:bg-gray-500" data-modal-id="modal-mas-info" type="button">Cerrar</button>
    <button class="text-white bg-lime-500 hover:bg-lime-600 font-medium rounded-lg px-6 py-2.5" id="btn-modal-ir-numeros" type="button">Números</button>
-   </div>
-   </div>
-   </div>
-  </div>
+   </div></div>
+   </div></div>
   
   <div class="modal fixed inset-0 z-50 overflow-y-auto bg-black bg-opacity-60" id="modal-registrar-venta">
    <div class="relative p-4 w-full max-w-lg mx-auto my-12">
@@ -317,7 +312,6 @@
    </form>
    </div></div>
   </div>
-  
   <div class="modal fixed inset-0 z-50 overflow-y-auto bg-black bg-opacity-60" id="modal-reportar-fallo">
    <div class="relative p-4 w-full max-w-lg mx-auto my-12">
    <div class="relative bg-white rounded-2xl shadow-2xl dark:bg-gray-800">
@@ -335,7 +329,6 @@
    <button class="text-white bg-lime-500 hover:bg-lime-600 font-medium rounded-lg px-6 py-2.5" id="btn-reportar-enviar" type="submit">Enviar Reporte</button></div>
    </form>
    </div></div></div>
-  
   <div class="modal fixed inset-0 z-50 overflow-y-auto bg-black bg-opacity-60" id="modal-admin-login">
   <div class="relative p-4 w-full max-w-sm mx-auto my-12">
   <div class="relative bg-white rounded-2xl shadow-2xl dark:bg-gray-800">
@@ -404,7 +397,6 @@
   
   <button class="fixed z-20 bottom-2 right-2 p-2 bg-fuchsia-700 text-white rounded-lg shadow-lg md:hidden aspect-square" id="toggle-sidebar-mobile"><i class="fa-solid fa-bars fa-lg"></i></button>
   
-  <script type="module" src="script.js"></script>
-  
- </body>
+<script type="module" src="script.js"></script>
+</body>
 </html>

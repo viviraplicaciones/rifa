@@ -1,6 +1,7 @@
 /* =========================================================
    firebase-init.js
    Inicialización y exportación de la base de datos.
+   (AHORA INCLUYE FIRESTORE Y MESSAGING)
    ========================================================= */
 
 // Importa las funciones que necesitas de los SDK de Firebase
@@ -13,8 +14,14 @@ import {
     query, 
     orderBy,
     addDoc,
-    writeBatch
+    writeBatch,
+    setDoc // <-- AÑADIDO
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { 
+    getMessaging, 
+    getToken, 
+    onMessage 
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-messaging.js"; // <-- NUEVO
 
 // =========================================================
 // TUS CREDENCIALES (Están correctas)
@@ -36,6 +43,9 @@ const app = initializeApp(firebaseConfig);
 // Exportar la instancia de la base de datos (Firestore)
 export const db = getFirestore(app);
 
+// Exportar la instancia de mensajería (Messaging)
+export const messaging = getMessaging(app); // <-- NUEVO
+
 // Exportar todas las funciones de Firestore que usaremos
 export { 
     collection, 
@@ -44,5 +54,12 @@ export {
     query, 
     orderBy,
     addDoc,
-    writeBatch
+    writeBatch,
+    setDoc // <-- AÑADIDO
 };
+
+// Exportar todas las funciones de Messaging que usaremos
+export {
+    getToken,
+    onMessage
+}; // <-- NUEVO

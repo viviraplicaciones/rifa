@@ -1,16 +1,22 @@
-/* ============================script.js (v29 - PWA Service Worker)========================== */
+/* ===========================script.js (v31 - Lógica de Notificaciones FCM)=========================== */
 // Importar la base de datos (db) y funciones de Firebase
 import { 
     db, 
     collection, 
     onSnapshot, 
     query, 
-    orderBy 
+    orderBy,
+    doc,      // <-- AÑADIDO
+    setDoc    // <-- AÑADIDO
 } from './firebase-init.js';
-
+// Importar funciones de Messaging
+import { 
+    messaging, 
+    getToken, 
+    onMessage 
+} from './firebase-init.js'; // <-- NUEVO
 // Importar lógica de UI compartida
 import { toggleSidebarGlobal, initDarkMode, registerDarkModeHandler } from './common-ui.js';
-
 // Importar lógica de la Rifa
 import {
   initRifa,
@@ -28,13 +34,17 @@ import {
   handleBotonSuerte 
 } from './tablas-numericas.js';
 
-/* ------------------------------Estado Global de la Aplicación----------------------- */
+/* -----------Constante de Notificación--------------------------- */
+// --- PEGA AQUÍ TU CLAVE VAPID DEL PASO 1 ---
+const VAPID_KEY = 'BLKW4ylTSLBySioHx0AOkYi6xZJPDjmQ1XAJAO8girT-ouIIwvdiAyvLlI6stV3M72dGrjnZ01fdr-YI7MmHSb0'; 
+
+/* -----------Estado Global de la Aplicación----------------------- */
 let boletosRifa = [];
 let participantes = [];
-const PRECIO_BOLETO = 5000;
+const PRECIO_BOLETO = 5000; 
 let numerosSeleccionadosPublica = [];
 
-/* ---------------Variables DOM (Caché)--------------------- */
+/* -----------------------Variables DOM (Caché)---------------------------------- */
 let sidebar;
 let toggleSidebarGlobalBtn, toggleSidebarMobileBtn, mainContent, navLinks, views,
     toastEl, toastMsg, toastCloseBtn, cuadriculaPublica, listaSeleccionPublica,
@@ -45,22 +55,20 @@ let toggleSidebarGlobalBtn, toggleSidebarMobileBtn, mainContent, navLinks, views
     btnCompartir, btnReportarFallo, modalReportarFallo, formReportarFallo,
     btnAdminLogin, modalAdminLogin, formAdminLogin, adminLinksContainer,
     btnDarkMode, iconDarkMode, slides, currentSlide = 0, slideCount = 0;
-
 let modalIngresarDatos;
 let formIngresarDatos;
-
 let btnSuerte;
 let modalSuerte;
 let modalSuerteNumero;
-let imgSuerte; // <-- NUEVA VARIABLE
+let imgSuerte;
+let toggleNotificaciones; // Ya no es 'NUEVA VARIABLE', ahora está en uso
 
-/* ============================Inicialización al cargar el documento==================== */
+/* ========================= Inicialización al cargar el documento=================== */
 document.addEventListener('DOMContentLoaded', () => {
   cachearElementosDOM();
   
   // Inyectar dependencias en el módulo de UI común
-  initDarkMode(iconDarkMode);
-  
+  initDarkMode(iconDarkMode);  
   // Inyectar dependencias en el módulo de la Rifa
   initRifa({
     boletosRifa: boletosRifa,
@@ -75,12 +83,10 @@ document.addEventListener('DOMContentLoaded', () => {
     camposNumerosDinamicos, listaNumerosModal,
     modalIngresarDatos, formIngresarDatos,
     btnSuerte, modalSuerte, modalSuerteNumero,
-    // --- NUEVO ELEMENTO ---
-    imgSuerte // <-- Pasar la imagen del dado
+    imgSuerte
   });
   
-  registrarEventListeners();
-  
+  registrarEventListeners();  
   // Corrección Menú PC
   if (window.innerWidth < 768) {
     sidebar?.classList.add('collapsed');
@@ -93,7 +99,6 @@ document.addEventListener('DOMContentLoaded', () => {
   if (sessionStorage.getItem('isAdmin') === 'true') {
     adminLinksContainer?.classList.remove('hidden');
   }
-
   // Lógica de Deep Linking
   const params = new URLSearchParams(window.location.search);
   const viewParam = params.get('view');
@@ -112,12 +117,10 @@ document.addEventListener('DOMContentLoaded', () => {
       modalReportarFallo.classList.add('flex');
     }
     window.history.replaceState({}, document.title, window.location.pathname);
-  }
-  
+  }  
   // Empezar a escuchar los datos de Firebase
   escucharBoletos();
   escucharParticipantes();
-
   // Slider
   slides = document.querySelectorAll('.slider-image');
   slideCount = slides.length;
@@ -135,37 +138,26 @@ document.addEventListener('DOMContentLoaded', () => {
       if (slides[currentSlide]) slides[currentSlide].classList.remove('hidden', 'opacity-0');
     }, 4000);
   }
-
-// =======PASO 4: REGISTRAR EL SERVICE WORKER (PWA)
-// =========================================================
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    const swPath = `${window.location.pathname.replace(/\/[^/]*$/, '/') }sw.js`;
-    navigator.serviceWorker.register(swPath)
-      .then(registration => {
-        console.log('Service Worker PWA registrado con éxito, alcance:', registration.scope);
-      })
-      .catch(error => {
-        console.error('Fallo al registrar el Service Worker PWA:', error);
-      });
-  });
-}
-// =========================================================
+  
+  // REGISTRAR EL SERVICE WORKER (PWA - Caching)
+  // Esto está perfecto, el SDK de Firebase registrará
+  // 'firebase-messaging-sw.js' por separado.
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
-      navigator.serviceWorker.register('/sw.js')
+      navigator.serviceWorker.register('/sw.js') 
         .then(registration => {
-          console.log('Service Worker PWA registrado con éxito, alcance:', registration.scope);
+          console.log('Service Worker PWA (Cache) registrado:', registration.scope);
         })
         .catch(error => {
-          console.error('Fallo al registrar el Service Worker PWA:', error);
+          console.error('Fallo al registrar el Service Worker PWA (Cache):', error);
         });
     });
   }
-  // =========================================================
+   
+  // INICIALIZAR ESTADO DE NOTIFICACIONES (Lógica mejorada)
+  inicializarEstadoNotificaciones();
 });
-/* ========================Datos (Ahora con Firebase)============= */
-
+/* ======================== Datos (Ahora con Firebase)============== */
 function escucharBoletos() {
   const q = query(collection(db, "boletos"), orderBy("numero", "asc"));
   onSnapshot(q, (querySnapshot) => {
@@ -200,7 +192,7 @@ function escucharParticipantes() {
     renderTablaParticipantes();
   });
 }
-/* ================Cacheo de elementos DOM================= */
+/* ============================== Cacheo de elementos DOM ================ */
 function cachearElementosDOM() {
   sidebar = document.getElementById('sidebar');
   toggleSidebarGlobalBtn = document.getElementById('toggle-sidebar-global');
@@ -248,17 +240,16 @@ function cachearElementosDOM() {
   btnSuerte = document.getElementById('btn-suerte');
   modalSuerte = document.getElementById('modal-suerte');
   modalSuerteNumero = document.getElementById('modal-suerte-numero');
-  
-  // --- CACHEAR IMAGEN DEL DADO ---
   imgSuerte = document.getElementById('img-suerte');
+
+  toggleNotificaciones = document.getElementById('toggle-notificaciones');
 }
-/* =================Registro de event listeners==================== */
+/* ======================Registro de event listeners============= */
 function registrarEventListeners() {
   // --- UI Común (Sidebar, DarkMode) ---
   toggleSidebarGlobalBtn?.addEventListener('click', () => toggleSidebarGlobal(sidebar, toggleSidebarGlobalBtn, null));
   toggleSidebarMobileBtn?.addEventListener('click', () => toggleSidebarGlobal(sidebar, toggleSidebarGlobalBtn, null));
   registerDarkModeHandler(btnDarkMode, iconDarkMode);
-
   // --- Navegación SPA ---
   navLinks.forEach(link => {
     link.addEventListener('click', (e) => {
@@ -272,29 +263,24 @@ function registrarEventListeners() {
       }
     });
   });
-// --- Toast ---
+  // --- Toast ---
   toastCloseBtn?.addEventListener('click', () => {
     toastEl.classList.remove('opacity-100', 'pointer-events-auto');
     toastEl.classList.add('opacity-0', 'pointer-events-none');
   });
-
   // --- Lógica de Rifa (Eventos delegados a módulos importados) ---
   cuadriculaPublica?.addEventListener('click', handleSeleccionPublica);
   switchOcultarComprados?.addEventListener('change', renderCuadriculaPublica);
-  
-  // --- Flujo de Pago ---
+    // --- Flujo de Pago ---
   btnProcederPago?.addEventListener('click', handleProcederPago);
   formIngresarDatos?.addEventListener('submit', handleGuardarCompraUsuario);
-
   // --- Botón Suerte ---
   btnSuerte?.addEventListener('click', handleBotonSuerte); 
-
   // --- ADMIN ---
   filtrosAdminContainer?.addEventListener('click', handleFiltroAdmin);
   btnRegistrarVentaGlobal?.addEventListener('click', () => abrirModalRegistro());
   formRegistrarVenta?.addEventListener('submit', handleGuardarVenta); 
   btnAnadirNumero?.addEventListener('click', () => anadirCampoNumero(null));
-
   // --- Modales (Lógica local) ---
   btnMasInfo?.addEventListener('click', () => modalMasInfo?.classList.add('flex'));
   btnModalIrNumeros?.addEventListener('click', () => {
@@ -312,7 +298,6 @@ function registrarEventListeners() {
       event.target.classList.remove('flex');
     }
   });
-
   // --- Utilitarios (Compartir, Reportar, Admin) ---
   btnCompartir?.addEventListener('click', (e) => {
     e.preventDefault();
@@ -349,12 +334,113 @@ function registrarEventListeners() {
     }
     formAdminLogin.reset();
   });
+  
+  // =========================================================
+  // EVENT LISTENER PARA EL TOGGLE DE NOTIFICACIONES (Lógica mejorada)
+  // =========================================================
+  toggleNotificaciones?.addEventListener('change', () => {
+    if (toggleNotificaciones.checked) {
+      // Si el usuario lo activa (verde)
+      pedirPermisoNotificaciones();
+    } else {
+      // Si el usuario lo desactiva (rojo)
+      // (En un futuro, aquí podrías borrar el token de Firestore)
+      console.log('Notificaciones desactivadas por el usuario.');
+      mostrarToast('Notificaciones desactivadas.', true);
+      // TODO: Agregar lógica para borrar token si se desea
+    }
+  });
 }
-/* =============Funciones UI: (Vistas, Toast, Compartir)==================== */
+
+/* ================================LÓGICA DE NOTIFICACIONES (Mejorada)================= */
+
+/**
+ * Revisa el estado actual del permiso y actualiza el toggle.
+ * Si el permiso ya está dado, activa el listener de mensajes en primer plano.
+ */
+function inicializarEstadoNotificaciones() {
+  if (!('Notification' in window) || !messaging) {
+    console.warn('Este navegador no soporta notificaciones push o Firebase Messaging no está disponible.');
+    toggleNotificaciones?.parentElement.parentElement.classList.add('hidden'); // Ocultar el toggle
+    return;
+  }
+
+  if (Notification.permission === 'granted') {
+    toggleNotificaciones.checked = true; // Poner en verde
+    // Si ya tenemos permiso, empezamos a escuchar mensajes en primer plano
+    activarEscuchaMensajesPrimerPlano();
+  } else {
+    toggleNotificaciones.checked = false; // Poner en rojo
+  }
+}
+
+/**
+ * Pide permiso al usuario y, si lo concede, obtiene y guarda el token.
+ */
+function pedirPermisoNotificaciones() {
+  if (VAPID_KEY === 'TU_CLAVE_VAPID_DE_FIREBASE_VA_AQUI') {
+      console.error("Error: Falta la VAPID_KEY en script.js");
+      mostrarToast("Error de configuración de notificaciones.", true);
+      toggleNotificaciones.checked = false;
+      return;
+  }
+
+  Notification.requestPermission().then(async (permiso) => {
+    if (permiso === 'granted') {
+      mostrarToast('¡Notificaciones activadas!');
+      toggleNotificaciones.checked = true;
+      
+      try {
+        // 1. Obtener el token del dispositivo
+        // Firebase registrará 'firebase-messaging-sw.js' automáticamente aquí
+        const token = await getToken(messaging, { vapidKey: VAPID_KEY });
+        
+        if (token) {
+          console.log('Token de FCM obtenido:', token);
+          // 2. Guardar el token en Firestore
+          // Usamos el token como ID del documento para evitar duplicados
+          await setDoc(doc(db, "suscripciones", token), {
+            token: token,
+            timestamp: new Date()
+          });
+          console.log('Token guardado en Firestore');
+          // 3. Activar escucha de mensajes en primer plano
+          activarEscuchaMensajesPrimerPlano();
+        } else {
+          console.warn('No se pudo obtener el token de FCM.');
+          mostrarToast('No se pudo obtener el token de suscripción.', true);
+          toggleNotificaciones.checked = false;
+        }
+      } catch (err) {
+        console.error('Error al obtener el token o guardarlo:', err);
+        mostrarToast('Error al suscribirse a notificaciones.', true);
+        toggleNotificaciones.checked = false;
+      }
+      
+    } else {
+      console.log('Permiso de notificación denegado.');
+      mostrarToast('No se pudo activar las notificaciones.', true);
+      toggleNotificaciones.checked = false;
+    }
+  });
+}
+
+/**
+ * Activa el listener para mensajes recibidos MIENTRAS la app está abierta.
+ */
+function activarEscuchaMensajesPrimerPlano() {
+    onMessage(messaging, (payload) => {
+        console.log('Mensaje recibido en primer plano: ', payload);
+        // Muestra un toast personalizado en lugar de una notificación push
+        const mensaje = payload.notification.body || '¡Hay novedades en la rifa!';
+        mostrarToast(mensaje, false); 
+        // Aquí podrías mostrar un modal o un banner más prominente si quisieras
+    });
+}
+
+/* =========Funciones UI: (Vistas, Toast, Compartir)======= */
 /**
  * Actualiza la vista activa y muestra/oculta el botón de suerte.
- * @param {string} viewId - El ID de la vista a mostrar.
- * @param {boolean} [isInitialLoad=false] - Indica si es la carga inicial de la página.
  */
 function actualizarVistaActiva(viewId, isInitialLoad = false) {
   if (mainContent && !isInitialLoad) mainContent.scrollTop = 0;
@@ -372,7 +458,6 @@ function actualizarVistaActiva(viewId, isInitialLoad = false) {
   // --- LÓGICA DEL BOTÓN SUERTE ---
   if (viewId === 'view-comprar-numeros') {
     btnSuerte?.classList.remove('hidden');
-    // Pequeña animación de entrada
     setTimeout(() => {
         btnSuerte?.classList.remove('translate-y-1/2');
         btnSuerte?.classList.add('-translate-y-1/2', 'hover:-translate-y-[55%]');
@@ -442,7 +527,10 @@ async function handleCompartir() {
     mostrarToast('Enlace copiado al portapapeles.');
   }
 }
-/* =====================  Estilo dinámico (Función sin cambios)=================== */
+
+/* =========================================================
+   Estilo dinámico (Función sin cambios)
+   ========================================================= */
 (function insertarEstiloFiltroAdmin() {
   const style = document.createElement('style');
   style.innerHTML = `
@@ -463,7 +551,7 @@ async function handleCompartir() {
     .dark .filtro-btn-admin[data-filtro="todos"] { border-color: #9CA3AF; color: #E5E7EB; }
     .dark .filtro-btn-admin[data-filtro="disponible"] { border-color: #4B5563; color: #D1D5DB; }
     .dark .filtro-btn-admin.filtro-admin-activo[data-filtro="todos"], .dark .filtro-btn-admin:hover[data-filtro="todos"] { background-color: #9CA3AF; color: white !important; }
-    .dark .filtro-btn-admin.filtro-admin-activo[data-filtro="disponible"], .dark .filtro-btn-admin:hover[data-filtro="disponible"] { background-color: #6B7280; color: white !important; }
+    .dark .filtro-btn-admin.filtro-admin-activo[data-filtro="disponible"], .dark .filtro-btn-admin:hover[data-filtro="disponible"] { background-color: #6B7280; color: white !importa; }
   `;
   document.head.appendChild(style);
 })();

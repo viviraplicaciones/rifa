@@ -1,45 +1,34 @@
-/* =========================================================
-   sw.js (Service Worker - versión corregida para GitHub Pages)
-   ========================================================= */
-
+/* =======================sw.js (Service Worker - versión corregida para GitHub Pages)================== */
 // Cambia la versión cuando actualices archivos (v2, v3, etc.)
 const CACHE_NAME = 'rifa-navidena-v2';
-
 // Archivos esenciales para el funcionamiento offline
 const FILES_TO_CACHE = [
   './', // la raíz del proyecto (./ en lugar de /)
   './index.html',
   './index_01.html',
   './manifest.json',
-
   // Scripts
   './script.js',
   './tablas-numericas.js',
   './firebase-init.js',
   './common-ui.js',
-
   // Estilos
   './style.css',
-
   // Imágenes principales
-  './logo.png',
-  './icono.jpg',
-  './banner.jpg',
-  './dado.png',
-  './dado.gif',
-  './vivirapp.png',
-
+  './images/logo.png',
+  './images/icono.jpg',
+  './images/banner.jpg',
+  './images/dado.png',
+  './images/dado.gif',
+  './images/vivirapp.png',
   // Imágenes del slider
-  './01.jpg',
-  './02.jpg',
-  './03.jpg',
-  './04.jpg',
-  './05.jpg'
+  './images/01.jpg',
+  './images/02.jpg',
+  './images/03.jpg',
+  './images/04.jpg',
+  './images/05.jpg'
 ];
-
-/* =========================================================
-   Evento: install
-   ========================================================= */
+/* ======================Evento: install=========================== */
 self.addEventListener('install', (event) => {
   console.log('[ServiceWorker] Instalando...');
   event.waitUntil(
@@ -52,10 +41,7 @@ self.addEventListener('install', (event) => {
   );
   self.skipWaiting();
 });
-
-/* =========================================================
-   Evento: activate
-   ========================================================= */
+/* =========================Evento: activate======================= */
 self.addEventListener('activate', (event) => {
   console.log('[ServiceWorker] Activando...');
   event.waitUntil(
@@ -70,10 +56,7 @@ self.addEventListener('activate', (event) => {
   );
   self.clients.claim();
 });
-
-/* =========================================================
-   Evento: fetch
-   ========================================================= */
+/* =======================Evento: fetch=============================== */
 self.addEventListener('fetch', (event) => {
   if (event.request.method !== 'GET') return;
 

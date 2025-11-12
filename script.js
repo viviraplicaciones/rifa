@@ -1,7 +1,4 @@
-/* =========================================================
-   script.js (v29 - PWA Service Worker)
-   ========================================================= */
-
+/* ============================script.js (v29 - PWA Service Worker)========================== */
 // Importar la base de datos (db) y funciones de Firebase
 import { 
     db, 
@@ -31,17 +28,13 @@ import {
   handleBotonSuerte 
 } from './tablas-numericas.js';
 
-/* ---------------------------------------------------------
-   Estado Global de la Aplicación
-   --------------------------------------------------------- */
+/* ------------------------------Estado Global de la Aplicación----------------------- */
 let boletosRifa = [];
 let participantes = [];
 const PRECIO_BOLETO = 6000;
 let numerosSeleccionadosPublica = [];
 
-/* ---------------------------------------------------------
-   Variables DOM (Caché)
-   --------------------------------------------------------- */
+/* ---------------Variables DOM (Caché)--------------------- */
 let sidebar;
 let toggleSidebarGlobalBtn, toggleSidebarMobileBtn, mainContent, navLinks, views,
     toastEl, toastMsg, toastCloseBtn, cuadriculaPublica, listaSeleccionPublica,
@@ -61,10 +54,7 @@ let modalSuerte;
 let modalSuerteNumero;
 let imgSuerte; // <-- NUEVA VARIABLE
 
-
-/* =========================================================
-   Inicialización al cargar el documento
-   ========================================================= */
+/* ============================Inicialización al cargar el documento==================== */
 document.addEventListener('DOMContentLoaded', () => {
   cachearElementosDOM();
   
@@ -146,8 +136,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }, 4000);
   }
 
-  // =========================================================
-// PASO 4: REGISTRAR EL SERVICE WORKER (PWA)
+// =======PASO 4: REGISTRAR EL SERVICE WORKER (PWA)
 // =========================================================
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
@@ -174,12 +163,8 @@ if ('serviceWorker' in navigator) {
     });
   }
   // =========================================================
-
 });
-
-/* =========================================================
-   Datos (Ahora con Firebase)
-   ========================================================= */
+/* ========================Datos (Ahora con Firebase)============= */
 
 function escucharBoletos() {
   const q = query(collection(db, "boletos"), orderBy("numero", "asc"));
@@ -215,11 +200,7 @@ function escucharParticipantes() {
     renderTablaParticipantes();
   });
 }
-
-
-/* =========================================================
-   Cacheo de elementos DOM
-   ========================================================= */
+/* ================Cacheo de elementos DOM================= */
 function cachearElementosDOM() {
   sidebar = document.getElementById('sidebar');
   toggleSidebarGlobalBtn = document.getElementById('toggle-sidebar-global');
@@ -271,10 +252,7 @@ function cachearElementosDOM() {
   // --- CACHEAR IMAGEN DEL DADO ---
   imgSuerte = document.getElementById('img-suerte');
 }
-
-/* =========================================================
-   Registro de event listeners
-   ========================================================= */
+/* =================Registro de event listeners==================== */
 function registrarEventListeners() {
   // --- UI Común (Sidebar, DarkMode) ---
   toggleSidebarGlobalBtn?.addEventListener('click', () => toggleSidebarGlobal(sidebar, toggleSidebarGlobalBtn, null));
@@ -294,8 +272,7 @@ function registrarEventListeners() {
       }
     });
   });
-
-  // --- Toast ---
+// --- Toast ---
   toastCloseBtn?.addEventListener('click', () => {
     toastEl.classList.remove('opacity-100', 'pointer-events-auto');
     toastEl.classList.add('opacity-0', 'pointer-events-none');
@@ -373,11 +350,7 @@ function registrarEventListeners() {
     formAdminLogin.reset();
   });
 }
-
-/* =========================================================
-   Funciones UI: (Vistas, Toast, Compartir)
-   ========================================================= */
-
+/* =============Funciones UI: (Vistas, Toast, Compartir)==================== */
 /**
  * Actualiza la vista activa y muestra/oculta el botón de suerte.
  * @param {string} viewId - El ID de la vista a mostrar.
@@ -443,9 +416,9 @@ async function handleCompartir() {
   const shareUrl = window.location.href.split('?')[0]; 
 
   try {
-    const response = await fetch('banner.jpg');
+    const response = await fetch('images/banner.jpg');
     const blob = await response.blob();
-    const file = new File([blob], 'banner.jpg', { type: 'image/jpeg' });
+    const file = new File([blob], 'images/banner.jpg', { type: 'image/jpeg' });
     const shareData = {
       title: shareTitle,
       text: shareText,
@@ -469,10 +442,7 @@ async function handleCompartir() {
     mostrarToast('Enlace copiado al portapapeles.');
   }
 }
-
-/* =========================================================
-   Estilo dinámico (Función sin cambios)
-   ========================================================= */
+/* =====================  Estilo dinámico (Función sin cambios)=================== */
 (function insertarEstiloFiltroAdmin() {
   const style = document.createElement('style');
   style.innerHTML = `

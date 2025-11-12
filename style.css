@@ -23,24 +23,20 @@ body {font-family: 'Roboto', sans-serif;}
 .numero-rifa-publico.revisando {background-color: #F59E0B;color: white;border-color: #F59E0B;opacity: 0.7;cursor: not-allowed;}
 .slider-image {transition: opacity 1s ease-in-out;}
 
-/* =========================================================
-   Slider / Carrusel de imágenes de la vista Inicio
-   ========================================================= */
+/* =================================Slider / Carrusel de imágenes de la vista Inicio======================== */
 #image-slider { position: relative; overflow: hidden;}
 .slider-image { transition: opacity 1s ease-in-out; opacity: 0; z-index: 0;}
 .slider-image:not(.hidden) { opacity: 1; z-index: 1;}
 
 /* --- INICIO DE NUEVOS ESTILOS --- */
-
 /* 1. Fondo navideño para la web */
 .body-con-fondo {
-  background-image: url('fondo.jpg');
+  background-image: url('./images/fondo.jpg');
   background-size: cover;
   background-position: center;
   background-attachment: fixed;
   background-repeat: no-repeat;
 }
-
 /* 2. Superposición para legibilidad (Tono "Pastel" suave) */
 .body-con-fondo::before {
   content: "";
@@ -51,51 +47,37 @@ body {font-family: 'Roboto', sans-serif;}
   z-index: -1;
   transition: background-color 0.3s;
 }
-
 /* 2b. Superposición para Modo Oscuro */
 .dark .body-con-fondo::before {
   background-color: rgba(17, 24, 39, 0.7); /* Un fondo oscuro (bg-gray-900 con opacidad) */
 }
-
-
 /* 3. Iconos del sidebar más vivos */
 .nav-link .sidebar-icon {
   color: #f0abfc;
   transition: all 0.2s;
 }
-
 .nav-link:hover .sidebar-icon,
 .nav-link.active .sidebar-icon {
   color: #FFFFFF;
   transform: scale(1.1);
 }
-
 /* 4. Estilos para el botón de toggle flotante (PC) */
-.toggle-sidebar-btn {
-  top: 1rem; /* 16px */
-  left: 1rem; /* 16px */
+.toggle-sidebar-btn {top: 1rem; /* 16px */left: 1rem; /* 16px */
   transition: all 0.3s ease-in-out;
   /* ============ CAMBIO 2a: Ajuste de posición ============ */
   /* Ajustar de 16rem a 15rem */
 }
-#sidebar:not(.collapsed) ~ main .toggle-sidebar-btn {
-  left: 15rem; 
-}
+#sidebar:not(.collapsed) ~ main .toggle-sidebar-btn {left: 15rem;}
 @media (min-width: 768px) {
-  #sidebar:not(.collapsed) ~ main .toggle-sidebar-btn {
-    left: 1rem;
-  }
+  #sidebar:not(.collapsed) ~ main .toggle-sidebar-btn {left: 1rem;}
 }
-
 /* 5. Clases para los números en modo oscuro */
 .dark .status-disponible {
   background-color: #374151; /* bg-gray-700 */
   color: #E5E7EB; /* text-gray-200 */
   border-color: #4B5563; /* border-gray-600 */
 }
-
 /* ============ INICIO DE NUEVAS CORRECCIONES (v14) ============ */
-
 /* PUNTO 1 (Feedback anterior): Arreglar color de números (disponibles) en modo oscuro */
 .dark .numero-rifa-publico:not(.ocupado):not(.revisando):not(.seleccionado) {
     color: #E5E7EB; /* text-gray-200 */
@@ -104,27 +86,13 @@ body {font-family: 'Roboto', sans-serif;}
 .dark .numero-rifa-publico:not(.ocupado):not(.revisando):not(.seleccionado):hover {
     background-color: #374151; /* bg-gray-700 */
 }
-
 /* PUNTO 3 (Feedback anterior): Espaciado de iconos del menú colapsado */
-
 /* 1. Resetear el padding del <nav> y el espacio entre hijos */
-#sidebar.collapsed nav {
-    padding-left: 0;
-    padding-right: 0;
-    space-y: 0; 
-}
-
+#sidebar.collapsed nav {padding-left: 0;padding-right: 0;space-y: 0;}
 /* 2. Ocultar los títulos de sección (p, admin-login) y bordes */
 #sidebar.collapsed nav > div > p,
-#sidebar.collapsed nav > div > a#btn-admin-login {
-    display: none;
-}
-#sidebar.collapsed nav > div {
-    padding-top: 0;
-    margin-top: 0;
-    border-top: none;
-}
-
+#sidebar.collapsed nav > div > a#btn-admin-login {display: none;}
+#sidebar.collapsed nav > div {padding-top: 0;margin-top: 0;border-top: none;}
 /* 3. Aplicar un padding vertical IGUAL a TODOS los enlaces */
 #sidebar.collapsed nav > a,
 #sidebar.collapsed nav > div > a {
@@ -134,21 +102,12 @@ body {font-family: 'Roboto', sans-serif;}
     padding-left: 0;
     padding-right: 0;
 }
-
 /* 4. Aumentar el tamaño de los iconos SÓLO cuando está colapsado */
-#sidebar.collapsed .sidebar-icon {
-    font-size: 1.25rem; /* 20px */
-}
+#sidebar.collapsed .sidebar-icon {font-size: 1.25rem; /* 20px */}
 /* (Ajustar el icono de "Nosotros" que es una imagen) */
 #sidebar.collapsed a[data-view="view-nosotros"] .sidebar-icon,
-#sidebar.collapsed a[href="index.html?view=view-nosotros"] .sidebar-icon {
-    width: 1.75rem; /* 28px */
-    height: 1.75rem; /* 28px */
+#sidebar.collapsed a[href="index.html?view=view-nosotros"] .sidebar-icon {width: 1.75rem; /* 28px */height: 1.75rem; /* 28px */
 }
-
 /* 5. Ocultar los links de admin (que ya están en un div) */
-#sidebar.collapsed #admin-links-container {
-    display: none !important; 
-}
-
+#sidebar.collapsed #admin-links-container {display: none !important;}
 /* ============ FIN DE NUEVAS CORRECCIONES (v14) ============ */

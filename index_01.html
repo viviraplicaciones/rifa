@@ -3,14 +3,12 @@
  <head>
   <meta charset="utf-8"/>
   <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-  <title>
-   Marian Crochet - Rifa Navideña
-  </title>
+  <title>Marian Crochet - Rifa Navideña</title>
   
   <meta content="Bienvenidos a Marian Crochet. Participa en nuestra Fabulosa Rifa de Navidad y gana 9 espectaculares adornos navideños tejidos en crochet estilo Amigurumi." name="description"/>
   <meta content="marian crochet, amigurumi, crochet, rifa, navidad, hecho a mano, pereira" name="keywords"/>
   <meta content="VivirApp" name="author"/>
-  <link href="icono.jpg" rel="icon" type="image/jpeg"/>
+  <link href="images/icono.jpg" rel="icon" type="image/jpeg"/>
   
   <script src="https://cdn.tailwindcss.com">
   </script>
@@ -20,114 +18,45 @@
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
   <link href="style.css" rel="stylesheet"/>
   
-  <script>
-    tailwind.config = {
-      darkMode: 'class', 
-    }
-  </script>
+  <script>tailwind.config = {darkMode: 'class', }</script>
  </head>
  <body class="h-full flex body-con-fondo dark:bg-gray-900">
-  <aside class="bg-fuchsia-700 text-fuchsia-50 flex flex-col h-full shadow-lg no-scrollbar overflow-y-auto" id="sidebar">
-   <div class="relative h-40 flex flex-col items-center justify-center p-4">
-    <img alt="Banner Navideño" class="absolute inset-0 w-full h-full object-cover z-0" src="banner.jpg"/>
-    <div class="absolute inset-0 w-full h-full bg-black opacity-30 z-0">
-    </div>
-    <div class="relative z-10 flex flex-col items-center">
-     <div class="w-20 h-20 rounded-full overflow-hidden border-4 border-white shadow-lg mb-2">
-      <img alt="RifaPRO Logo" class="w-full h-full object-cover" src="logo.png"/>
-     </div>
-     <span class="sidebar-text text-xl font-bold text-white tracking-wide">
-      RIFA NAVIDEÑA
-     </span>
-    </div>
+ <aside class="bg-fuchsia-700 text-fuchsia-50 flex flex-col h-full shadow-lg no-scrollbar overflow-y-auto" id="sidebar">
+ <div class="relative h-40 flex flex-col items-center justify-center p-4">
+ <img alt="Banner Navideño" class="absolute inset-0 w-full h-full object-cover z-0" src="images/banner.jpg"/>
+ <div class="absolute inset-0 w-full h-full bg-black opacity-30 z-0"></div>
+ <div class="relative z-10 flex flex-col items-center">
+ <div class="w-20 h-20 rounded-full overflow-hidden border-4 border-white shadow-lg mb-2">
+ <img alt="RifaPRO Logo" class="w-full h-full object-cover" src="images/logo.png"/>
+ </div>
+ <span class="sidebar-text text-xl font-bold text-white tracking-wide">RIFA NAVIDEÑA</span>
+ </div>
+ </div>
+ <nav class="flex-1 p-4 space-y-1">
+ <a class="flex items-center p-2 rounded-lg hover:bg-fuchsia-600 nav-link" href="index.html?view=view-inicio"><i class="fa-solid fa-house fa-lg sidebar-icon"></i><span class="sidebar-text text-lg ml-4">Inicio</span></a>
+   <a class="flex items-center p-2 rounded-lg hover:bg-fuchsia-600 nav-link" href="index.html?view=view-comprar-numeros"><i class="fa-solid fa-table-cells fa-lg sidebar-icon"></i><span class="sidebar-text text-lg ml-4">N&uacute;meros</span></a>
+   <a class="flex items-center p-2 rounded-lg hover:bg-fuchsia-600 nav-link" href="index.html?view=view-faq"><i class="fa-solid fa-circle-question fa-lg sidebar-icon"></i><span class="sidebar-text text-lg ml-4">Preguntas</span></a>
+   <div class="pt-4 mt-4 border-t border-fuchsia-500">
+   <p class="sidebar-text text-xs uppercase text-fuchsia-300 px-3 mb-2">Comunidad</p>
+   <a class="flex items-center p-2 rounded-lg hover:bg-fuchsia-600 active bg-fuchsia-600" href="#" id="btn-nuestra-web"><i class="fa-solid fa-globe fa-lg sidebar-icon"></i><span class="sidebar-text text-lg ml-4">Nuestra Web</span></a>
+   <a class="flex items-center p-2 rounded-lg hover:bg-fuchsia-600 nav-link" href="https://www.instagram.com/marianma_crochet/" target="_blank"><i class="fa-brands fa-instagram fa-lg sidebar-icon"></i><span class="sidebar-text text-lg ml-4">Instagram</span></a>
+   <a class="flex items-center p-2 rounded-lg hover:bg-fuchsia-600" href="#" id="btn-compartir"><i class="fa-solid fa-share-nodes fa-lg sidebar-icon"></i><span class="sidebar-text text-lg ml-4">Compartir</span></a>
    </div>
-   <nav class="flex-1 p-4 space-y-1">
-    <a class="flex items-center p-2 rounded-lg hover:bg-fuchsia-600 nav-link" href="index.html?view=view-inicio">
-     <i class="fa-solid fa-house fa-lg sidebar-icon">
-     </i>
-     <span class="sidebar-text text-lg ml-4">
-      Inicio
-     </span>
-    </a>
-    <a class="flex items-center p-2 rounded-lg hover:bg-fuchsia-600 nav-link" href="index.html?view=view-comprar-numeros">
-     <i class="fa-solid fa-table-cells fa-lg sidebar-icon">
-     </i>
-     <span class="sidebar-text text-lg ml-4">
-      N&uacute;meros
-     </span>
-    </a>
-    <a class="flex items-center p-2 rounded-lg hover:bg-fuchsia-600 nav-link" href="index.html?view=view-faq">
-     <i class="fa-solid fa-circle-question fa-lg sidebar-icon">
-     </i>
-     <span class="sidebar-text text-lg ml-4">
-      Preguntas
-     </span>
-    </a>
-    <div class="pt-4 mt-4 border-t border-fuchsia-500">
-     <p class="sidebar-text text-xs uppercase text-fuchsia-300 px-3 mb-2">
-      Comunidad
-     </p>
-     <a class="flex items-center p-2 rounded-lg hover:bg-fuchsia-600 active bg-fuchsia-600" href="#" id="btn-nuestra-web">
-      <i class="fa-solid fa-globe fa-lg sidebar-icon">
-      </i>
-      <span class="sidebar-text text-lg ml-4">
-       Nuestra Web
-      </span>
-     </a>
-     <a class="flex items-center p-2 rounded-lg hover:bg-fuchsia-600 nav-link" href="https://www.instagram.com/marianma_crochet/" target="_blank">
-      <i class="fa-brands fa-instagram fa-lg sidebar-icon">
-      </i>
-      <span class="sidebar-text text-lg ml-4">
-       Instagram
-      </span>
-     </a>
-     <a class="flex items-center p-2 rounded-lg hover:bg-fuchsia-600" href="#" id="btn-compartir">
-      <i class="fa-solid fa-share-nodes fa-lg sidebar-icon">
-      </i>
-      <span class="sidebar-text text-lg ml-4">
-       Compartir
-      </span>
-     </a>
-    </div>
-    <div class="pt-4 mt-4 border-t border-fuchsia-500">
-     <a class="cursor-pointer" href="index.html?modal=admin" id="btn-admin-login">
-      <p class="sidebar-text text-xs uppercase text-fuchsia-300 px-3 mb-2">
-       Admin
-      </p>
-     </a>
-    </div>
-    <div class="pt-4 mt-4 border-t border-fuchsia-500">
-     <p class="sidebar-text text-xs uppercase text-fuchsia-300 px-3 mb-2">
-      Soporte
-     </p>
-     <a class="flex items-center p-2 rounded-lg hover:bg-fuchsia-600" href="index.html?modal=reportar">
-      <i class="fa-solid fa-bug fa-lg sidebar-icon">
-      </i>
-      <span class="sidebar-text text-lg ml-4">
-       Reportar Fallos
-      </span>
-     </a>
-     <a class="flex items-center p-2 rounded-lg hover:bg-fuchsia-600" href="#" id="btn-dark-mode">
-      <i class="fa-solid fa-moon fa-lg sidebar-icon" id="icon-dark-mode">
-      </i>
-      <span class="sidebar-text text-lg ml-4">
-       Tema
-      </span>
-     </a>
-    </div>
+   <div class="pt-4 mt-4 border-t border-fuchsia-500">
+   <a class="cursor-pointer" href="index.html?modal=admin" id="btn-admin-login"><p class="sidebar-text text-xs uppercase text-fuchsia-300 px-3 mb-2">Admin</p></a>
+   </div>
+   <div class="pt-4 mt-4 border-t border-fuchsia-500">
+   <p class="sidebar-text text-xs uppercase text-fuchsia-300 px-3 mb-2">Soporte</p>
+   <a class="flex items-center p-2 rounded-lg hover:bg-fuchsia-600" href="index.html?modal=reportar"><i class="fa-solid fa-bug fa-lg sidebar-icon"></i><span class="sidebar-text text-lg ml-4">Reportar Fallos</span></a>
+   <a class="flex items-center p-2 rounded-lg hover:bg-fuchsia-600" href="#" id="btn-dark-mode"><i class="fa-solid fa-moon fa-lg sidebar-icon" id="icon-dark-mode"></i><span class="sidebar-text text-lg ml-4">Tema</span></a>
+   </div>
    </nav>
    <div class="mt-auto p-4 flex flex-col items-center border-t border-fuchsia-500">
-    <img alt="VivirApp Logo" class="h-8 mb-2" src="vivirapp.png"/>
-    <span class="sidebar-text text-xs text-fuchsia-300 text-center">
-     By VivirApp • 2025 • Colombia
-    </span>
-   </div>
-  </aside>
+   <img alt="VivirApp Logo" class="h-8 mb-2" src="images/vivirapp.png"/>
+   <span class="sidebar-text text-xs text-fuchsia-300 text-center">By VivirApp • 2025 • Colombia</span>
+   </div></aside>
   
-  <button class="fixed z-20 p-2 bg-fuchsia-700 text-white rounded-md toggle-sidebar-btn hidden md:block" id="toggle-sidebar-global">
-   <i class="fa-solid fa-bars">
-   </i>
-  </button>
+  <button class="fixed z-20 p-2 bg-fuchsia-700 text-white rounded-md toggle-sidebar-btn hidden md:block" id="toggle-sidebar-global"><i class="fa-solid fa-bars"></i></button>
   
   <main class="flex-1 flex flex-col h-full overflow-y-auto" id="main-content">
    
@@ -135,186 +64,180 @@
     <div class="mt-0 md:mt-8 w-full max-w-6xl mx-auto bg-white md:rounded-2xl shadow-xl overflow-hidden dark:bg-gray-800">
      
      <div class="relative">
-      <img alt="Adornos Navideños Amigurumi" class="w-full h-64 md:h-80 object-cover" src="01.jpg"/>
-      <div class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center">
-       <div class="text-center p-4">
-        <h1 class="text-4xl md:text-5xl font-bold text-white">
-         Bienvenidos a Marian Crochet
-        </h1>
-        <p class="text-xl text-fuchsia-200 mt-2">
-         Donde cada puntada está hecha con amor.
-        </p>
-        <div class="mt-6 flex flex-col sm:flex-row gap-4 justify-center">
-         <a class="inline-block bg-lime-500 text-white font-bold text-lg py-3 px-8 rounded-xl hover:bg-lime-600 transition duration-300 shadow-lg" href="#galeria-productos">
-          Ver Productos
-         </a>
-         <a class="inline-block bg-fuchsia-500 text-white font-bold text-lg py-3 px-8 rounded-xl hover:bg-fuchsia-600 transition duration-300 shadow-lg" href="index.html?view=view-comprar-numeros">
-          ¡Participa en la Rifa!
-         </a>
-        </div>
-       </div>
-      </div>
+     <img alt="Adornos Navideños Amigurumi" class="w-full h-64 md:h-80 object-cover" src="images/header.jpg"/>
+     <div class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center">
+     <div class="text-center p-4">
+     <br>
+     <h1 class="text-4xl md:text-5xl font-bold text-white">Bienvenidos a Marian Crochet</h1>
+     <p class="text-xl text-fuchsia-200 mt-2">Donde cada puntada está hecha con amor.</p>
+     <div class="mt-6 flex flex-col sm:flex-row gap-4 justify-center">
+     </div>
+     </div>
+     </div>
      </div>
      
      <div class="p-4 md:p-12 space-y-12">
-      <section class="flex flex-col md:flex-row items-center gap-8">
-       <img alt="Icono Marian Crochet" class="w-40 h-40 rounded-full shadow-lg" src="icono.jpg"/>
-       <div class="flex-1 text-center md:text-left">
-        <h2 class="text-3xl font-bold text-gray-800 dark:text-white">
-         Sobre Mí
-        </h2>
-        <p class="text-lg text-gray-600 mt-2 dark:text-gray-300">
-         Somos "Marian Crochet", con más de tres años de experiencia en crochet, creando piezas únicas y coloridas hechas con dedicación. Nuestros amigurumis y accesorios buscan transmitir cariño y generar alegría en quienes los reciben.
-        </p>
-       </div>
-      </section>
-      <hr class="dark:border-gray-700"/>
+     <section class="flex flex-col md:flex-row items-center gap-8">
+     <img alt="Icono Marian Crochet" class="w-40 h-40 rounded-full shadow-lg" src="images/logo.png"/>
+     <div class="flex-1 text-center md:text-left">
+     <h2 class="text-3xl font-bold text-gray-800 dark:text-white">Sobre Mí</h2>
+     <p class="text-lg text-gray-600 mt-2 dark:text-gray-300">Somos "Marian Crochet", con más de tres años de experiencia en crochet, creando piezas únicas y coloridas hechas con dedicación. Nuestros amigurumis y accesorios buscan transmitir cariño y generar alegría en quienes los reciben.</p></div></section>
+      <hr>
       <section id="galeria-productos">
-       <h2 class="text-3xl font-bold text-gray-800 dark:text-white text-center">
-        Nuestros Productos
-       </h2>
+       <h2 class="text-3xl font-bold text-gray-800 dark:text-white text-center">Nuestros Productos</h2>
        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
-        <div class="bg-gray-50 dark:bg-gray-700 rounded-lg shadow-md overflow-hidden flex flex-col">
-         <img alt="Producto 1" class="w-full h-56 object-cover" src="02.jpg"/>
+       <div class="bg-gray-50 dark:bg-gray-700 rounded-lg shadow-md overflow-hidden flex flex-col">
+       <img alt="Producto 1" class="w-full h-56 object-cover" src="images/snoopy.jpg"/>
+       <div class="p-5 flex flex-col flex-1">
+       <h3 class="text-2xl font-bold text-gray-900 dark:text-white">Llavero Snoopy</h3>
+       <a class="mt-4 text-center bg-gray-200 dark:bg-gray-600 dark:hover:bg-gray-500 dark:text-white text-gray-800 font-semibold py-2 px-4 rounded-lg hover:bg-gray-300 transition-colors" href="https://www.instagram.com/marianma_crochet/" target="_blank">Pedir por Instagram</a></div></div>
+
+       <div class="bg-gray-50 dark:bg-gray-700 rounded-lg shadow-md overflow-hidden flex flex-col">
+       <img alt="Producto 1" class="w-full h-56 object-cover" src="images/coneja.jpg"/>
+       <div class="p-5 flex flex-col flex-1">
+       <h3 class="text-2xl font-bold text-gray-900 dark:text-white">Llavero Conejita Frida</h3>
+       <a class="mt-4 text-center bg-gray-200 dark:bg-gray-600 dark:hover:bg-gray-500 dark:text-white text-gray-800 font-semibold py-2 px-4 rounded-lg hover:bg-gray-300 transition-colors" href="https://www.instagram.com/marianma_crochet/" target="_blank">Pedir por Instagram</a></div></div>
+
+       <div class="bg-gray-50 dark:bg-gray-700 rounded-lg shadow-md overflow-hidden flex flex-col">
+       <img alt="Producto 1" class="w-full h-56 object-cover" src="images/capi.jpg"/>
+       <div class="p-5 flex flex-col flex-1">
+       <h3 class="text-2xl font-bold text-gray-900 dark:text-white">Pinzas Capibara</h3>
+       <a class="mt-4 text-center bg-gray-200 dark:bg-gray-600 dark:hover:bg-gray-500 dark:text-white text-gray-800 font-semibold py-2 px-4 rounded-lg hover:bg-gray-300 transition-colors" href="https://www.instagram.com/marianma_crochet/" target="_blank">Pedir por Instagram</a></div></div>
+
+         <div class="bg-gray-50 dark:bg-gray-700 rounded-lg shadow-md overflow-hidden flex flex-col">
+         <img alt="Producto 1" class="w-full h-56 object-cover" src="images/rosas.jpg"/>
          <div class="p-5 flex flex-col flex-1">
-          <h3 class="text-2xl font-bold text-gray-900 dark:text-white">
-           Oso Polar Navideño
-          </h3>
-          <p class="text-gray-600 mt-2 dark:text-gray-300">
-           Adorable oso polar tejido a mano, perfecto para decorar tu árbol o regalar.
-          </p>
-          <span class="text-xl font-bold text-fuchsia-500 mt-4">
-           $ 25.000
-          </span>
-          <a class="mt-4 text-center bg-gray-200 dark:bg-gray-600 dark:hover:bg-gray-500 dark:text-white text-gray-800 font-semibold py-2 px-4 rounded-lg hover:bg-gray-300 transition-colors" href="https://www.instagram.com/marianma_crochet/" target="_blank">
-           Pedir por Instagram
-          </a>
-         </div>
-        </div>
+         <h3 class="text-2xl font-bold text-gray-900 dark:text-white">Moñas Rosa</h3>
+         <a class="mt-4 text-center bg-gray-200 dark:bg-gray-600 dark:hover:bg-gray-500 dark:text-white text-gray-800 font-semibold py-2 px-4 rounded-lg hover:bg-gray-300 transition-colors" href="https://www.instagram.com/marianma_crochet/" target="_blank">Pedir por Instagram</a></div></div>
+
         <div class="bg-gray-50 dark:bg-gray-700 rounded-lg shadow-md overflow-hidden flex flex-col">
-         <img alt="Producto 2" class="w-full h-56 object-cover" src="03.jpg"/>
-         <div class="p-5 flex flex-col flex-1">
-          <h3 class="text-2xl font-bold text-gray-900 dark:text-white">
-           Reno Amigurumi
-          </h3>
-          <p class="text-gray-600 mt-2 dark:text-gray-300">
-           Un compañero clásico de la navidad, con bufanda roja y detalles bordados.
-          </p>
-          <span class="text-xl font-bold text-fuchsia-500 mt-4">
-           $ 30.000
-          </span>
-          <a class="mt-4 text-center bg-gray-200 dark:bg-gray-600 dark:hover:bg-gray-500 dark:text-white text-gray-800 font-semibold py-2 px-4 rounded-lg hover:bg-gray-300 transition-colors" href="https://www.instagram.com/marianma_crochet/" target="_blank">
-           Pedir por Instagram
-          </a>
-         </div>
-        </div>
+        <img alt="Producto 1" class="w-full h-56 object-cover" src="images/mazul.jpg"/>
+        <div class="p-5 flex flex-col flex-1">
+        <h3 class="text-2xl font-bold text-gray-900 dark:text-white">Diadema Flores Azules</h3>
+        <a class="mt-4 text-center bg-gray-200 dark:bg-gray-600 dark:hover:bg-gray-500 dark:text-white text-gray-800 font-semibold py-2 px-4 rounded-lg hover:bg-gray-300 transition-colors" href="https://www.instagram.com/marianma_crochet/" target="_blank">Pedir por Instagram</a></div></div>
+
         <div class="bg-gray-50 dark:bg-gray-700 rounded-lg shadow-md overflow-hidden flex flex-col">
-         <img alt="Producto 3" class="w-full h-56 object-cover" src="04.jpg"/>
-         <div class="p-5 flex flex-col flex-1">
-          <h3 class="text-2xl font-bold text-gray-900 dark:text-white">
-           Muñeco de Nieve
-          </h3>
-          <p class="text-gray-600 mt-2 dark:text-gray-300">
-           Un amigable muñeco de nieve que no se derrite. Ideal para colgar.
-          </p>
-          <span class="text-xl font-bold text-fuchsia-500 mt-4">
-           $ 20.000
-          </span>
-          <a class="mt-4 text-center bg-gray-200 dark:bg-gray-600 dark:hover:bg-gray-500 dark:text-white text-gray-800 font-semibold py-2 px-4 rounded-lg hover:bg-gray-300 transition-colors" href="https://www.instagram.com/marianma_crochet/" target="_blank">
-           Pedir por Instagram
-          </a>
-         </div>
-        </div>
-       </div>
-      </section>
-      <hr class="dark:border-gray-700"/>
-      <section class="text-center">
-       <i class="fa-solid fa-palette fa-3x text-fuchsia-500">
-       </i>
-       <h2 class="text-3xl font-bold text-gray-800 dark:text-white mt-4">
-        &iquest;Quieres algo especial?
-       </h2>
-       <p class="text-lg text-gray-600 mt-2 max-w-2xl mx-auto dark:text-gray-300">
-        ¡Claro que sí! Me encanta crear piezas únicas. Si tienes una idea para un amigurumi personalizado, contáctame por Instagram y cuéntame qué tienes en mente.
-       </p>
-       <a class="mt-6 inline-block bg-fuchsia-500 text-white font-bold text-lg py-3 px-8 rounded-xl hover:bg-fuchsia-600 transition duration-300 shadow-lg" href="https://www.instagram.com/marianma_crochet/" target="_blank">
-        Enviar Mensaje Directo
-       </a>
-      </section>
-      <hr class="dark:border-gray-700"/>
-      <section class="text-center bg-gray-100 dark:bg-gray-700 p-8 rounded-lg">
-       <h2 class="text-3xl font-bold text-gray-800 dark:text-white">
-        ¡No te olvides de la Rifa Navideña!
-       </h2>
-       <p class="text-lg text-gray-600 mt-2 dark:text-gray-300">
-        Además de mis productos, estoy rifando un set increíble de 9 esferas navideñas. ¡No dejes pasar la oportunidad!
-       </p>
-       <a class="mt-6 inline-block bg-lime-500 text-white font-bold text-lg py-3 px-8 rounded-xl hover:bg-lime-600 transition duration-300 shadow-lg" href="index.html?view=view-comprar-numeros">
-        Ver Números Disponibles
-       </a>
-      </section>
-     </div>
-    </div>
-   </div>
+        <img alt="Producto 1" class="w-full h-56 object-cover" src="images/mrosa.jpg"/>
+        <div class="p-5 flex flex-col flex-1">
+        <h3 class="text-2xl font-bold text-gray-900 dark:text-white">Diadema Flores Rosas</h3>
+        <a class="mt-4 text-center bg-gray-200 dark:bg-gray-600 dark:hover:bg-gray-500 dark:text-white text-gray-800 font-semibold py-2 px-4 rounded-lg hover:bg-gray-300 transition-colors" href="https://www.instagram.com/marianma_crochet/" target="_blank">Pedir por Instagram</a></div></div>
+
+        <div class="bg-gray-50 dark:bg-gray-700 rounded-lg shadow-md overflow-hidden flex flex-col">
+        <img alt="Producto 1" class="w-full h-56 object-cover" src="images/hello.jpg"/>
+        <div class="p-5 flex flex-col flex-1">
+        <h3 class="text-2xl font-bold text-gray-900 dark:text-white">Llavero Hello Kittiy</h3>
+        <a class="mt-4 text-center bg-gray-200 dark:bg-gray-600 dark:hover:bg-gray-500 dark:text-white text-gray-800 font-semibold py-2 px-4 rounded-lg hover:bg-gray-300 transition-colors" href="https://www.instagram.com/marianma_crochet/" target="_blank">Pedir por Instagram</a></div></div>
+
+        <div class="bg-gray-50 dark:bg-gray-700 rounded-lg shadow-md overflow-hidden flex flex-col">
+        <img alt="Producto 1" class="w-full h-56 object-cover" src="images/vegeta.jpg"/>
+        <div class="p-5 flex flex-col flex-1">
+        <h3 class="text-2xl font-bold text-gray-900 dark:text-white">Llavero Vegeta</h3>
+        <a class="mt-4 text-center bg-gray-200 dark:bg-gray-600 dark:hover:bg-gray-500 dark:text-white text-gray-800 font-semibold py-2 px-4 rounded-lg hover:bg-gray-300 transition-colors" href="https://www.instagram.com/marianma_crochet/" target="_blank">Pedir por Instagram</a></div></div>
+
+        <div class="bg-gray-50 dark:bg-gray-700 rounded-lg shadow-md overflow-hidden flex flex-col">
+        <img alt="Producto 1" class="w-full h-56 object-cover" src="images/harry.jpg"/>
+        <div class="p-5 flex flex-col flex-1">
+        <h3 class="text-2xl font-bold text-gray-900 dark:text-white">Llavero Harry Pooter</h3>
+        <a class="mt-4 text-center bg-gray-200 dark:bg-gray-600 dark:hover:bg-gray-500 dark:text-white text-gray-800 font-semibold py-2 px-4 rounded-lg hover:bg-gray-300 transition-colors" href="https://www.instagram.com/marianma_crochet/" target="_blank">Pedir por Instagram</a></div></div>
+
+        <div class="bg-gray-50 dark:bg-gray-700 rounded-lg shadow-md overflow-hidden flex flex-col">
+        <img alt="Producto 1" class="w-full h-56 object-cover" src="images/porta.jpg"/>
+        <div class="p-5 flex flex-col flex-1">
+        <h3 class="text-2xl font-bold text-gray-900 dark:text-white">Portalapices</h3>
+        <a class="mt-4 text-center bg-gray-200 dark:bg-gray-600 dark:hover:bg-gray-500 dark:text-white text-gray-800 font-semibold py-2 px-4 rounded-lg hover:bg-gray-300 transition-colors" href="https://www.instagram.com/marianma_crochet/" target="_blank">Pedir por Instagram</a></div></div>
+
+       <div class="bg-gray-50 dark:bg-gray-700 rounded-lg shadow-md overflow-hidden flex flex-col">
+       <img alt="Producto 1" class="w-full h-56 object-cover" src="images/kpop.jpg"/>
+       <div class="p-5 flex flex-col flex-1">
+       <h3 class="text-2xl font-bold text-gray-900 dark:text-white">Llavero Kuromi</h3>
+       <a class="mt-4 text-center bg-gray-200 dark:bg-gray-600 dark:hover:bg-gray-500 dark:text-white text-gray-800 font-semibold py-2 px-4 rounded-lg hover:bg-gray-300 transition-colors" href="https://www.instagram.com/marianma_crochet/" target="_blank">Pedir por Instagram</a></div></div>
+
+      <div class="bg-gray-50 dark:bg-gray-700 rounded-lg shadow-md overflow-hidden flex flex-col">
+      <img alt="Producto 1" class="w-full h-56 object-cover" src="images/kpop2.jpg"/>
+      <div class="p-5 flex flex-col flex-1">
+      <h3 class="text-2xl font-bold text-gray-900 dark:text-white">
+      <a class="mt-4 text-center bg-gray-200 dark:bg-gray-600 dark:hover:bg-gray-500 dark:text-white text-gray-800 font-semibold py-2 px-4 rounded-lg hover:bg-gray-300 transition-colors" href="https://www.instagram.com/marianma_crochet/" target="_blank">Pedir por Instagram </a></div></div>
+
+     <div class="bg-gray-50 dark:bg-gray-700 rounded-lg shadow-md overflow-hidden flex flex-col">
+     <img alt="Producto 2" class="w-full h-56 object-cover" src="images/perry.jpg"/>
+     <div class="p-5 flex flex-col flex-1">
+     <h3 class="text-2xl font-bold text-gray-900 dark:text-white">Llavero Perry</h3>
+     <a class="mt-4 text-center bg-gray-200 dark:bg-gray-600 dark:hover:bg-gray-500 dark:text-white text-gray-800 font-semibold py-2 px-4 rounded-lg hover:bg-gray-300 transition-colors" href="https://www.instagram.com/marianma_crochet/" target="_blank">Pedir por Instagram</a></div></div>
+    <div class="bg-gray-50 dark:bg-gray-700 rounded-lg shadow-md overflow-hidden flex flex-col">
+    <img alt="Producto 3" class="w-full h-56 object-cover" src="images/wasosky.jpg"/>
+    <div class="p-5 flex flex-col flex-1">
+    <h3 class="text-2xl font-bold text-gray-900 dark:text-white">Llavero Mike Wazowski</h3>
+    <a class="mt-4 text-center bg-gray-200 dark:bg-gray-600 dark:hover:bg-gray-500 dark:text-white text-gray-800 font-semibold py-2 px-4 rounded-lg hover:bg-gray-300 transition-colors" href="https://www.instagram.com/marianma_crochet/" target="_blank">Pedir por Instagram</a></div>
+    </div></div></section>
+   <hr class="dark:border-gray-700"/>
+   <section class="text-center"><i class="fa-solid fa-palette fa-3x text-fuchsia-500"></i>
+   <h2 class="text-3xl font-bold text-gray-800 dark:text-white mt-4">&iquest;Quieres algo especial?</h2>
+   <p class="text-lg text-gray-600 mt-2 max-w-2xl mx-auto dark:text-gray-300">¡Claro que sí! Me encanta crear piezas únicas. Si tienes una idea para un amigurumi personalizado, contáctame por Instagram y cuéntame qué tienes en mente.</p>
+  <a class="mt-6 inline-block bg-fuchsia-500 text-white font-bold text-lg py-3 px-8 rounded-xl hover:bg-fuchsia-600 transition duration-300 shadow-lg" href="https://www.instagram.com/marianma_crochet/" target="_blank">Enviar Mensaje Directo</a>
+  </section>
+  <hr class="dark:border-gray-700"/>
+  <section class="text-center bg-gray-100 dark:bg-gray-700 p-8 rounded-lg">
+  <h2 class="text-3xl font-bold text-gray-800 dark:text-white">¡No te olvides de la Rifa Navideña!</h2>
+    <p class="text-lg text-gray-600 mt-2 dark:text-gray-300">Además de mis productos, estoy rifando un set increíble de 9 esferas navideñas. ¡No dejes pasar la oportunidad!</p>
+    <a class="mt-6 inline-block bg-lime-500 text-white font-bold text-lg py-3 px-8 rounded-xl hover:bg-lime-600 transition duration-300 shadow-lg" href="index.html?view=view-comprar-numeros">Ver Números Disponibles</a>
+  </section>
+  </div></div></div>
   </main>
-  <button class="fixed z-20 bottom-4 right-4 p-3 bg-fuchsia-700 text-white rounded-lg shadow-lg md:hidden aspect-square" id="toggle-sidebar-mobile">
-   <i class="fa-solid fa-bars fa-lg">
-   </i>
-  </button>
+  <button class="fixed z-20 bottom-4 right-4 p-3 bg-fuchsia-700 text-white rounded-lg shadow-lg md:hidden aspect-square" id="toggle-sidebar-mobile"><i class="fa-solid fa-bars fa-lg"></i></button>
 
-  <script type="module">
-    // Importar la lógica de UI común
-    import { toggleSidebarGlobal, initDarkMode, registerDarkModeHandler } from './common-ui.js';
+<script type="module">
+// Importar la lógica de UI común
+import { toggleSidebarGlobal, initDarkMode, registerDarkModeHandler } from './common-ui.js';
 
-    document.addEventListener('DOMContentLoaded', () => {
-      // ===== CAMBIO 4: Scroll al Top =====
-      const mainContent = document.getElementById('main-content');
-      if (mainContent) mainContent.scrollTop = 0;
+document.addEventListener('DOMContentLoaded', () => {
+// ===== CAMBIO 4: Scroll al Top =====
+const mainContent = document.getElementById('main-content');
+if (mainContent) mainContent.scrollTop = 0;
       
-      // Cachear elementos de esta página
-      const sidebar = document.getElementById('sidebar');
-      const toggleBtn = document.getElementById('toggle-sidebar-global');
-      const toggleBtnMobile = document.getElementById('toggle-sidebar-mobile');
-      const btnDarkMode = document.getElementById('btn-dark-mode');
-      const iconDarkMode = document.getElementById('icon-dark-mode');
-      const btnCompartir = document.getElementById('btn-compartir');
+// Cachear elementos de esta página
+const sidebar = document.getElementById('sidebar');
+const toggleBtn = document.getElementById('toggle-sidebar-global');
+const toggleBtnMobile = document.getElementById('toggle-sidebar-mobile');
+const btnDarkMode = document.getElementById('btn-dark-mode');
+const iconDarkMode = document.getElementById('icon-dark-mode');
+const btnCompartir = document.getElementById('btn-compartir');
       
-      // ===== CAMBIO 1: Menú colapsado en móvil =====
-      if (window.innerWidth < 768) {
-        sidebar?.classList.add('collapsed');
-      }
-      
-      // --- Lógica importada de common-ui.js ---
-      initDarkMode(iconDarkMode);
-      // Ajuste: Esta página NO usa el overlay, por lo que pasamos 'null'
-      toggleBtn?.addEventListener('click', () => toggleSidebarGlobal(sidebar, toggleBtn, null));
-      toggleBtnMobile?.addEventListener('click', () => toggleSidebarGlobal(sidebar, toggleBtn, null));
-      registerDarkModeHandler(btnDarkMode, iconDarkMode);
-      // --- Fin de lógica importada ---
+// ===== CAMBIO 1: Menú colapsado en móvil =====
+if (window.innerWidth < 768) {
+sidebar?.classList.add('collapsed');
+}
+    
+// --- Lógica importada de common-ui.js ---
+initDarkMode(iconDarkMode);
+// Ajuste: Esta página NO usa el overlay, por lo que pasamos 'null'
+toggleBtn?.addEventListener('click', () => toggleSidebarGlobal(sidebar, toggleBtn, null));
+toggleBtnMobile?.addEventListener('click', () => toggleSidebarGlobal(sidebar, toggleBtn, null));
+registerDarkModeHandler(btnDarkMode, iconDarkMode);
+// --- Fin de lógica importada ---
 
-      // Lógica de Links Especiales (Específica de esta página)
-      const btnNuestraWeb = document.getElementById('btn-nuestra-web');
-      btnNuestraWeb?.addEventListener('click', (e) => e.preventDefault());
+// Lógica de Links Especiales (Específica de esta página)
+const btnNuestraWeb = document.getElementById('btn-nuestra-web');
+btnNuestraWeb?.addEventListener('click', (e) => e.preventDefault());
+    
+// Lógica de "Compartir" (Versión simple con alert)
+btnCompartir?.addEventListener('click', (e) => {
+e.preventDefault();
+navigator.clipboard.writeText(window.location.href);
+alert('Enlace de nuestra web copiado al portapapeles.');
+});
+    
+// Lógica para links que van al index.html
+const mainLinks = document.querySelectorAll('a[href^="index.html"]');
+mainLinks.forEach(link => {
+link.addEventListener('click', () => {
+// Ocultar menú en móvil al hacer clic
+if (window.innerWidth < 768 && sidebar && !sidebar.classList.contains('collapsed')) {
+sidebar.classList.add('collapsed');
+}
+});
+});
       
-      // Lógica de "Compartir" (Versión simple con alert)
-      btnCompartir?.addEventListener('click', (e) => {
-         e.preventDefault();
-         navigator.clipboard.writeText(window.location.href);
-         alert('Enlace de nuestra web copiado al portapapeles.');
-      });
-      
-      // Lógica para links que van al index.html
-      const mainLinks = document.querySelectorAll('a[href^="index.html"]');
-      mainLinks.forEach(link => {
-        link.addEventListener('click', () => {
-          // Ocultar menú en móvil al hacer clic
-          if (window.innerWidth < 768 && sidebar && !sidebar.classList.contains('collapsed')) {
-             sidebar.classList.add('collapsed');
-          }
-        });
-      });
-      
-    });
-  </script>
- </body>
+});
+</script>
+</body>
 </html>

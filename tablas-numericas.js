@@ -1,6 +1,4 @@
-/* ========================================
-   tablas-numericas.js (v28 - Animación Suerte)
-   ======================================= */
+/* ==============tablas-numericas.js (v28 - Animación Suerte)=============================== */
 
 // Importar la base de datos (db) y funciones de Firestore
 import { 
@@ -184,7 +182,7 @@ export function handleBotonSuerte() {
   _isSuerteDisabled = true;
   if (_imgSuerte) {
     // Forzar el reinicio del GIF añadiendo un timestamp
-    _imgSuerte.src = `dado.gif?t=${new Date().getTime()}`;
+    _imgSuerte.src = `images/dado.gif?t=${new Date().getTime()}`;
   }
 
   // 2. Esperar a que la animación ocurra
@@ -204,7 +202,7 @@ export function handleBotonSuerte() {
     
     // 6. Volver a la imagen estática
     if (_imgSuerte) {
-      _imgSuerte.src = 'dado.png';
+      _imgSuerte.src = 'images/dado.png';
     }
     
     // 7. Ocultar el modal de resultado después de 2 seg

@@ -31,7 +31,7 @@ import {
 /* ------------------------------Estado Global de la Aplicación----------------------- */
 let boletosRifa = [];
 let participantes = [];
-const PRECIO_BOLETO = 6000;
+const PRECIO_BOLETO = 5000;
 let numerosSeleccionadosPublica = [];
 
 /* ---------------Variables DOM (Caché)--------------------- */

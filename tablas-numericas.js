@@ -12,7 +12,7 @@ import {
 // Variables de estado y DOM
 let _boletosRifa = [];
 let _participantes = [];
-let _PRECIO_BOLETO = 6000;
+let _PRECIO_BOLETO = 5000;
 let _numerosSeleccionadosPublica = [];
 let _mostrarToast = () => {};
 let _isSuerteDisabled = false; // Previene doble clic en el botón Suerte

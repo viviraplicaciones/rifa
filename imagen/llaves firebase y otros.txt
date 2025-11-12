@@ -1,0 +1,93 @@
+
+sdk - npm
+// Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Your web app's Firebase configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyDQxf7pZpe2st6wrJsVV6Q9EBW2PxWf6o4",
+  authDomain: "rifanavidad-344f0.firebaseapp.com",
+  projectId: "rifanavidad-344f0",
+  storageBucket: "rifanavidad-344f0.firebasestorage.app",
+  messagingSenderId: "719709518329",
+  appId: "1:719709518329:web:e84990017306fecb416528",
+  measurementId: "G-E1XWBTJ00R"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
+
+
+
+etiqueta <script>
+<script type="module">
+  // Import the functions you need from the SDKs you need
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-analytics.js";
+  // TODO: Add SDKs for Firebase products that you want to use
+  // https://firebase.google.com/docs/web/setup#available-libraries
+
+  // Your web app's Firebase configuration
+  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+  const firebaseConfig = {
+    apiKey: "AIzaSyDQxf7pZpe2st6wrJsVV6Q9EBW2PxWf6o4",
+    authDomain: "rifanavidad-344f0.firebaseapp.com",
+    projectId: "rifanavidad-344f0",
+    storageBucket: "rifanavidad-344f0.firebasestorage.app",
+    messagingSenderId: "719709518329",
+    appId: "1:719709518329:web:e84990017306fecb416528",
+    measurementId: "G-E1XWBTJ00R"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const analytics = getAnalytics(app);
+</script>
+
+
+llave de acceso
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyDQxf7pZpe2st6wrJsVV6Q9EBW2PxWf6o4",
+  authDomain: "rifanavidad-344f0.firebaseapp.com",
+  projectId: "rifanavidad-344f0",
+  storageBucket: "rifanavidad-344f0.firebasestorage.app",
+  messagingSenderId: "719709518329",
+  appId: "1:719709518329:web:e84990017306fecb416528",
+  measurementId: "G-E1XWBTJ00R"
+};
+
+
+Resumen del Plan:
+Firebase DB: Hacer que los datos sean permanentes.
+
+Flujo de Usuario: Permitir que los usuarios guarden sus datos en la DB.
+
+Botón "Suerte": Mejorar la interfaz de selección.
+
+PWA: Darle a la web capacidades de "app" (instalación).
+
+Notificaciones/Calendario: Usar las capacidades de PWA y Firebase para interactuar con el usuario.
+
+
+
+ok, vamos a tomar como punto de partida este reset, el contexto que le voy a dar es solo esto, tenia 5 pasos por hacer ya llevamos 4 solo falta uno:
+Resumen del Plan:
+1. Firebase DB: Hacer que los datos sean permanentes. - OK
+
+2. Flujo de Usuario: Permitir que los usuarios guarden sus datos en la DB. - OK
+
+3. Botón "Suerte": Mejorar la interfaz de selección. - OK
+
+4. PWA: Darle a la web capacidades de "app" (instalación). - OK
+
+5. Notificaciones/Calendario: Usar las capacidades de PWA y Firebase para interactuar con el usuario. (ESTO FALTA)
+
+la idea es que la notificacion tambien interactue con el calendario del dispositivo movil.
+como para el tema de las notificaciones el usuario las debe autorizar, vamos a crear un toggle que cuando se active quede en color verde y si no esta activado se vea en rojo. 
+ este toggle que se vea en el menu lateral encima de reporte de fallos

@@ -1,4 +1,4 @@
-/* ==============tablas-numericas.js (v29 - Lógica CRUD Participantes)=============================== */
+/* ==============tablas-numericas.js (v30 - Guardando Token de Participante)=============================== */
 
 // Importar la base de datos (db) y funciones de Firestore
 import { 
@@ -7,9 +7,13 @@ import {
     addDoc, 
     doc, 
     writeBatch,
-    updateDoc,  // <-- NUEVO: Para editar
-    deleteDoc   // <-- NUEVO: Para borrar
+    updateDoc,  
+    deleteDoc   
 } from './firebase-init.js';
+
+// --- INICIO CÓDIGO NUEVO: Importar la función de token ---
+import { solicitarYObtenerToken } from './script.js';
+// --- FIN CÓDIGO NUEVO ---
 
 // Variables de estado y DOM
 let _boletosRifa = [];
@@ -223,9 +227,17 @@ export function handleProcederPago() {
   }
 }
 
+// --- INICIO MODIFICACIÓN: Función actualizada para guardar token ---
 export async function handleGuardarCompraUsuario(e) {
   e.preventDefault();
   if (!_formIngresarDatos || _numerosSeleccionadosPublica.length === 0) return;
+
+  // Estado de Carga
+  const submitButton = _formIngresarDatos.querySelector('button[type="submit"]');
+  if (submitButton) {
+      submitButton.disabled = true;
+      submitButton.textContent = 'Guardando...';
+  }
 
   const nombre = document.getElementById('usuario-nombre').value;
   const telefono = document.getElementById('usuario-telefono').value;
@@ -235,16 +247,31 @@ export async function handleGuardarCompraUsuario(e) {
     const boleto = _boletosRifa.find(b => b.numero === numero);
     if (!boleto || boleto.estado !== 'disponible') {
         _mostrarToast(`El número ${numero} ya no está disponible.`, true);
+        // Reactivar botón en error
+        if (submitButton) {
+            submitButton.disabled = false;
+            submitButton.textContent = 'Apartar mis números';
+        }
         return; 
     }
   }
 
   try {
+    // Obtener Token FCM
+    console.log("Solicitando token de notificación...");
+    const fcmToken = await solicitarYObtenerToken();
+    if (fcmToken) {
+        console.log("Token obtenido y será guardado con el participante.");
+    } else {
+        console.log("No se obtuvo token de notificación. El participante se guardará sin token.");
+    }
+
     const nuevoParticipante = {
       nombre: nombre,
       telefono: telefono,
-      numeros: _numerosSeleccionadosPublica.sort(), // <-- MODIFICADO: Ordenar números
-      estado: estado
+      numeros: _numerosSeleccionadosPublica.sort(), 
+      estado: estado,
+      fcmToken: fcmToken || null // <-- AÑADIDO: Guardar el token (o null)
     };
     
     const docRef = await addDoc(collection(db, "participantes"), nuevoParticipante);
@@ -258,7 +285,7 @@ export async function handleGuardarCompraUsuario(e) {
       });
     });
     
-    // --- INICIO CÓDIGO NUEVO: Enviar a WhatsApp ---
+    // --- Enviar a WhatsApp ---
     // ¡REEMPLAZA 'TU_NUMERO_DE_WHATSAPP' con tu número! (ej: 573101234567)
     const telefonoWhatsapp = 'TU_NUMERO_DE_WHATSAPP'; 
     const numerosTexto = nuevoParticipante.numeros.join(', ');
@@ -276,22 +303,28 @@ export async function handleGuardarCompraUsuario(e) {
     
     // Abrimos WhatsApp en una nueva pestaña
     window.open(whatsappUrl, '_blank');
-    // --- FIN CÓDIGO NUEVO ---
     
     await batch.commit();
 
     _modalIngresarDatos.classList.remove('flex');
     _numerosSeleccionadosPublica.length = 0; 
     
-    actualizarSeleccionPublica(); // <-- INICIO CÓDIGO NUEVO: Limpiar UI
+    actualizarSeleccionPublica(); 
     
     _mostrarToast("¡Números apartados! Te contactaremos pronto.");
     
   } catch (error) {
     console.error("Error al guardar la compra: ", error);
     _mostrarToast("Error al apartar los números. Intenta de nuevo.", true);
+  } finally {
+    // Reactivar botón (siempre)
+    if (submitButton) {
+        submitButton.disabled = false;
+        submitButton.textContent = 'Apartar mis números';
+    }
   }
 }
+// --- FIN MODIFICACIÓN ---
 
 
 /* =========================================================
@@ -345,7 +378,6 @@ export function renderTablaParticipantes() {
     return;
   }
 
-  // --- MODIFICADO: Ordenar por nombre ---
   _participantes.sort((a, b) => a.nombre.localeCompare(b.nombre));
 
   _participantes.forEach(p => {
@@ -371,7 +403,6 @@ export function renderTablaParticipantes() {
     const card = document.createElement('div');
     card.className = "bg-gray-50 dark:bg-gray-900 rounded-lg p-4 shadow";
     
-    // --- INICIO CÓDIGO MODIFICADO: Añadir botones a tarjeta móvil ---
     card.innerHTML = `
       <div class="space-y-2 text-sm">
         <p class="font-bold text-gray-900 dark:text-white truncate" title="${p.nombre}">
@@ -405,13 +436,10 @@ export function renderTablaParticipantes() {
         ` : ''}
       </div>
     `;
-    // --- FIN CÓDIGO MODIFICADO ---
     
     card.classList.add('md:hidden');
     
-    // --- INICIO CÓDIGO MODIFICADO: Añadir botones a fila de tabla ---
     const tableRow = document.createElement('div');
-    // Cambiado de grid-cols-4 a grid-cols-5
     tableRow.className = "hidden md:grid grid-cols-5 gap-4 items-center text-xs md:text-sm p-4"; 
     tableRow.innerHTML = `
         <div class="font-medium text-gray-900 dark:text-white truncate" title="${p.nombre}">
@@ -441,7 +469,6 @@ export function renderTablaParticipantes() {
           ` : '<span class="text-gray-400 dark:text-gray-500 text-xs">Completado</span>'}
         </div>
     `;
-    // --- FIN CÓDIGO MODIFICADO ---
 
     _tablaParticipantes.appendChild(card); 
     _tablaParticipantes.appendChild(tableRow); 
@@ -458,7 +485,6 @@ export function renderTablaParticipantes() {
    Modal registro de venta (Admin)
    ========================================================= */
 
-// --- MODIFICADO: Aceptar un ID para modo "Edición" ---
 export function abrirModalRegistro(participanteId = null) {
   if (!_modalRegistrarVenta || !_formRegistrarVenta || !_camposNumerosDinamicos) return;
   
@@ -466,32 +492,26 @@ export function abrirModalRegistro(participanteId = null) {
   _camposNumerosDinamicos.innerHTML = '';
   actualizarListaDisponiblesModal();
   
-  // Limpiar cualquier ID de edición anterior
   const hiddenIdInput = document.getElementById('participante-id-hidden');
   if (hiddenIdInput) hiddenIdInput.remove();
 
   if (participanteId) {
-    // --- MODO EDICIÓN ---
     const participante = _participantes.find(p => p.id === participanteId);
     if (!participante) {
       _mostrarToast("No se encontró al participante.", true);
       return;
     }
 
-    // Cambiar título del modal
     _modalRegistrarVenta.querySelector('h3').textContent = "Editar Venta";
     
-    // Llenar campos
     document.getElementById('participante-nombre').value = participante.nombre;
     document.getElementById('participante-telefono').value = participante.telefono;
     document.getElementById('participante-estado').value = participante.estado;
 
-    // Añadir los números actuales del participante
     participante.numeros.forEach(numero => {
-      anadirCampoNumero(numero, participante.numeros); // Pasa los números del participante
+      anadirCampoNumero(numero, participante.numeros); 
     });
 
-    // Guardar el ID para saber que estamos editando
     const idInput = document.createElement('input');
     idInput.type = 'hidden';
     idInput.id = 'participante-id-hidden';
@@ -499,7 +519,6 @@ export function abrirModalRegistro(participanteId = null) {
     _formRegistrarVenta.appendChild(idInput);
     
   } else {
-    // --- MODO REGISTRO ---
     _modalRegistrarVenta.querySelector('h3').textContent = "Registrar Venta Manual";
     anadirCampoNumero(null);
   }
@@ -522,7 +541,6 @@ function actualizarListaDisponiblesModal() {
   }
 }
 
-// --- MODIFICADO: Aceptar números "propios" del participante en modo edición ---
 export function anadirCampoNumero(numeroSeleccionado, numerosPropios = []) {
   if (!_camposNumerosDinamicos) return;
 
@@ -530,7 +548,6 @@ export function anadirCampoNumero(numeroSeleccionado, numerosPropios = []) {
     .map(select => select.value)
     .filter(val => val !== '');
 
-  // Los disponibles son: los 'disponibles' + los que ya tiene este participante
   const numerosDisponibles = getNumerosDisponibles();
   const numerosPropiosFiltrados = numerosPropios.filter(num => num !== numeroSeleccionado);
   const numerosParaSelect = [...numerosDisponibles, ...numerosPropiosFiltrados];
@@ -547,14 +564,12 @@ export function anadirCampoNumero(numeroSeleccionado, numerosPropios = []) {
     optionsHTML += `<option value="${numeroSeleccionado}" selected>${numeroSeleccionado}</option>`;
   }
   
-  // Añadir números disponibles (que no estén ya en el modal)
   numerosDisponibles.forEach(num => {
     if (!numerosYaSeleccionadosEnModal.includes(num) || num === numeroSeleccionado) {
       optionsHTML += `<option value="${num}">${num}</option>`;
     }
   });
   
-  // Añadir números que ya eran del participante (si no están ya en el modal)
   numerosPropios.forEach(num => {
       if (num !== numeroSeleccionado && !numerosDisponibles.includes(num) && !numerosYaSeleccionadosEnModal.includes(num)) {
           optionsHTML += `<option value="${num}" class="text-blue-500">(Propio) ${num}</option>`;
@@ -577,7 +592,6 @@ export function anadirCampoNumero(numeroSeleccionado, numerosPropios = []) {
   _camposNumerosDinamicos.appendChild(divCampo);
 }
 
-// --- MODIFICADO: Lógica de actualización para modo edición ---
 function actualizarSelectsDinamicos() {
   if (!_camposNumerosDinamicos) return;
   
@@ -596,14 +610,12 @@ function actualizarSelectsDinamicos() {
     let optionsHTML = '<option value="" disabled>Selecciona un número</option>';
     if (valorActual) optionsHTML += `<option value="${valorActual}" selected>${valorActual}</option>`;
 
-    // Números disponibles (que no estén seleccionados en otro select)
     numerosDisponibles.forEach(num => {
       if (!valoresSeleccionados.includes(num) || num === valorActual) {
         if (num !== valorActual) optionsHTML += `<option value="${num}">${num}</option>`;
       }
     });
     
-    // Números propios del participante (que no estén seleccionados en otro select)
     numerosPropios.forEach(num => {
         if (!numerosDisponibles.includes(num) && (!valoresSeleccionados.includes(num) || num === valorActual)) {
              if (num !== valorActual) optionsHTML += `<option value="${num}" class="text-blue-500">(Propio) ${num}</option>`;
@@ -615,7 +627,6 @@ function actualizarSelectsDinamicos() {
   });
 }
 
-// --- MODIFICADO: Distinguir entre Guardar (Nuevo) y Actualizar (Edición) ---
 export async function handleGuardarVenta(e) {
   e.preventDefault();
   if (!_formRegistrarVenta) return;
@@ -634,12 +645,10 @@ export async function handleGuardarVenta(e) {
     return;
   }
   
-  // --- Lógica de Validación (Comprobar disponibilidad) ---
   const participante = participanteId ? _participantes.find(p => p.id === participanteId) : null;
   const numerosOriginales = participante ? participante.numeros : [];
   
   for (const numero of numerosNuevos) {
-    // Si el número no estaba en la lista original, debe estar disponible
     if (!numerosOriginales.includes(numero)) {
       const boleto = _boletosRifa.find(b => b.numero === numero);
       if (!boleto || boleto.estado !== 'disponible') {
@@ -659,20 +668,16 @@ export async function handleGuardarVenta(e) {
       estado: estado
     };
 
-    // --- Decidir si crear o actualizar ---
     if (participanteId) {
-      // --- ACTUALIZAR (EDITAR) ---
       const participanteRef = doc(db, "participantes", participanteId);
       batch.update(participanteRef, datosParticipante);
       
-      // Números que se quitaron (liberar)
       const numerosLiberados = numerosOriginales.filter(num => !numerosNuevos.includes(num));
       numerosLiberados.forEach(numero => {
           const boletoRef = doc(db, "boletos", numero);
           batch.update(boletoRef, { estado: "disponible", participanteId: "" });
       });
       
-      // Números que se añadieron o mantuvieron (asignar)
       numerosNuevos.forEach(numero => {
           const boletoRef = doc(db, "boletos", numero);
           batch.update(boletoRef, { estado: estado, participanteId: participanteId });
@@ -680,6 +685,7 @@ export async function handleGuardarVenta(e) {
       
     } else {
       // --- CREAR (NUEVO) ---
+      // NOTA: Esta función de admin NO guarda el token FCM, solo la de usuario
       const docRef = await addDoc(collection(db, "participantes"), datosParticipante);
       
       numerosNuevos.forEach(numero => {
@@ -702,7 +708,6 @@ export async function handleGuardarVenta(e) {
   }
 }
 
-// --- INICIO CÓDIGO NUEVO: Función para Borrar Participante ---
 export async function handleBorrarParticipante(participanteId) {
   if (!participanteId) return;
   
@@ -712,7 +717,6 @@ export async function handleBorrarParticipante(participanteId) {
       return;
   }
   
-  // Confirmación
   if (!confirm(`¿Estás seguro de que quieres borrar a ${participante.nombre}? \nSus números (${participante.numeros.join(', ')}) volverán a estar disponibles.`)) {
     return;
   }
@@ -720,20 +724,17 @@ export async function handleBorrarParticipante(participanteId) {
   try {
     const batch = writeBatch(db);
 
-    // 1. Poner sus boletos como "disponible"
     participante.numeros.forEach(numero => {
       const boletoRef = doc(db, "boletos", numero);
       batch.update(boletoRef, {
         estado: "disponible",
-        participanteId: "" // Quitar la referencia al participante
+        participanteId: "" 
       });
     });
     
-    // 2. Borrar el documento del participante
     const participanteRef = doc(db, "participantes", participanteId);
     batch.delete(participanteRef);
     
-    // 3. Ejecutar el batch
     await batch.commit();
     
     _mostrarToast("Participante borrado y números liberados.");
@@ -743,4 +744,3 @@ export async function handleBorrarParticipante(participanteId) {
     _mostrarToast("Error al borrar. Intenta de nuevo.", true);
   }
 }
-// --- FIN CÓDIGO NUEVO ---

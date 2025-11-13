@@ -1,4 +1,4 @@
-/* ===========================script.js (v32 - Lógica CRUD Participantes)=========================== */
+/* ===========================script.js (v34 - Exportar Token)=========================== */
 // Importar la base de datos (db) y funciones de Firebase
 import { 
     db, 
@@ -32,8 +32,8 @@ import {
   handleGuardarVenta,
   anadirCampoNumero,
   handleBotonSuerte,
-  handleBorrarParticipante // <-- INICIO CÓDIGO NUEVO
-} from './tablas-numericas.js'; // <-- FIN CÓDIGO NUEVO
+  handleBorrarParticipante 
+} from './tablas-numericas.js'; 
 
 /* -----------Constante de Notificación--------------------------- */
 const VAPID_KEY = 'BLKW4ylTSLBySioHx0AOkYi6xZJPDjmQ1XAJAO8girT-ouIIwvdiAyvLlI6stV3M72dGrjnZ01fdr-YI7MmHSb0'; 
@@ -62,6 +62,11 @@ let modalSuerte;
 let modalSuerteNumero;
 let imgSuerte;
 let toggleNotificaciones; 
+
+// --- Lightbox de Inicio ---
+let lightboxModalInicio, lightboxImageInicio, lightboxCloseInicio, lightboxPrevInicio, lightboxNextInicio;
+let sliderImagesData = []; 
+let currentLightboxIndex = 0;
 
 /* ========================= Inicialización al cargar el documento=================== */
 document.addEventListener('DOMContentLoaded', () => {
@@ -118,9 +123,17 @@ document.addEventListener('DOMContentLoaded', () => {
   }  
   escucharBoletos();
   escucharParticipantes();
+  
   // Slider
   slides = document.querySelectorAll('.slider-image');
   slideCount = slides.length;
+
+  sliderImagesData = Array.from(slides).map((img, index) => ({
+      src: img.src,
+      alt: img.alt,
+      originalIndex: index 
+  }));
+
   if (slideCount > 0) {
     slides.forEach((slide, index) => {
       if (index === 0) {
@@ -236,6 +249,12 @@ function cachearElementosDOM() {
   imgSuerte = document.getElementById('img-suerte');
 
   toggleNotificaciones = document.getElementById('toggle-notificaciones');
+
+  lightboxModalInicio = document.getElementById('lightbox-modal-inicio');
+  lightboxImageInicio = document.getElementById('lightbox-image-inicio');
+  lightboxCloseInicio = document.getElementById('lightbox-close-inicio');
+  lightboxPrevInicio = document.getElementById('lightbox-prev-inicio');
+  lightboxNextInicio = document.getElementById('lightbox-next-inicio');
 }
 /* ======================Registro de event listeners============= */
 function registrarEventListeners() {
@@ -271,27 +290,25 @@ function registrarEventListeners() {
   btnSuerte?.addEventListener('click', handleBotonSuerte); 
   // --- ADMIN ---
   filtrosAdminContainer?.addEventListener('click', handleFiltroAdmin);
-  btnRegistrarVentaGlobal?.addEventListener('click', () => abrirModalRegistro(null)); // MODIFICADO: Llamar con null
+  btnRegistrarVentaGlobal?.addEventListener('click', () => abrirModalRegistro(null)); 
   formRegistrarVenta?.addEventListener('submit', handleGuardarVenta); 
   btnAnadirNumero?.addEventListener('click', () => anadirCampoNumero(null));
   
-  // --- INICIO CÓDIGO NUEVO: Eventos delegados para Editar/Borrar Participantes ---
   tablaParticipantes?.addEventListener('click', (e) => {
     const editBtn = e.target.closest('.btn-editar-participante');
     if (editBtn) {
       e.preventDefault();
       const participanteId = editBtn.dataset.id;
-      abrirModalRegistro(participanteId); // Llama a la función importada con el ID
+      abrirModalRegistro(participanteId); 
     }
 
     const deleteBtn = e.target.closest('.btn-borrar-participante');
     if (deleteBtn) {
       e.preventDefault();
       const participanteId = deleteBtn.dataset.id;
-      handleBorrarParticipante(participanteId); // Llama a la función importada con el ID
+      handleBorrarParticipante(participanteId); 
     }
   });
-  // --- FIN CÓDIGO NUEVO ---
   
   // --- Modales (Lógica local) ---
   btnMasInfo?.addEventListener('click', () => modalMasInfo?.classList.add('flex'));
@@ -310,6 +327,33 @@ function registrarEventListeners() {
       event.target.classList.remove('flex');
     }
   });
+
+  // --- Eventos para Lightbox de Inicio ---
+  const imageSlider = document.getElementById('image-slider'); 
+  imageSlider?.addEventListener('click', (e) => {
+    const trigger = e.target.closest('.slider-lightbox-trigger');
+    if (trigger) {
+      const clickedSrc = trigger.src;
+      const index = sliderImagesData.findIndex(item => item.src === clickedSrc);
+      
+      if (index > -1) {
+        showLightboxInicio(index);
+      } else {
+        showLightboxInicio(currentSlide);
+      }
+    }
+  });
+
+  lightboxCloseInicio?.addEventListener('click', closeLightboxInicio);
+  lightboxPrevInicio?.addEventListener('click', () => showLightboxInicio(currentLightboxIndex - 1));
+  lightboxNextInicio?.addEventListener('click', () => showLightboxInicio(currentLightboxIndex + 1));
+  
+  lightboxModalInicio?.addEventListener('click', (e) => {
+    if (e.target === lightboxModalInicio) {
+      closeLightboxInicio();
+    }
+  });
+
   // --- Utilitarios (Compartir, Reportar, Admin) ---
   btnCompartir?.addEventListener('click', (e) => {
     e.preventDefault();
@@ -347,82 +391,134 @@ function registrarEventListeners() {
     formAdminLogin.reset();
   });
   
+  // --- INICIO MODIFICACIÓN: El toggle ahora llama a la función refactorizada ---
   toggleNotificaciones?.addEventListener('change', () => {
     if (toggleNotificaciones.checked) {
-      pedirPermisoNotificaciones();
+      pedirPermisoNotificaciones(); // Llama a la nueva función (v34)
     } else {
       console.log('Notificaciones desactivadas por el usuario.');
       mostrarToast('Notificaciones desactivadas.', true);
+      // Opcional: Aquí podrías agregar lógica para borrar el token si lo deseas
     }
   });
+  // --- FIN MODIFICACIÓN ---
 }
 
-/* ================================LÓGICA DE NOTIFICACIONES (Mejorada)================= */
+/* ================================LÓGICA DE NOTIFICACIONES (v2 - Refactorizada para exportar)================= */
 
+/**
+ * Esta es la nueva función "maestra" que es exportable.
+ * Pide permiso, obtiene el token, lo guarda en 'suscripciones' y lo DEVUELVE.
+ */
+export async function solicitarYObtenerToken() {
+  // 1. Validar VAPID_KEY
+  if (VAPID_KEY === 'TU_CLAVE_VAPID_DE_FIREBASE_VA_AQUI' || !VAPID_KEY) {
+      console.error("Error: Falta la VAPID_KEY en script.js");
+      mostrarToast("Error de configuración de notificaciones.", true);
+      return null;
+  }
+
+  // 2. Validar soporte del navegador
+  if (!('Notification' in window) || !messaging) {
+    console.warn('Este navegador no soporta notificaciones push.');
+    return null;
+  }
+
+  // 3. Pedir permiso si es necesario
+  let permiso = Notification.permission;
+  if (permiso === 'default') {
+    permiso = await Notification.requestPermission();
+  }
+
+  if (permiso === 'denied') {
+    console.log('Permiso de notificación denegado.');
+    return null;
+  }
+
+  // 4. Si el permiso está concedido, obtener y guardar el token
+  if (permiso === 'granted') {
+    try {
+      const token = await getToken(messaging, { vapidKey: VAPID_KEY });
+      
+      if (token) {
+        console.log('Token de FCM obtenido:', token);
+        // Guardar en la colección 'suscripciones' (para notificaciones masivas)
+        await setDoc(doc(db, "suscripciones", token), {
+          token: token,
+          timestamp: new Date()
+        });
+        console.log('Token guardado en /suscripciones');
+        
+        // Activar listener para mensajes en primer plano
+        activarEscuchaMensajesPrimerPlano();
+        
+        // Devolver el token para que sea usado
+        return token;
+      } else {
+        console.warn('No se pudo obtener el token de FCM.');
+        mostrarToast('No se pudo obtener el token de suscripción.', true);
+        return null;
+      }
+    } catch (err) {
+      console.error('Error al obtener el token o guardarlo:', err);
+      mostrarToast('Error al suscribirse a notificaciones.', true);
+      return null;
+    }
+  }
+  
+  return null; // Fallback por si algo sale mal
+}
+
+
+/**
+ * Revisa el estado actual del permiso y actualiza el toggle.
+ */
 function inicializarEstadoNotificaciones() {
   if (!('Notification' in window) || !messaging) {
-    console.warn('Este navegador no soporta notificaciones push o Firebase Messaging no está disponible.');
+    console.warn('Este navegador no soporta notificaciones push.');
     toggleNotificaciones?.parentElement.parentElement.classList.add('hidden'); 
     return;
   }
 
   if (Notification.permission === 'granted') {
     toggleNotificaciones.checked = true; 
+    // Si ya tenemos permiso, empezamos a escuchar mensajes en primer plano
+    // No es necesario obtener el token aquí, solo escuchar.
     activarEscuchaMensajesPrimerPlano();
   } else {
     toggleNotificaciones.checked = false; 
   }
 }
 
-function pedirPermisoNotificaciones() {
-  if (VAPID_KEY === 'TU_CLAVE_VAPID_DE_FIREBASE_VA_AQUI') {
-      console.error("Error: Falta la VAPID_KEY en script.js");
-      mostrarToast("Error de configuración de notificaciones.", true);
-      toggleNotificaciones.checked = false;
-      return;
+/**
+ * Pide permiso al usuario (usado por el TOGGLE)
+ */
+async function pedirPermisoNotificaciones() {
+  const token = await solicitarYObtenerToken(); // Llama a la nueva función maestra
+  
+  if (token) {
+    mostrarToast('¡Notificaciones activadas!');
+    toggleNotificaciones.checked = true;
+  } else {
+    mostrarToast('No se pudo activar las notificaciones.', true);
+    toggleNotificaciones.checked = false;
   }
-
-  Notification.requestPermission().then(async (permiso) => {
-    if (permiso === 'granted') {
-      mostrarToast('¡Notificaciones activadas!');
-      toggleNotificaciones.checked = true;
-      
-      try {
-        const token = await getToken(messaging, { vapidKey: VAPID_KEY });
-        
-        if (token) {
-          console.log('Token de FCM obtenido:', token);
-          await setDoc(doc(db, "suscripciones", token), {
-            token: token,
-            timestamp: new Date()
-          });
-          console.log('Token guardado en Firestore');
-          activarEscuchaMensajesPrimerPlano();
-        } else {
-          console.warn('No se pudo obtener el token de FCM.');
-          mostrarToast('No se pudo obtener el token de suscripción.', true);
-          toggleNotificaciones.checked = false;
-        }
-      } catch (err) {
-        console.error('Error al obtener el token o guardarlo:', err);
-        mostrarToast('Error al suscribirse a notificaciones.', true);
-        toggleNotificaciones.checked = false;
-      }
-      
-    } else {
-      console.log('Permiso de notificación denegado.');
-      mostrarToast('No se pudo activar las notificaciones.', true);
-      toggleNotificaciones.checked = false;
-    }
-  });
 }
 
+/**
+ * Activa el listener para mensajes recibidos MIENTRAS la app está abierta.
+ * Esta función es "privada" del módulo, llamada por solicitarYObtenerToken.
+ */
 function activarEscuchaMensajesPrimerPlano() {
+    // Evitar duplicar listeners
+    if (activarEscuchaMensajesPrimerPlano.listenerAttached) return;
+    
     onMessage(messaging, (payload) => {
         console.log('Mensaje recibido en primer plano: ', payload);
         const mensaje = payload.notification.body || '¡Hay novedades en la rifa!';
         mostrarToast(mensaje, false); 
     });
+    activarEscuchaMensajesPrimerPlano.listenerAttached = true;
 }
 
 /* =========Funciones UI: (Vistas, Toast, Compartir)======= */
@@ -509,6 +605,33 @@ async function handleCompartir() {
     navigator.clipboard.writeText(shareUrl);
     mostrarToast('Enlace copiado al portapapeles.');
   }
+}
+
+// --- Lógica del Lightbox de Inicio ---
+function showLightboxInicio(index) {
+  if (!lightboxModalInicio || !lightboxImageInicio || !lightboxPrevInicio || !lightboxNextInicio || sliderImagesData.length === 0) return;
+  
+  if (index < 0 || index >= sliderImagesData.length) {
+    console.warn("Índice de Lightbox de Inicio fuera de rango:", index);
+    return;
+  }
+  
+  currentLightboxIndex = index;
+  const item = sliderImagesData[index];
+  
+  lightboxImageInicio.src = item.src;
+  lightboxImageInicio.alt = item.alt;
+  
+  lightboxModalInicio.classList.remove('hidden');
+  
+  lightboxPrevInicio.style.display = (index === 0) ? 'none' : 'flex';
+  lightboxNextInicio.style.display = (index === sliderImagesData.length - 1) ? 'none' : 'flex';
+}
+
+function closeLightboxInicio() {
+  if (!lightboxModalInicio) return;
+  lightboxModalInicio.classList.add('hidden');
+  lightboxImageInicio.src = ""; // Limpiar
 }
 
 /* =========================================================

@@ -1,4 +1,4 @@
-/* ===========================script.js (v31 - Lógica de Notificaciones FCM)=========================== */
+/* ===========================script.js (v32 - Lógica CRUD Participantes)=========================== */
 // Importar la base de datos (db) y funciones de Firebase
 import { 
     db, 
@@ -6,15 +6,15 @@ import {
     onSnapshot, 
     query, 
     orderBy,
-    doc,      // <-- AÑADIDO
-    setDoc    // <-- AÑADIDO
+    doc,      
+    setDoc    
 } from './firebase-init.js';
 // Importar funciones de Messaging
 import { 
     messaging, 
     getToken, 
     onMessage 
-} from './firebase-init.js'; // <-- NUEVO
+} from './firebase-init.js'; 
 // Importar lógica de UI compartida
 import { toggleSidebarGlobal, initDarkMode, registerDarkModeHandler } from './common-ui.js';
 // Importar lógica de la Rifa
@@ -31,11 +31,11 @@ import {
   abrirModalRegistro,
   handleGuardarVenta,
   anadirCampoNumero,
-  handleBotonSuerte 
-} from './tablas-numericas.js';
+  handleBotonSuerte,
+  handleBorrarParticipante // <-- INICIO CÓDIGO NUEVO
+} from './tablas-numericas.js'; // <-- FIN CÓDIGO NUEVO
 
 /* -----------Constante de Notificación--------------------------- */
-// --- PEGA AQUÍ TU CLAVE VAPID DEL PASO 1 ---
 const VAPID_KEY = 'BLKW4ylTSLBySioHx0AOkYi6xZJPDjmQ1XAJAO8girT-ouIIwvdiAyvLlI6stV3M72dGrjnZ01fdr-YI7MmHSb0'; 
 
 /* -----------Estado Global de la Aplicación----------------------- */
@@ -61,15 +61,13 @@ let btnSuerte;
 let modalSuerte;
 let modalSuerteNumero;
 let imgSuerte;
-let toggleNotificaciones; // Ya no es 'NUEVA VARIABLE', ahora está en uso
+let toggleNotificaciones; 
 
 /* ========================= Inicialización al cargar el documento=================== */
 document.addEventListener('DOMContentLoaded', () => {
   cachearElementosDOM();
   
-  // Inyectar dependencias en el módulo de UI común
   initDarkMode(iconDarkMode);  
-  // Inyectar dependencias en el módulo de la Rifa
   initRifa({
     boletosRifa: boletosRifa,
     participantes: participantes,
@@ -118,7 +116,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     window.history.replaceState({}, document.title, window.location.pathname);
   }  
-  // Empezar a escuchar los datos de Firebase
   escucharBoletos();
   escucharParticipantes();
   // Slider
@@ -139,9 +136,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }, 4000);
   }
   
-  // REGISTRAR EL SERVICE WORKER (PWA - Caching)
-  // Esto está perfecto, el SDK de Firebase registrará
-  // 'firebase-messaging-sw.js' por separado.
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
       navigator.serviceWorker.register('/sw.js') 
@@ -154,7 +148,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
    
-  // INICIALIZAR ESTADO DE NOTIFICACIONES (Lógica mejorada)
   inicializarEstadoNotificaciones();
 });
 /* ======================== Datos (Ahora con Firebase)============== */
@@ -278,9 +271,28 @@ function registrarEventListeners() {
   btnSuerte?.addEventListener('click', handleBotonSuerte); 
   // --- ADMIN ---
   filtrosAdminContainer?.addEventListener('click', handleFiltroAdmin);
-  btnRegistrarVentaGlobal?.addEventListener('click', () => abrirModalRegistro());
+  btnRegistrarVentaGlobal?.addEventListener('click', () => abrirModalRegistro(null)); // MODIFICADO: Llamar con null
   formRegistrarVenta?.addEventListener('submit', handleGuardarVenta); 
   btnAnadirNumero?.addEventListener('click', () => anadirCampoNumero(null));
+  
+  // --- INICIO CÓDIGO NUEVO: Eventos delegados para Editar/Borrar Participantes ---
+  tablaParticipantes?.addEventListener('click', (e) => {
+    const editBtn = e.target.closest('.btn-editar-participante');
+    if (editBtn) {
+      e.preventDefault();
+      const participanteId = editBtn.dataset.id;
+      abrirModalRegistro(participanteId); // Llama a la función importada con el ID
+    }
+
+    const deleteBtn = e.target.closest('.btn-borrar-participante');
+    if (deleteBtn) {
+      e.preventDefault();
+      const participanteId = deleteBtn.dataset.id;
+      handleBorrarParticipante(participanteId); // Llama a la función importada con el ID
+    }
+  });
+  // --- FIN CÓDIGO NUEVO ---
+  
   // --- Modales (Lógica local) ---
   btnMasInfo?.addEventListener('click', () => modalMasInfo?.classList.add('flex'));
   btnModalIrNumeros?.addEventListener('click', () => {
@@ -335,48 +347,33 @@ function registrarEventListeners() {
     formAdminLogin.reset();
   });
   
-  // =========================================================
-  // EVENT LISTENER PARA EL TOGGLE DE NOTIFICACIONES (Lógica mejorada)
-  // =========================================================
   toggleNotificaciones?.addEventListener('change', () => {
     if (toggleNotificaciones.checked) {
-      // Si el usuario lo activa (verde)
       pedirPermisoNotificaciones();
     } else {
-      // Si el usuario lo desactiva (rojo)
-      // (En un futuro, aquí podrías borrar el token de Firestore)
       console.log('Notificaciones desactivadas por el usuario.');
       mostrarToast('Notificaciones desactivadas.', true);
-      // TODO: Agregar lógica para borrar token si se desea
     }
   });
 }
 
 /* ================================LÓGICA DE NOTIFICACIONES (Mejorada)================= */
 
-/**
- * Revisa el estado actual del permiso y actualiza el toggle.
- * Si el permiso ya está dado, activa el listener de mensajes en primer plano.
- */
 function inicializarEstadoNotificaciones() {
   if (!('Notification' in window) || !messaging) {
     console.warn('Este navegador no soporta notificaciones push o Firebase Messaging no está disponible.');
-    toggleNotificaciones?.parentElement.parentElement.classList.add('hidden'); // Ocultar el toggle
+    toggleNotificaciones?.parentElement.parentElement.classList.add('hidden'); 
     return;
   }
 
   if (Notification.permission === 'granted') {
-    toggleNotificaciones.checked = true; // Poner en verde
-    // Si ya tenemos permiso, empezamos a escuchar mensajes en primer plano
+    toggleNotificaciones.checked = true; 
     activarEscuchaMensajesPrimerPlano();
   } else {
-    toggleNotificaciones.checked = false; // Poner en rojo
+    toggleNotificaciones.checked = false; 
   }
 }
 
-/**
- * Pide permiso al usuario y, si lo concede, obtiene y guarda el token.
- */
 function pedirPermisoNotificaciones() {
   if (VAPID_KEY === 'TU_CLAVE_VAPID_DE_FIREBASE_VA_AQUI') {
       console.error("Error: Falta la VAPID_KEY en script.js");
@@ -391,20 +388,15 @@ function pedirPermisoNotificaciones() {
       toggleNotificaciones.checked = true;
       
       try {
-        // 1. Obtener el token del dispositivo
-        // Firebase registrará 'firebase-messaging-sw.js' automáticamente aquí
         const token = await getToken(messaging, { vapidKey: VAPID_KEY });
         
         if (token) {
           console.log('Token de FCM obtenido:', token);
-          // 2. Guardar el token en Firestore
-          // Usamos el token como ID del documento para evitar duplicados
           await setDoc(doc(db, "suscripciones", token), {
             token: token,
             timestamp: new Date()
           });
           console.log('Token guardado en Firestore');
-          // 3. Activar escucha de mensajes en primer plano
           activarEscuchaMensajesPrimerPlano();
         } else {
           console.warn('No se pudo obtener el token de FCM.');
@@ -425,23 +417,15 @@ function pedirPermisoNotificaciones() {
   });
 }
 
-/**
- * Activa el listener para mensajes recibidos MIENTRAS la app está abierta.
- */
 function activarEscuchaMensajesPrimerPlano() {
     onMessage(messaging, (payload) => {
         console.log('Mensaje recibido en primer plano: ', payload);
-        // Muestra un toast personalizado en lugar de una notificación push
         const mensaje = payload.notification.body || '¡Hay novedades en la rifa!';
         mostrarToast(mensaje, false); 
-        // Aquí podrías mostrar un modal o un banner más prominente si quisieras
     });
 }
 
 /* =========Funciones UI: (Vistas, Toast, Compartir)======= */
-/**
- * Actualiza la vista activa y muestra/oculta el botón de suerte.
- */
 function actualizarVistaActiva(viewId, isInitialLoad = false) {
   if (mainContent && !isInitialLoad) mainContent.scrollTop = 0;
   
@@ -455,7 +439,6 @@ function actualizarVistaActiva(viewId, isInitialLoad = false) {
     }
   });
 
-  // --- LÓGICA DEL BOTÓN SUERTE ---
   if (viewId === 'view-comprar-numeros') {
     btnSuerte?.classList.remove('hidden');
     setTimeout(() => {

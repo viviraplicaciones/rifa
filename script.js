@@ -1,4 +1,4 @@
-/* ===========================script.js (v34 - Exportar Token)=========================== */
+/* ===========================script.js (v35 - Corrección SW para GitHub Pages)=========================== */
 // Importar la base de datos (db) y funciones de Firebase
 import { 
     db, 
@@ -151,7 +151,8 @@ document.addEventListener('DOMContentLoaded', () => {
   
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
-      navigator.serviceWorker.register('/sw.js') 
+      // Registrar el SW de CACHÉ (PWA)
+      navigator.serviceWorker.register('./sw.js') 
         .then(registration => {
           console.log('Service Worker PWA (Cache) registrado:', registration.scope);
         })
@@ -391,20 +392,17 @@ function registrarEventListeners() {
     formAdminLogin.reset();
   });
   
-  // --- INICIO MODIFICACIÓN: El toggle ahora llama a la función refactorizada ---
   toggleNotificaciones?.addEventListener('change', () => {
     if (toggleNotificaciones.checked) {
-      pedirPermisoNotificaciones(); // Llama a la nueva función (v34)
+      pedirPermisoNotificaciones(); 
     } else {
       console.log('Notificaciones desactivadas por el usuario.');
       mostrarToast('Notificaciones desactivadas.', true);
-      // Opcional: Aquí podrías agregar lógica para borrar el token si lo deseas
     }
   });
-  // --- FIN MODIFICACIÓN ---
 }
 
-/* ================================LÓGICA DE NOTIFICACIONES (v2 - Refactorizada para exportar)================= */
+/* ================================LÓGICA DE NOTIFICACIONES (v3 - Corregido para GitHub Pages)================= */
 
 /**
  * Esta es la nueva función "maestra" que es exportable.
@@ -419,7 +417,7 @@ export async function solicitarYObtenerToken() {
   }
 
   // 2. Validar soporte del navegador
-  if (!('Notification' in window) || !messaging) {
+  if (!('Notification' in window) || !messaging || !('serviceWorker' in navigator)) {
     console.warn('Este navegador no soporta notificaciones push.');
     return null;
   }
@@ -438,7 +436,21 @@ export async function solicitarYObtenerToken() {
   // 4. Si el permiso está concedido, obtener y guardar el token
   if (permiso === 'granted') {
     try {
-      const token = await getToken(messaging, { vapidKey: VAPID_KEY });
+      // --- INICIO CÓDIGO MODIFICADO: Registrar el SW manualmente ---
+      // Esta es la corrección para GitHub Pages (subdirectorios)
+      // Usamos './' para que sea relativo a la ruta actual ( /rifa/ )
+      console.log('Registrando Firebase Messaging SW en ./');
+      const swRegistration = await navigator.serviceWorker.register('./firebase-messaging-sw.js', {
+          scope: './' 
+      });
+      console.log('Firebase Messaging SW registrado:', swRegistration);
+      
+      // Ahora, pasamos esa registración a getToken
+      const token = await getToken(messaging, { 
+          vapidKey: VAPID_KEY,
+          serviceWorkerRegistration: swRegistration // <-- ¡LA LÍNEA CLAVE!
+      });
+      // --- FIN CÓDIGO MODIFICADO ---
       
       if (token) {
         console.log('Token de FCM obtenido:', token);
@@ -482,8 +494,6 @@ function inicializarEstadoNotificaciones() {
 
   if (Notification.permission === 'granted') {
     toggleNotificaciones.checked = true; 
-    // Si ya tenemos permiso, empezamos a escuchar mensajes en primer plano
-    // No es necesario obtener el token aquí, solo escuchar.
     activarEscuchaMensajesPrimerPlano();
   } else {
     toggleNotificaciones.checked = false; 

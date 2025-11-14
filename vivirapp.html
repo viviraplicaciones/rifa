@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VivirAplicaciones - Tecnología y Desarrollo</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f2f6fa;
+      color: #333;
+    }
+    header {
+      background: linear-gradient(135deg, #0a1a2f, #1e3a5f);
+      color: #fff;
+      padding: 20px;
+      text-align: center;
+    }
+    header img {
+      width: 90px;
+      margin-bottom: 10px;
+    }
+    .hero {
+      padding: 70px 20px;
+      text-align: center;
+      background: #ffffff;
+    }
+    .hero h1 {
+      font-size: 2.4rem;
+      color: #1e3a5f;
+      margin-bottom: 10px;
+    }
+    .hero p {
+      font-size: 1.15rem;
+      max-width: 600px;
+      margin: 0 auto 25px auto;
+      color: #555;
+    }
+    .btn {
+      display: inline-block;
+      padding: 12px 28px;
+      background: #ff7a00;
+      color: #fff;
+      text-decoration: none;
+      border-radius: 6px;
+      font-size: 1rem;
+      font-weight: bold;
+    }
+    .services {
+      padding: 60px 20px;
+      display: grid;
+      gap: 30px;
+      max-width: 1100px;
+      margin: auto;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    }
+    .card {
+      background: #fff;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      text-align: center;
+      border-top: 4px solid #ff7a00;
+    }
+    .card img {
+      width: 100%;
+      border-radius: 10px;
+      margin-bottom: 15px;
+    }
+    .reviews {
+      background: #ffffff;
+      padding: 60px 20px;
+    }
+    .reviews h2 {
+      text-align: center;
+      font-size: 2rem;
+      color: #1e3a5f;
+      margin-bottom: 40px;
+    }
+    .review-box {
+      max-width: 900px;
+      margin: auto;
+      display: grid;
+      gap: 25px;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    }
+    .review {
+      background: #f7f9fc;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 3px 8px rgba(0,0,0,0.05);
+      border-left: 4px solid #ff7a00;
+      font-size: 0.95rem;
+    }
+    footer {
+      text-align: center;
+      padding: 20px;
+      background: #0a1a2f;
+      color: #fff;
+      margin-top: 40px;
+      font-size: 0.9rem;
+    }
+  .reveal{opacity:0; transform:translateY(30px); transition:all .6s ease;} .show{opacity:1; transform:translateY(0);} </style>
+</head>
+<body>
+  <header><img src="images/logo.png" alt="Logo VivirAplicaciones" /><h2>VivirAplicaciones</h2><p>10 años creando tecnología</p></header>
+
+  <section class="hero"><h1>Soluciones Web y Móviles de Alto Impacto</h1><p>En VivirAplicaciones transformamos ideas en plataformas modernas, rápidas y confiables. Creamos sitios web, aplicaciones móviles y PWA diseñadas para impulsar negocios con tecnología de alto nivel.</p>
+    <a class="btn" href="#contacto">Quiero más información</a></section>
+
+  <section class="services">
+    <div class="card"><img src="https://picsum.photos/400/250?web" alt="Web" /><h3>Páginas Web</h3><p>Desarrollos profesionales, optimizados para velocidad, SEO y un diseño que cautiva a tus clientes.</p></div>
+    <div class="card"><img src="https://picsum.photos/400/250?app" alt="App" /><h3>Apps Móviles</h3><p>Aplicaciones intuitivas y potentes para Android y iOS, diseñadas para una experiencia fluida.</p></div>
+    <div class="card"><img src="https://picsum.photos/400/250?pwa" alt="PWA" /><h3>PWA</h3><p>Aplicaciones progresivas súper rápidas, seguras y funcionales incluso sin conexión.</p></div>
+    <div class="card"><img src="https://picsum.photos/400/250?design" alt="Diseño gráfico" /><h3>Diseño Gráfico</h3><p>Branding, logos, piezas publicitarias y material visual profesional para tu marca.</p></div>
+    <div class="card"><img src="https://picsum.photos/400/250?print" alt="Impresión litográfica" /><h3>Impresión Litográfica</h3><p>Tarjetas, volantes, brochures, pendones, empaques y material corporativo de alta calidad.</p></div>
+  </section>
+
+  <section id="contacto" class="reveal" style="padding:60px 20px; background:#eef3f9; text-align:center;">
+    <h2 style="color:#1e3a5f; font-size:2rem;">Contacto</h2><p style="max-width:600px; margin:10px auto 30px; color:#555;">¿Listo para impulsar tu proyecto? Escríbenos y te responderemos en minutos.</p>
+    <form style="max-width:500px; margin:auto; display:flex; flex-direction:column; gap:15px;">
+      <input type="text" placeholder="Tu nombre" style="padding:12px; border-radius:6px; border:1px solid #ccc;">
+      <input type="email" placeholder="Tu email" style="padding:12px; border-radius:6px; border:1px solid #ccc;">
+      <textarea placeholder="Cuéntanos sobre tu proyecto" rows="4" style="padding:12px; border-radius:6px; border:1px solid #ccc;"></textarea>
+      <button class="btn" type="submit">Enviar mensaje</button>
+    </form>
+  </section>
+
+  <section class="reviews reveal">>
+    <h2>Opiniones de Nuestros Clientes</h2>
+    <div class="review-box">
+      <div class="review">⭐ “Excelente servicio. Mi página cargó más rápido y aumentaron mis ventas.” — <b>Ana G.</b></div>
+      <div class="review">⭐ “El equipo entiende lo que uno necesita. Mi app quedó perfecta.” — <b>Carlos M.</b></div>
+      <div class="review">⭐ “Profesionales, amables y rápidos. Los recomiendo totalmente.” — <b>Laura P.</b></div>
+      <div class="review">⭐ “Mi PWA funciona increíble. Gracias por el acompañamiento.” — <b>Diego T.</b></div>
+    </div>
+  </section>
+
+  <footer>© 2025 VivirAplicaciones — Innovación que impulsa.</footer>
+
+<script>
+// Scroll Reveal simple
+const observer=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){e.target.classList.add('show');}
+  });
+});
+document.querySelectorAll('.reveal').forEach(el=>observer.observe(el));
+</script>
+</body>
+</html>

@@ -1,10 +1,9 @@
 /* =========================================================
    functions/index.js
-   VERSIÓN CORREGIDA (onDocumentUpdated)
+   VERSIÓN CORREGIDA 2 (Payload de Notificación Arreglado)
    ========================================================= */
 
 // Importar las herramientas necesarias
-// ¡AQUÍ ESTÁ EL CAMBIO! -> onDocumentUpdated
 const { onDocumentUpdated } = require("firebase-functions/v2/firestore");
 const { initializeApp } = require("firebase-admin/app");
 const { getMessaging } = require("firebase-admin/messaging");
@@ -15,7 +14,6 @@ initializeApp();
 /**
  * Esta es tu Cloud Function.
  * Se activa CADA VEZ que un documento de "participantes" es ACTUALIZADO.
- * ¡AQUÍ ESTÁ EL CAMBIO! -> onDocumentUpdated
  */
 exports.notificarPagoAprobado = onDocumentUpdated("/participantes/{participanteId}", async (event) => {
 
@@ -52,21 +50,32 @@ exports.notificarPagoAprobado = onDocumentUpdated("/participantes/{participanteI
   const nombreParticipante = datosDespues.nombre || "Participante";
   const numerosTexto = datosDespues.numeros.join(', ');
 
+  // --- INICIO CÓDIGO CORREGIDO ---
+  // El 'icon' se mueve a 'webpush' para que sea un payload válido.
   const payload = {
     notification: {
       title: "¡Felicidades, tu pago fue aprobado! 🥳",
-      body: `¡Hola, ${nombreParticipante}! Tus números ${numerosTexto} ya están participando oficialmente. ¡Mucha suerte!`,
-      icon: "https://viviraplicaciones.github.io/rifa/images/logo.png" // Ícono para la notificación
+      body: `¡Hola, ${nombreParticipante}! Tus números ${numerosTexto} ya están participando oficialmente. ¡Mucha suerte!`
+    },
+    webpush: {
+      notification: {
+        icon: "https://viviraplicaciones.github.io/rifa/images/logo.png" // Ícono para la notificación
+      }
     }
   };
+  // --- FIN CÓDIGO CORREGIDO ---
 
   // 4. Enviar la notificación a ese token específico
   try {
     console.log(`Enviando notificación a: ${fcmToken}`);
+    
+    // --- INICIO CÓDIGO CORREGIDO ---
+    // Se envía el payload completo (...payload) en lugar de solo payload.notification
     await getMessaging().send({
       token: fcmToken,
-      notification: payload.notification
+      ...payload
     });
+    // --- FIN CÓDIGO CORREGIDO ---
 
     console.log("¡Notificación enviada con éxito!");
     return;

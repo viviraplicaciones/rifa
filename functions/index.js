@@ -1,6 +1,6 @@
 /* =========================================================
    functions/index.js
-   VERSIÓN CORREGIDA 2 (Payload de Notificación Arreglado)
+   VERSIÓN LIMPIA Y CORREGIDA (Payload y Sintaxis OK)
    ========================================================= */
 
 // Importar las herramientas necesarias
@@ -29,7 +29,7 @@ exports.notificarPagoAprobado = onDocumentUpdated("/participantes/{participanteI
 
   // --- Condición de Seguridad ---
   // Solo nos interesa si el estado CAMBIÓ y si el NUEVO estado es "pagado"
-  if (datosAntes.estado === "pagado" || datosDespues.estado !== "pagado") {
+  if (datosAntes.estado === "pagado" || datosDespes.estado !== "pagado") {
     console.log(`Estado no cambió a 'pagado'. Estado anterior: ${datosAntes.estado}, Nuevo estado: ${datosDespues.estado}`);
     return; // Salir de la función
   }
@@ -50,7 +50,6 @@ exports.notificarPagoAprobado = onDocumentUpdated("/participantes/{participanteI
   const nombreParticipante = datosDespues.nombre || "Participante";
   const numerosTexto = datosDespues.numeros.join(', ');
 
-  // --- INICIO CÓDIGO CORREGIDO ---
   // El 'icon' se mueve a 'webpush' para que sea un payload válido.
   const payload = {
     notification: {
@@ -63,19 +62,16 @@ exports.notificarPagoAprobado = onDocumentUpdated("/participantes/{participanteI
       }
     }
   };
-  // --- FIN CÓDIGO CORREGIDO ---
 
   // 4. Enviar la notificación a ese token específico
   try {
     console.log(`Enviando notificación a: ${fcmToken}`);
-    
-    // --- INICIO CÓDIGO CORREGIDO ---
+
     // Se envía el payload completo (...payload) en lugar de solo payload.notification
     await getMessaging().send({
       token: fcmToken,
       ...payload
     });
-    // --- FIN CÓDIGO CORREGIDO ---
 
     console.log("¡Notificación enviada con éxito!");
     return;

@@ -1,4 +1,4 @@
-/* ===========================script.js (v37 - Lógica Modal Pago y Filtro Participantes)=========================== */
+/* ===========================script.js (v38 - Delay WhatsApp Admin)=========================== */
 // Importar la base de datos (db) y funciones de Firebase
 import { 
     db, 
@@ -209,12 +209,10 @@ function escucharParticipantes() {
     participantes.push(...participantesTemporales);
     
     // --- MODIFICACIÓN REQUERIMIENTO 2 ---
-    // Al recibir nuevos participantes, volvemos a renderizar la tabla.
-    // Si hay un filtro activo, lo reaplicamos.
     if (filtroParticipantesInput && filtroParticipantesInput.value.trim() !== '') {
-        handleFiltroParticipantes({ target: filtroParticipantesInput }); // Simula un evento input
+        handleFiltroParticipantes({ target: filtroParticipantesInput }); 
     } else {
-        renderTablaParticipantes(); // Renderiza la lista completa
+        renderTablaParticipantes(); 
     }
     // --- FIN MODIFICACIÓN ---
   });
@@ -324,7 +322,6 @@ function registrarEventListeners() {
   btnProcederPago?.addEventListener('click', handleProcederPago);
   
   // --- INICIO REQUERIMIENTO 1 (Modal Pago) ---
-  // Se modifica el listener: ahora llama a una función intermediaria
   formIngresarDatos?.addEventListener('submit', handleFormularioCompraSubmit);
   // --- FIN REQUERIMIENTO 1 ---
 
@@ -340,13 +337,11 @@ function registrarEventListeners() {
   filtroParticipantesInput?.addEventListener('input', handleFiltroParticipantes);
   // --- FIN REQUERIMIENTO 2 ---
   
-  // ========= MODIFICACIÓN (REQUERIMIENTO 3): Lógica Acordeón y Botones =========
   tablaParticipantes?.addEventListener('click', (e) => {
-    // 1. Manejar botones de acción primero
     const editBtn = e.target.closest('.btn-editar-participante');
     if (editBtn) {
       e.preventDefault();
-      e.stopPropagation(); // Evitar que se abra el acordeón
+      e.stopPropagation(); 
       const participanteId = editBtn.dataset.id;
       abrirModalRegistro(participanteId);
       return;
@@ -355,20 +350,18 @@ function registrarEventListeners() {
     const deleteBtn = e.target.closest('.btn-borrar-participante');
     if (deleteBtn) {
       e.preventDefault();
-      e.stopPropagation(); // Evitar que se abra el acordeón
+      e.stopPropagation(); 
       const participanteId = deleteBtn.dataset.id;
-      handleBorrarParticipante(participanteId); // Llama a la función importada
+      handleBorrarParticipante(participanteId); 
       return;
     }
 
-    // 2. Manejar clic en el encabezado para el acordeón
     const header = e.target.closest('.participante-header');
     if (header) {
         const card = header.closest('.participante-card');
         card.classList.toggle('abierto');
     }
   });
-  // ========= FIN MODIFICACIÓN (REQUERIMIENTO 3) =========
   
   // --- Modales (Lógica local) ---
   btnMasInfo?.addEventListener('click', () => modalMasInfo?.classList.add('flex'));
@@ -377,19 +370,16 @@ function registrarEventListeners() {
     actualizarVistaActiva('view-comprar-numeros');
   });
   
-  // ========= MODIFICACIÓN (REQUERIMIENTO 4): Lógica Modal VivirApp =========
   btnVivirAppModal?.addEventListener('click', (e) => {
     e.preventDefault();
     if (modalVivirApp && iframeVivirApp) {
-        // Cargar el iframe solo al hacer click para ahorrar recursos
         if (iframeVivirApp.src === 'about:blank' || iframeVivirApp.src === '') {
             iframeVivirApp.src = 'vivirapp.html';
         }
-        modalVivirApp.classList.remove('hidden'); // Asegurarse que no tenga hidden
+        modalVivirApp.classList.remove('hidden'); 
         modalVivirApp.classList.add('flex');
     }
   });
-  // ========= FIN MODIFICACIÓN (REQUERIMIENTO 4) =========
   
   modalCloseBtns.forEach(btn => {
     btn.addEventListener('click', () => {
@@ -397,9 +387,8 @@ function registrarEventListeners() {
       const modal = document.getElementById(modalId);
       if(modal) {
           modal.classList.remove('flex');
-          // Opcional: Si es el modal de VivirApp, podemos limpiar el iframe o dejarlo
           if (modalId === 'modal-vivirapp') {
-             modal.classList.add('hidden'); // Volver a ocultar con hidden si se usa esa lógica
+             modal.classList.add('hidden'); 
           }
       }
     });
@@ -487,18 +476,17 @@ function registrarEventListeners() {
   });
 }
 
-// --- INICIO REQUERIMIENTO 1 (Modal Pago) ---
+// --- INICIO REQUERIMIENTO 1 (Delay WhatsApp Admin) ---
 /**
  * Función intermediaria para manejar el envío del formulario de compra.
  * Llama a 'handleGuardarCompraUsuario' y luego abre el modal de confirmación.
+ * Añade un delay de 4s para abrir el WhatsApp del Admin.
  */
 async function handleFormularioCompraSubmit(e) {
   e.preventDefault(); // Prevenir envío normal
   
-  // Llama a la función de guardado (que ahora retorna datos)
   const resultado = await handleGuardarCompraUsuario(e);
 
-  // Si el guardado fue exitoso (resultado no es null)
   if (resultado && modalConfirmacionPago) {
     // 1. Poblar la lista de números en el modal de confirmación
     if (listaNumerosConfirmacion) {
@@ -520,32 +508,34 @@ async function handleFormularioCompraSubmit(e) {
     
     // 3. Mostrar el modal de confirmación
     modalConfirmacionPago.classList.add('flex');
+
+    // --- INICIO DE LA MODIFICACIÓN (Delay de 4s para WhatsApp Admin) ---
+    // 4. Abrir el WhatsApp del Admin después de un delay
+    if (resultado.whatsappUrlAdmin) {
+        setTimeout(() => {
+            console.log("Abriendo WhatsApp del admin (con delay)...");
+            window.open(resultado.whatsappUrlAdmin, '_blank');
+        }, 4000); // 4000 milisegundos = 4 segundos
+    }
+    // --- FIN DE LA MODIFICACIÓN ---
   }
-  // Si 'resultado' es null, la función 'handleGuardarCompraUsuario' ya mostró un toast de error.
 }
 // --- FIN REQUERIMIENTO 1 ---
 
 // --- INICIO REQUERIMIENTO 2 (Filtro) ---
-/**
- * Maneja el evento 'input' del campo de búsqueda de participantes.
- * Filtra la lista global de 'participantes' y la renderiza.
- */
 function handleFiltroParticipantes(e) {
     const termino = e.target.value.toLowerCase().trim();
 
-    // Si el término está vacío, muestra todos
     if (termino === '') {
-        renderTablaParticipantes(participantes); // Muestra la lista completa
+        renderTablaParticipantes(participantes); 
         return;
     }
 
-    // Filtra la lista global
     const filtrados = participantes.filter(p => 
         p.nombre.toLowerCase().includes(termino) || 
         p.telefono.includes(termino)
     );
 
-    // Llama a la función de renderizado con la lista filtrada
     renderTablaParticipantes(filtrados);
 }
 // --- FIN REQUERIMIENTO 2 ---
@@ -553,25 +543,18 @@ function handleFiltroParticipantes(e) {
 
 /* ================================LÓGICA DE NOTIFICACIONES (v3 - Corregido para GitHub Pages)================= */
 
-/**
- * Esta es la nueva función "maestra" que es exportable.
- * Pide permiso, obtiene el token, lo guarda en 'suscripciones' y lo DEVUELVE.
- */
 export async function solicitarYObtenerToken() {
-  // 1. Validar VAPID_KEY
   if (VAPID_KEY === 'TU_CLAVE_VAPID_DE_FIREBASE_VA_AQUI' || !VAPID_KEY) {
       console.error("Error: Falta la VAPID_KEY en script.js");
       mostrarToast("Error de configuración de notificaciones.", true);
       return null;
   }
 
-  // 2. Validar soporte del navegador
   if (!('Notification' in window) || !messaging || !('serviceWorker' in navigator)) {
     console.warn('Este navegador no soporta notificaciones push.');
     return null;
   }
 
-  // 3. Pedir permiso si es necesario
   let permiso = Notification.permission;
   if (permiso === 'default') {
     permiso = await Notification.requestPermission();
@@ -582,38 +565,29 @@ export async function solicitarYObtenerToken() {
     return null;
   }
 
-  // 4. Si el permiso está concedido, obtener y guardar el token
   if (permiso === 'granted') {
     try {
-      // --- INICIO CÓDIGO MODIFICADO: Registrar el SW manualmente ---
-      // Esta es la corrección para GitHub Pages (subdirectorios)
-      // Usamos './' para que sea relativo a la ruta actual ( /rifa/ )
       console.log('Registrando Firebase Messaging SW en ./');
       const swRegistration = await navigator.serviceWorker.register('./firebase-messaging-sw.js', {
           scope: './' 
       });
       console.log('Firebase Messaging SW registrado:', swRegistration);
       
-      // Ahora, pasamos esa registración a getToken
       const token = await getToken(messaging, { 
           vapidKey: VAPID_KEY,
-          serviceWorkerRegistration: swRegistration // <-- ¡LA LÍNEA CLAVE!
+          serviceWorkerRegistration: swRegistration 
       });
-      // --- FIN CÓDIGO MODIFICADO ---
       
       if (token) {
         console.log('Token de FCM obtenido:', token);
-        // Guardar en la colección 'suscripciones' (para notificaciones masivas)
         await setDoc(doc(db, "suscripciones", token), {
           token: token,
           timestamp: new Date()
         });
         console.log('Token guardado en /suscripciones');
         
-        // Activar listener para mensajes en primer plano
         activarEscuchaMensajesPrimerPlano();
         
-        // Devolver el token para que sea usado
         return token;
       } else {
         console.warn('No se pudo obtener el token de FCM.');
@@ -627,13 +601,10 @@ export async function solicitarYObtenerToken() {
     }
   }
   
-  return null; // Fallback por si algo sale mal
+  return null; 
 }
 
 
-/**
- * Revisa el estado actual del permiso y actualiza el toggle.
- */
 function inicializarEstadoNotificaciones() {
   if (!('Notification' in window) || !messaging) {
     console.warn('Este navegador no soporta notificaciones push.');
@@ -649,11 +620,8 @@ function inicializarEstadoNotificaciones() {
   }
 }
 
-/**
- * Pide permiso al usuario (usado por el TOGGLE)
- */
 async function pedirPermisoNotificaciones() {
-  const token = await solicitarYObtenerToken(); // Llama a la nueva función maestra
+  const token = await solicitarYObtenerToken(); 
   
   if (token) {
     mostrarToast('¡Notificaciones activadas!');
@@ -664,12 +632,7 @@ async function pedirPermisoNotificaciones() {
   }
 }
 
-/**
- * Activa el listener para mensajes recibidos MIENTRAS la app está abierta.
- * Esta función es "privada" del módulo, llamada por solicitarYObtenerToken.
- */
 function activarEscuchaMensajesPrimerPlano() {
-    // Evitar duplicar listeners
     if (activarEscuchaMensajesPrimerPlano.listenerAttached) return;
     
     onMessage(messaging, (payload) => {
@@ -733,9 +696,6 @@ function mostrarToast(mensaje, esError = false) {
   }, 2000);
 }
 
-// ========= INICIO DE LA MODIFICACIÓN (REQUERIMIENTO 5) =========
-// Fix para Compartir: Eliminamos el envío de Archivos (Files) para evitar conflictos
-// en la API Web Share. Enviamos solo URL y Texto, confiando en OG Tags para la imagen.
 async function handleCompartir() {
   const shareData = {
       title: 'Fabulosa Rifa de Navidad',
@@ -751,13 +711,11 @@ async function handleCompartir() {
       throw new Error('Web Share API no soportada');
     }
   } catch (err) {
-    // Fallback: Copiar al portapapeles
     console.log('Error al compartir o API no soportada:', err);
     navigator.clipboard.writeText(shareData.url);
     mostrarToast('Enlace copiado al portapapeles.');
   }
 }
-// ========= FIN DE LA MODIFICACIÓN (REQUERIMIENTO 5) =========
 
 // --- Lógica del Lightbox de Inicio ---
 function showLightboxInicio(index) {

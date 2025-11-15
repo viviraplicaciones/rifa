@@ -1,4 +1,4 @@
-/* ==============tablas-numericas.js (v33 - Mensaje Admin y Filtro)=============================== */
+/* ==============tablas-numericas.js (v34 - Delay WhatsApp Admin)=============================== */
 
 // Importar la base de datos (db) y funciones de Firestore
 import { 
@@ -106,15 +106,12 @@ export function renderCuadriculaPublica() {
     divBoleto.textContent = boleto.numero;
     divBoleto.dataset.numero = boleto.numero;
     divBoleto.dataset.estado = boleto.estado;
-    // ========= INICIO DE LA MODIFICACIÓN (REQUERIMIENTO 3) - Añadir ID para buscar =========
     divBoleto.dataset.participanteId = boleto.participanteId || '';
-    // ========= FIN DE LA MODIFICACIÓN (REQUERIMIENTO 3) =========
     divBoleto.title = title; // Tooltip básico
     _cuadriculaPublica.appendChild(divBoleto);
   });
 }
 
-// ========= INICIO DE LA MODIFICACIÓN (REQUERIMIENTO 3) - Lógica Tooltip =========
 export function handleSeleccionPublica(e) {
   const boletoEl = e.target.closest('.numero-rifa-publico');
   if (!boletoEl) return;
@@ -124,17 +121,13 @@ export function handleSeleccionPublica(e) {
   if (estado !== 'disponible') {
     const participanteId = boletoEl.dataset.participanteId;
     if (participanteId) {
-        // Buscar al participante en el array global
         const participante = _participantes.find(p => p.id === participanteId);
         if (participante) {
-            // Mostrar el nombre del participante
             _mostrarToast(`Número reservado por: ${participante.nombre}`);
         } else {
-            // Fallback si el ID existe pero el participante no está cargado (poco probable)
             _mostrarToast("Este número no está disponible.", true);
         }
     } else {
-        // Fallback si no hay ID (p.ej. 'seleccionado' por el mismo usuario)
         _mostrarToast("Este número no está disponible.", true);
     }
     return;
@@ -150,7 +143,6 @@ export function handleSeleccionPublica(e) {
   renderCuadriculaPublica();
   actualizarSeleccionPublica();
 }
-// ========= FIN DE LA MODIFICACIÓN (REQUERIMIENTO 3) =========
 
 export function actualizarSeleccionPublica() {
   if (!_listaSeleccionPublica || !_badgeCantidad || !_subtotalEl || !_btnProcederPago) return;
@@ -251,14 +243,10 @@ export function handleProcederPago() {
   }
 }
 
-// ========= INICIO DE LA MODIFICACIÓN (REQUERIMIENTO 1) - Lógica Modal Pago =========
 export async function handleGuardarCompraUsuario(e) {
-  // NOTA: Esta función ahora es llamada por un intermediario en script.js
-  // y ya no es un event listener directo.
   e.preventDefault(); 
   if (!_formIngresarDatos || _numerosSeleccionadosPublica.length === 0) return null;
 
-  // Estado de Carga
   const submitButton = _formIngresarDatos.querySelector('button[type="submit"]');
   if (submitButton) {
       submitButton.disabled = true;
@@ -277,7 +265,7 @@ export async function handleGuardarCompraUsuario(e) {
             submitButton.disabled = false;
             submitButton.textContent = 'Apartar mis números';
         }
-        return null; // Devuelve null en caso de error
+        return null; 
     }
   }
 
@@ -319,12 +307,11 @@ export async function handleGuardarCompraUsuario(e) {
     const numerosTexto = nuevoParticipante.numeros.join(', ');
     const telefonoAdmin = '573205893469';
 
-    // --- Mensaje para el ADMIN (MODIFICADO) ---
     const mensajeAdmin = `¡Hola! ${nombre} acaba de seleccionar los números ${numerosTexto}... El pago esta pendiente.`;
     const whatsappUrlAdmin = `https://api.whatsapp.com/send?phone=${telefonoAdmin}&text=${encodeURIComponent(mensajeAdmin)}`;
     
-    // 6. Abrir la ventana de WhatsApp del Admin
-    window.open(whatsappUrlAdmin, '_blank');
+    // 6. --- MODIFICACIÓN: Ya no abrimos la ventana aquí ---
+    // window.open(whatsappUrlAdmin, '_blank'); // <--- LÍNEA ELIMINADA
 
     // 7. Limpiar UI
     _modalIngresarDatos.classList.remove('flex');
@@ -335,25 +322,26 @@ export async function handleGuardarCompraUsuario(e) {
     _numerosSeleccionadosPublica.length = 0; 
     actualizarSeleccionPublica(); 
     
+    // --- INICIO DE LA MODIFICACIÓN (Delay WhatsApp Admin) ---
     return {
         nombre: nombre,
         numeros: numerosSeleccionadosCopia,
-        telefonoAdmin: telefonoAdmin // Devolvemos el teléfono para el botón del usuario
+        telefonoAdmin: telefonoAdmin, // Para el botón del usuario
+        whatsappUrlAdmin: whatsappUrlAdmin // ¡NUEVO! Para el delay en script.js
     };
+    // --- FIN DE LA MODIFICACIÓN ---
     
   } catch (error) {
     console.error("Error al guardar la compra: ", error);
     _mostrarToast("Error al apartar los números. Intenta de nuevo.", true);
     return null; // Devuelve null en caso de error
   } finally {
-    // Reactivar botón (siempre)
     if (submitButton) {
         submitButton.disabled = false;
         submitButton.textContent = 'Apartar mis números';
     }
   }
 }
-// ========= FIN DE LA MODIFICACIÓN (REQUERIMIENTO 1) =========
 
 
 /* =========================================================
@@ -395,16 +383,12 @@ export function handleFiltroAdmin(e) {
    Tabla participantes
    ========================================================= */
 
-// ========= INICIO DE LA MODIFICACIÓN (REQUERIMIENTO 2 - Preparación) =========
-// La función ahora acepta una lista de participantes para renderizar
 export function renderTablaParticipantes(participantesFiltrados = null) {
   if (!_tablaParticipantes) return; 
   _tablaParticipantes.innerHTML = '';
   
-  // Determina qué lista usar: la filtrada o la global completa
   const listaParaRenderizar = participantesFiltrados !== null ? participantesFiltrados : _participantes;
 
-  // Ordenar la lista que se va a renderizar
   listaParaRenderizar.sort((a, b) => a.nombre.localeCompare(b.nombre));
 
   if (listaParaRenderizar.length === 0) {
@@ -481,7 +465,6 @@ export function renderTablaParticipantes(participantesFiltrados = null) {
     _tablaParticipantes.appendChild(participanteWrapper);
   });
 }
-// ========= FIN DE LA MODIFICACIÓN (REQUERIMIENTO 2) =========
 
 
 /* =========================================================
@@ -553,8 +536,7 @@ export function anadirCampoNumero(numeroSeleccionado, numerosPropios = []) {
 
   const numerosDisponibles = getNumerosDisponibles();
   const numerosPropiosFiltrados = numerosPropios.filter(num => num !== numeroSeleccionado);
-  const numerosParaSelect = [...numerosDisponibles, ...numerosPropiosFiltrados];
-
+  
   const divCampo = document.createElement('div');
   divCampo.className = 'flex items-center gap-2';
 
@@ -687,8 +669,6 @@ export async function handleGuardarVenta(e) {
       });
       
     } else {
-      // --- CREAR (NUEVO) ---
-      // NOTA: Esta función de admin NO guarda el token FCM, solo la de usuario
       const docRef = await addDoc(collection(db, "participantes"), datosParticipante);
       
       numerosNuevos.forEach(numero => {
@@ -720,8 +700,6 @@ export async function handleBorrarParticipante(participanteId) {
       return;
   }
   
-  // Utiliza un confirm simple (ya que el index.html no tiene un modal de confirmación genérico)
-  // Si tuvieras un modal de confirmación personalizado, lo llamaríamos aquí.
   if (!confirm(`¿Estás seguro de que quieres borrar a ${participante.nombre}? \nSus números (${participante.numeros.join(', ')}) volverán a estar disponibles.`)) {
     return;
   }

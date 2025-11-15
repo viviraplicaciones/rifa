@@ -1,4 +1,4 @@
-/* ===========================script.js (v35 - Corrección SW para GitHub Pages)=========================== */
+/* ===========================script.js (v36 - Lógica Acordeón, Modal VivirApp y Fix Compartir)=========================== */
 // Importar la base de datos (db) y funciones de Firebase
 import { 
     db, 
@@ -61,7 +61,9 @@ let btnSuerte;
 let modalSuerte;
 let modalSuerteNumero;
 let imgSuerte;
-let toggleNotificaciones; 
+let toggleNotificaciones;
+// Variables para Modal VivirApp (Req 4)
+let btnVivirAppModal, modalVivirApp, iframeVivirApp;
 
 // --- Lightbox de Inicio ---
 let lightboxModalInicio, lightboxImageInicio, lightboxCloseInicio, lightboxPrevInicio, lightboxNextInicio;
@@ -256,6 +258,11 @@ function cachearElementosDOM() {
   lightboxCloseInicio = document.getElementById('lightbox-close-inicio');
   lightboxPrevInicio = document.getElementById('lightbox-prev-inicio');
   lightboxNextInicio = document.getElementById('lightbox-next-inicio');
+
+  // --- Variables Modal VivirApp (Req 4) ---
+  btnVivirAppModal = document.getElementById('btn-vivirapp-modal');
+  modalVivirApp = document.getElementById('modal-vivirapp');
+  iframeVivirApp = document.getElementById('iframe-vivirapp');
 }
 /* ======================Registro de event listeners============= */
 function registrarEventListeners() {
@@ -295,21 +302,35 @@ function registrarEventListeners() {
   formRegistrarVenta?.addEventListener('submit', handleGuardarVenta); 
   btnAnadirNumero?.addEventListener('click', () => anadirCampoNumero(null));
   
+  // ========= MODIFICACIÓN (REQUERIMIENTO 3): Lógica Acordeón y Botones =========
   tablaParticipantes?.addEventListener('click', (e) => {
+    // 1. Manejar botones de acción primero
     const editBtn = e.target.closest('.btn-editar-participante');
     if (editBtn) {
       e.preventDefault();
+      e.stopPropagation(); // Evitar que se abra el acordeón
       const participanteId = editBtn.dataset.id;
-      abrirModalRegistro(participanteId); 
+      abrirModalRegistro(participanteId);
+      return;
     }
 
     const deleteBtn = e.target.closest('.btn-borrar-participante');
     if (deleteBtn) {
       e.preventDefault();
+      e.stopPropagation(); // Evitar que se abra el acordeón
       const participanteId = deleteBtn.dataset.id;
-      handleBorrarParticipante(participanteId); 
+      handleBorrarParticipante(participanteId);
+      return;
+    }
+
+    // 2. Manejar clic en el encabezado para el acordeón
+    const header = e.target.closest('.participante-header');
+    if (header) {
+        const card = header.closest('.participante-card');
+        card.classList.toggle('abierto');
     }
   });
+  // ========= FIN MODIFICACIÓN (REQUERIMIENTO 3) =========
   
   // --- Modales (Lógica local) ---
   btnMasInfo?.addEventListener('click', () => modalMasInfo?.classList.add('flex'));
@@ -317,15 +338,41 @@ function registrarEventListeners() {
     modalMasInfo?.classList.remove('flex');
     actualizarVistaActiva('view-comprar-numeros');
   });
+  
+  // ========= MODIFICACIÓN (REQUERIMIENTO 4): Lógica Modal VivirApp =========
+  btnVivirAppModal?.addEventListener('click', (e) => {
+    e.preventDefault();
+    if (modalVivirApp && iframeVivirApp) {
+        // Cargar el iframe solo al hacer click para ahorrar recursos
+        if (iframeVivirApp.src === 'about:blank' || iframeVivirApp.src === '') {
+            iframeVivirApp.src = 'vivirapp.html';
+        }
+        modalVivirApp.classList.remove('hidden'); // Asegurarse que no tenga hidden
+        modalVivirApp.classList.add('flex');
+    }
+  });
+  // ========= FIN MODIFICACIÓN (REQUERIMIENTO 4) =========
+  
   modalCloseBtns.forEach(btn => {
     btn.addEventListener('click', () => {
       const modalId = btn.getAttribute('data-modal-id');
-      document.getElementById(modalId)?.classList.remove('flex');
+      const modal = document.getElementById(modalId);
+      if(modal) {
+          modal.classList.remove('flex');
+          // Opcional: Si es el modal de VivirApp, podemos limpiar el iframe o dejarlo
+          if (modalId === 'modal-vivirapp') {
+             modal.classList.add('hidden'); // Volver a ocultar con hidden si se usa esa lógica
+          }
+      }
     });
   });
+  
   window.addEventListener('click', (event) => {
     if (event.target.classList.contains('modal')) {
       event.target.classList.remove('flex');
+      if (event.target.id === 'modal-vivirapp') {
+          event.target.classList.add('hidden');
+      }
     }
   });
 
@@ -584,38 +631,31 @@ function mostrarToast(mensaje, esError = false) {
   }, 2000);
 }
 
+// ========= INICIO DE LA MODIFICACIÓN (REQUERIMIENTO 5) =========
+// Fix para Compartir: Eliminamos el envío de Archivos (Files) para evitar conflictos
+// en la API Web Share. Enviamos solo URL y Texto, confiando en OG Tags para la imagen.
 async function handleCompartir() {
-  const shareTitle = 'Fabulosa Rifa de Navidad';
-  const shareText = '¡Participa en esta increíble rifa y gánate 9 adornos navideños Amigurumi!';
-  const shareUrl = window.location.href.split('?')[0]; 
+  const shareData = {
+      title: 'Fabulosa Rifa de Navidad',
+      text: '¡Participa en esta increíble rifa y gánate 9 adornos navideños Amigurumi!',
+      url: window.location.href.split('?')[0] // URL limpia
+  };
 
   try {
-    const response = await fetch('images/banner.jpg');
-    const blob = await response.blob();
-    const file = new File([blob], 'images/banner.jpg', { type: 'image/jpeg' });
-    const shareData = {
-      title: shareTitle,
-      text: shareText,
-      url: shareUrl,
-      files: [file]
-    };
-
-    if (navigator.canShare && navigator.canShare(shareData)) {
+    if (navigator.share) {
       await navigator.share(shareData);
       mostrarToast('¡Gracias por compartir!');
     } else {
-      await navigator.share({
-        title: shareTitle,
-        text: shareText,
-        url: shareUrl,
-      });
-      mostrarToast('¡Gracias por compartir!');
+      throw new Error('Web Share API no soportada');
     }
   } catch (err) {
-    navigator.clipboard.writeText(shareUrl);
+    // Fallback: Copiar al portapapeles
+    console.log('Error al compartir o API no soportada:', err);
+    navigator.clipboard.writeText(shareData.url);
     mostrarToast('Enlace copiado al portapapeles.');
   }
 }
+// ========= FIN DE LA MODIFICACIÓN (REQUERIMIENTO 5) =========
 
 // --- Lógica del Lightbox de Inicio ---
 function showLightboxInicio(index) {
@@ -656,18 +696,18 @@ function closeLightboxInicio() {
     .filtro-btn-admin[data-filtro="apartado"] { border-color: #3B82F6; color: #3B82F6; }
     .filtro-btn-admin[data-filtro="revisando"] { border-color: #F59E0B; color: #F59E0B; }
     .filtro-btn-admin[data-filtro="pagado"] { border-color: #EF4444; color: #EF4444; }
-    .filtro-btn-admin.filtro-admin-activo, .filtro-btn-admin:hover {color: white !important;}
-    .filtro-btn-admin.filtro-admin-activo[data-filtro="todos"], .filtro-btn-admin:hover[data-filtro="todos"] { background-color: #6B7280; }
-    .filtro-btn-admin.filtro-admin-activo[data-filtro="disponible"], .filtro-btn-admin:hover[data-filtro="disponible"] { background-color: #9CA3AF; }
-    .filtro-btn-admin.filtro-admin-activo[data-filtro="apartado"], .filtro-btn-admin:hover[data-filtro="apartado"] { background-color: #3B82F6; }
-    .filtro-btn-admin.filtro-admin-activo[data-filtro="revisando"], .filtro-btn-admin:hover[data-filtro="revisando"] { background-color: #F59E0B; }
-    .filtro-btn-admin.filtro-admin-activo[data-filtro="pagado"], .filtro-btn-admin:hover[data-filtro="pagado"] { background-color: #EF4444; }
+    .filtro-btn-admin.filtro-btn-admin-activo, .filtro-btn-admin:hover {color: white !important;}
+    .filtro-btn-admin.filtro-btn-admin-activo[data-filtro="todos"], .filtro-btn-admin:hover[data-filtro="todos"] { background-color: #6B7280; }
+    .filtro-btn-admin.filtro-btn-admin-activo[data-filtro="disponible"], .filtro-btn-admin:hover[data-filtro="disponible"] { background-color: #9CA3AF; }
+    .filtro-btn-admin.filtro-btn-admin-activo[data-filtro="apartado"], .filtro-btn-admin:hover[data-filtro="apartado"] { background-color: #3B82F6; }
+    .filtro-btn-admin.filtro-btn-admin-activo[data-filtro="revisando"], .filtro-btn-admin:hover[data-filtro="revisando"] { background-color: #F59E0B; }
+    .filtro-btn-admin.filtro-btn-admin-activo[data-filtro="pagado"], .filtro-btn-admin:hover[data-filtro="pagado"] { background-color: #EF4444; }
 
     /* Estilos para modo oscuro en filtros */
     .dark .filtro-btn-admin[data-filtro="todos"] { border-color: #9CA3AF; color: #E5E7EB; }
     .dark .filtro-btn-admin[data-filtro="disponible"] { border-color: #4B5563; color: #D1D5DB; }
-    .dark .filtro-btn-admin.filtro-admin-activo[data-filtro="todos"], .dark .filtro-btn-admin:hover[data-filtro="todos"] { background-color: #9CA3AF; color: white !important; }
-    .dark .filtro-btn-admin.filtro-admin-activo[data-filtro="disponible"], .dark .filtro-btn-admin:hover[data-filtro="disponible"] { background-color: #6B7280; color: white !importa; }
+    .dark .filtro-btn-admin.filtro-btn-admin-activo[data-filtro="todos"], .dark .filtro-btn-admin:hover[data-filtro="todos"] { background-color: #9CA3AF; color: white !important; }
+    .dark .filtro-btn-admin.filtro-btn-admin-activo[data-filtro="disponible"], .dark .filtro-btn-admin:hover[data-filtro="disponible"] { background-color: #6B7280; color: white !importa; }
   `;
   document.head.appendChild(style);
 })();

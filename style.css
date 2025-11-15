@@ -111,3 +111,12 @@ body {font-family: 'Roboto', sans-serif;}
 /* 5. Ocultar los links de admin (que ya están en un div) */
 #sidebar.collapsed #admin-links-container {display: none !important;}
 /* ============ FIN DE NUEVAS CORRECCIONES (v14) ============ */
+
+/* ========= INICIO DE LA MODIFICACIÓN (REQUERIMIENTO 3) ========= */
+.participante-card.abierto .participante-body {
+  max-height: 200px; /* Ajustar si el contenido es más alto */
+}
+.participante-card.abierto .chevron-icon {
+  transform: rotate(180deg);
+}
+/* ========= FIN DE LA MODIFICACIÓN (REQUERIMIENTO 3) ========= */

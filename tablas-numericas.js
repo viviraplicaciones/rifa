@@ -286,8 +286,10 @@ export async function handleGuardarCompraUsuario(e) {
     });
     
     // --- Enviar a WhatsApp ---
-    // ¡REEMPLAZA 'TU_NUMERO_DE_WHATSAPP' con tu número! (ej: 573101234567)
-    const telefonoWhatsapp = 'TU_NUMERO_DE_WHATSAPP'; 
+    // ========= INICIO DE LA MODIFICACIÓN (REQUERIMIENTO 2) =========
+    const telefonoWhatsapp = '573205893469'; // <-- NÚMERO ACTUALIZADO
+    // ========= FIN DE LA MODIFICACIÓN (REQUERIMIENTO 2) =========
+    
     const numerosTexto = nuevoParticipante.numeros.join(', ');
     
     let mensajeWhatsapp = `¡Hola! tus números preseleccionados son ${numerosTexto}\n\n`;
@@ -357,14 +359,16 @@ export function renderCuadriculaAdmin(filtro) {
 export function handleFiltroAdmin(e) {
   if (e.target.tagName !== 'BUTTON' || !_filtrosAdminContainer) return;
   const filtro = e.target.dataset.filtro;
-  _filtrosAdminContainer.querySelectorAll('.filtro-btn-admin').forEach(btn => btn.classList.remove('filtro-admin-activo'));
-  e.target.classList.add('filtro-admin-activo');
+  _filtrosAdminContainer.querySelectorAll('.filtro-btn-admin').forEach(btn => btn.classList.remove('filtro-btn-admin-activo'));
+  e.target.classList.add('filtro-btn-admin-activo');
   renderCuadriculaAdmin(filtro);
 }
 
 /* =========================================================
    Tabla participantes
    ========================================================= */
+
+// ========= INICIO DE LA MODIFICACIÓN (REQUERIMIENTO 3) =========
 export function renderTablaParticipantes() {
   if (!_tablaParticipantes) return; 
   _tablaParticipantes.innerHTML = '';
@@ -399,86 +403,58 @@ export function renderTablaParticipantes() {
     }
     
     const estadoTexto = p.estado.charAt(0).toUpperCase() + p.estado.slice(1);
-
-    const card = document.createElement('div');
-    card.className = "bg-gray-50 dark:bg-gray-900 rounded-lg p-4 shadow";
     
-    card.innerHTML = `
-      <div class="space-y-2 text-sm">
-        <p class="font-bold text-gray-900 dark:text-white truncate" title="${p.nombre}">
-          <span class="text-gray-500 dark:text-gray-400 font-medium">NOMBRE: </span>
-          ${p.nombre}
-        </p>
-        <p class="text-gray-700 dark:text-gray-300 truncate">
-          <span class="text-gray-500 dark:text-gray-400 font-medium">TELÉFONO: </span>
-          ${p.telefono}
-        </p>
-        <p class="text-gray-700 dark:text-gray-300 truncate">
-          <span class="text-gray-500 dark:text-gray-400 font-medium">NÚMEROS: </span>
-          ${p.numeros.join(', ')}
-        </p>
-        <div class="flex items-center">
-          <span class="text-gray-500 dark:text-gray-400 font-medium mr-2">ESTADO: </span>
+    const participanteWrapper = document.createElement('div');
+    participanteWrapper.className = "participante-card bg-gray-50 dark:bg-gray-900 rounded-lg shadow overflow-hidden";
+    
+    participanteWrapper.innerHTML = `
+      <div class="participante-header flex items-center justify-between p-4 cursor-pointer">
+        <div class="flex-1 flex items-center min-w-0">
+          <p class="font-bold text-gray-900 dark:text-white truncate mr-4" title="${p.nombre}">
+            ${p.nombre}
+          </p>
           <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${bgEstado} ${colorEstado}">
             ${estadoTexto}
           </span>
         </div>
         
-        ${p.estado !== 'pagado' ? `
-        <div class="flex items-center justify-end gap-4 pt-3 mt-2 border-t dark:border-gray-700">
-          <button class="btn-editar-participante text-blue-500 hover:text-blue-700 text-lg" data-id="${p.id}">
-            <i class="fa-solid fa-pencil"></i>
-          </button>
-          <button class="btn-borrar-participante text-red-500 hover:text-red-700 text-lg" data-id="${p.id}">
-            <i class="fa-solid fa-trash"></i>
-          </button>
+        <div class="flex-shrink-0 flex items-center gap-4 ml-4">
+          ${p.estado !== 'pagado' ? `
+            <button class="btn-editar-participante text-blue-500 hover:text-blue-700 text-lg z-10" data-id="${p.id}">
+              <i class="fa-solid fa-pencil"></i>
+            </button>
+            <button class="btn-borrar-participante text-red-500 hover:text-red-700 text-lg z-10" data-id="${p.id}">
+              <i class="fa-solid fa-trash"></i>
+            </button>
+          ` : '<span class="text-gray-400 dark:text-gray-500 text-xs px-2">Pagado</span>'}
+          
+          <i class="fa-solid fa-chevron-down chevron-icon text-gray-400 transition-transform"></i>
         </div>
-        ` : ''}
+      </div>
+      
+      <div class="participante-body max-h-0 overflow-hidden transition-all duration-300 ease-in-out">
+        <div class="border-t border-gray-200 dark:border-gray-700 p-4 space-y-2 text-sm">
+          <p class="text-gray-700 dark:text-gray-300">
+            <span class="text-gray-500 dark:text-gray-400 font-medium">TELÉFONO: </span>
+            ${p.telefono}
+          </p>
+          <p class="text-gray-700 dark:text-gray-300">
+            <span class="text-gray-500 dark:text-gray-400 font-medium">NÚMEROS: </span>
+            ${p.numeros.join(', ')}
+          </p>
+        </div>
       </div>
     `;
     
-    card.classList.add('md:hidden');
-    
-    const tableRow = document.createElement('div');
-    tableRow.className = "hidden md:grid grid-cols-5 gap-4 items-center text-xs md:text-sm p-4"; 
-    tableRow.innerHTML = `
-        <div class="font-medium text-gray-900 dark:text-white truncate" title="${p.nombre}">
-          ${p.nombre}
-        </div>
-        <div class="text-gray-600 dark:text-gray-300 truncate">
-          ${p.telefono}
-        </div>
-        <div class="text-gray-600 dark:text-gray-300 truncate">
-          ${p.numeros.join(', ')}
-        </div>
-        <div>
-          <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${bgEstado} ${colorEstado}">
-            ${estadoTexto}
-          </span>
-        </div>
-        <div>
-          ${p.estado !== 'pagado' ? `
-          <div class="flex items-center justify-start gap-4">
-            <button class="btn-editar-participante text-blue-500 hover:text-blue-700" data-id="${p.id}">
-              <i class="fa-solid fa-pencil"></i>
-            </button>
-            <button class="btn-borrar-participante text-red-500 hover:text-red-700" data-id="${p.id}">
-              <i class="fa-solid fa-trash"></i>
-            </button>
-          </div>
-          ` : '<span class="text-gray-400 dark:text-gray-500 text-xs">Completado</span>'}
-        </div>
-    `;
+    _tablaParticipantes.appendChild(participanteWrapper);
 
-    _tablaParticipantes.appendChild(card); 
-    _tablaParticipantes.appendChild(tableRow); 
-    
+    // Separador para la vista de escritorio (que ya no usamos)
     const separator = document.createElement('hr');
     separator.className = "hidden md:block dark:border-gray-700";
-    _tablaParticipantes.appendChild(separator);
-
+    // _tablaParticipantes.appendChild(separator); // Opcional si queremos mantenerla
   });
 }
+// ========= FIN DE LA MODIFICACIÓN (REQUERIMIENTO 3) =========
 
 
 /* =========================================================

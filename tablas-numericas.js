@@ -304,11 +304,10 @@ export async function handleGuardarCompraUsuario(e) {
     await batch.commit();
 
     // 5. --- Lógica de WhatsApp (Solo Admin) ---
-    const numerosTexto = nuevoParticipante.numeros.join(', ');
+    // const numerosTexto = nuevoParticipante.numeros.join(', '); // Ya no se usa aquí
     const telefonoAdmin = '573205893469';
 
-    const mensajeAdmin = `¡Hola! ${nombre} acaba de seleccionar los números ${numerosTexto}... El pago esta pendiente.`;
-    const whatsappUrlAdmin = `https://api.whatsapp.com/send?phone=${telefonoAdmin}&text=${encodeURIComponent(mensajeAdmin)}`;
+    // --- MODIFICACIÓN: Se eliminaron mensajeAdmin y whatsappUrlAdmin ---
     
     // 6. --- MODIFICACIÓN: Ya no abrimos la ventana aquí ---
     // window.open(whatsappUrlAdmin, '_blank'); // <--- LÍNEA ELIMINADA
@@ -322,12 +321,11 @@ export async function handleGuardarCompraUsuario(e) {
     _numerosSeleccionadosPublica.length = 0; 
     actualizarSeleccionPublica(); 
     
-    // --- INICIO DE LA MODIFICACIÓN (Delay WhatsApp Admin) ---
+    // --- INICIO DE LA MODIFICACIÓN (Return limpio) ---
     return {
         nombre: nombre,
         numeros: numerosSeleccionadosCopia,
-        telefonoAdmin: telefonoAdmin, // Para el botón del usuario
-        whatsappUrlAdmin: whatsappUrlAdmin // ¡NUEVO! Para el delay en script.js
+        telefonoAdmin: telefonoAdmin // Para el botón del usuario
     };
     // --- FIN DE LA MODIFICACIÓN ---
     

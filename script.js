@@ -499,25 +499,20 @@ async function handleFormularioCompraSubmit(e) {
       });
     }
 
-    // 2. Configurar el botón de WhatsApp para el usuario
+    // 2. Configurar el botón de WhatsApp para el usuario (CON EL NUEVO MENSAJE)
     if (btnEnviarComprobante) {
-      const mensajeUsuario = `¡Hola! Acabo de reservar los números ${resultado.numeros.join(', ')} para la rifa. Adjunto mi comprobante de pago. (Nombre: ${resultado.nombre})`;
+      // --- INICIO DE LA MODIFICACIÓN (Nuevo Mensaje) ---
+      const mensajeUsuario = `¡Hola! ${resultado.nombre} acaba de seleccionar los números ${resultado.numeros.join(', ')}... El pago esta pendiente.`;
+      // --- FIN DE LA MODIFICACIÓN ---
+      
       const whatsappUrlUsuario = `https://api.whatsapp.com/send?phone=${resultado.telefonoAdmin}&text=${encodeURIComponent(mensajeUsuario)}`;
       btnEnviarComprobante.href = whatsappUrlUsuario;
     }
     
-    // 3. Mostrar el modal de confirmación
+    // 3. Mostrar el modal de confirmación (Inmediatamente)
     modalConfirmacionPago.classList.add('flex');
 
-    // --- INICIO DE LA MODIFICACIÓN (Delay de 4s para WhatsApp Admin) ---
-    // 4. Abrir el WhatsApp del Admin después de un delay
-    if (resultado.whatsappUrlAdmin) {
-        setTimeout(() => {
-            console.log("Abriendo WhatsApp del admin (con delay)...");
-            window.open(resultado.whatsappUrlAdmin, '_blank');
-        }, 4000); // 4000 milisegundos = 4 segundos
-    }
-    // --- FIN DE LA MODIFICACIÓN ---
+    // --- MODIFICACIÓN: Se eliminó el bloque completo de setTimeout ---
   }
 }
 // --- FIN REQUERIMIENTO 1 ---

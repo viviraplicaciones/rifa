@@ -1,4 +1,4 @@
-/* ==============tablas-numericas.js (v30 - Guardando Token de Participante)=============================== */
+/* ==============tablas-numericas.js (v32 - Modal Pago, Tooltip Nombre, Filtro)=============================== */
 
 // Importar la base de datos (db) y funciones de Firestore
 import { 
@@ -81,12 +81,13 @@ export function renderCuadriculaPublica() {
   _boletosRifa.forEach(boleto => {
     let claseEstado = '';
     let esOcupado = false;
+    let title = 'Número disponible';
     switch (boleto.estado) {
       case 'apartado':
       case 'pagado':
-        claseEstado = 'ocupado'; esOcupado = true; break;
+        claseEstado = 'ocupado'; esOcupado = true; title = 'No disponible'; break;
       case 'revisando':
-        claseEstado = 'revisando'; esOcupado = true; break;
+        claseEstado = 'revisando'; esOcupado = true; title = 'En revisión'; break;
       case 'disponible':
       default:
         claseEstado = ''; break;
@@ -95,17 +96,25 @@ export function renderCuadriculaPublica() {
     if (ocultar && esOcupado) return;
 
     const esSeleccionado = _numerosSeleccionadosPublica.includes(boleto.numero);
-    if (esSeleccionado && !esOcupado) claseEstado = 'seleccionado';
+    if (esSeleccionado && !esOcupado) {
+        claseEstado = 'seleccionado';
+        title = 'Seleccionado por ti';
+    }
 
     const divBoleto = document.createElement('div');
     divBoleto.className = `numero-rifa-publico w-full aspect-square flex items-center justify-center font-bold text-xs border-2 rounded-xl p-0 cursor-pointer ${claseEstado}`;
     divBoleto.textContent = boleto.numero;
     divBoleto.dataset.numero = boleto.numero;
     divBoleto.dataset.estado = boleto.estado;
+    // ========= INICIO DE LA MODIFICACIÓN (REQUERIMIENTO 3) - Añadir ID para buscar =========
+    divBoleto.dataset.participanteId = boleto.participanteId || '';
+    // ========= FIN DE LA MODIFICACIÓN (REQUERIMIENTO 3) =========
+    divBoleto.title = title; // Tooltip básico
     _cuadriculaPublica.appendChild(divBoleto);
   });
 }
 
+// ========= INICIO DE LA MODIFICACIÓN (REQUERIMIENTO 3) - Lógica Tooltip =========
 export function handleSeleccionPublica(e) {
   const boletoEl = e.target.closest('.numero-rifa-publico');
   if (!boletoEl) return;
@@ -113,7 +122,21 @@ export function handleSeleccionPublica(e) {
   const estado = boletoEl.dataset.estado;
 
   if (estado !== 'disponible') {
-    _mostrarToast("Este número no está disponible.", true);
+    const participanteId = boletoEl.dataset.participanteId;
+    if (participanteId) {
+        // Buscar al participante en el array global
+        const participante = _participantes.find(p => p.id === participanteId);
+        if (participante) {
+            // Mostrar el nombre del participante
+            _mostrarToast(`Número reservado por: ${participante.nombre}`);
+        } else {
+            // Fallback si el ID existe pero el participante no está cargado (poco probable)
+            _mostrarToast("Este número no está disponible.", true);
+        }
+    } else {
+        // Fallback si no hay ID (p.ej. 'seleccionado' por el mismo usuario)
+        _mostrarToast("Este número no está disponible.", true);
+    }
     return;
   }
 
@@ -127,6 +150,7 @@ export function handleSeleccionPublica(e) {
   renderCuadriculaPublica();
   actualizarSeleccionPublica();
 }
+// ========= FIN DE LA MODIFICACIÓN (REQUERIMIENTO 3) =========
 
 export function actualizarSeleccionPublica() {
   if (!_listaSeleccionPublica || !_badgeCantidad || !_subtotalEl || !_btnProcederPago) return;
@@ -227,10 +251,10 @@ export function handleProcederPago() {
   }
 }
 
-// --- INICIO MODIFICACIÓN: Función actualizada para guardar token ---
+// ========= INICIO DE LA MODIFICACIÓN (REQUERIMIENTO 1) - Lógica Modal Pago =========
 export async function handleGuardarCompraUsuario(e) {
   e.preventDefault();
-  if (!_formIngresarDatos || _numerosSeleccionadosPublica.length === 0) return;
+  if (!_formIngresarDatos || _numerosSeleccionadosPublica.length === 0) return null;
 
   // Estado de Carga
   const submitButton = _formIngresarDatos.querySelector('button[type="submit"]');
@@ -247,17 +271,16 @@ export async function handleGuardarCompraUsuario(e) {
     const boleto = _boletosRifa.find(b => b.numero === numero);
     if (!boleto || boleto.estado !== 'disponible') {
         _mostrarToast(`El número ${numero} ya no está disponible.`, true);
-        // Reactivar botón en error
         if (submitButton) {
             submitButton.disabled = false;
             submitButton.textContent = 'Apartar mis números';
         }
-        return; 
+        return null; // Devuelve null en caso de error
     }
   }
 
   try {
-    // Obtener Token FCM
+    // 1. Obtener Token FCM
     console.log("Solicitando token de notificación...");
     const fcmToken = await solicitarYObtenerToken();
     if (fcmToken) {
@@ -266,16 +289,19 @@ export async function handleGuardarCompraUsuario(e) {
         console.log("No se obtuvo token de notificación. El participante se guardará sin token.");
     }
 
+    // 2. Preparar datos para Firestore
     const nuevoParticipante = {
       nombre: nombre,
       telefono: telefono,
       numeros: _numerosSeleccionadosPublica.sort(), 
       estado: estado,
-      fcmToken: fcmToken || null // <-- AÑADIDO: Guardar el token (o null)
+      fcmToken: fcmToken || null 
     };
     
+    // 3. Guardar en Firestore
     const docRef = await addDoc(collection(db, "participantes"), nuevoParticipante);
 
+    // 4. Actualizar boletos
     const batch = writeBatch(db);
     _numerosSeleccionadosPublica.forEach(numero => {
       const boletoRef = doc(db, "boletos", numero); 
@@ -285,39 +311,39 @@ export async function handleGuardarCompraUsuario(e) {
       });
     });
     
-    // --- Enviar a WhatsApp ---
-    // ========= INICIO DE LA MODIFICACIÓN (REQUERIMIENTO 2) =========
-    const telefonoWhatsapp = '573205893469'; // <-- NÚMERO ACTUALIZADO
-    // ========= FIN DE LA MODIFICACIÓN (REQUERIMIENTO 2) =========
-    
-    const numerosTexto = nuevoParticipante.numeros.join(', ');
-    
-    let mensajeWhatsapp = `¡Hola! tus números preseleccionados son ${numerosTexto}\n\n`;
-    mensajeWhatsapp += 'Escoge tu forma de pago:\n';
-    mensajeWhatsapp += 'A • Nequi\n';
-    mensajeWhatsapp += 'B • Nu\n';
-    mensajeWhatsapp += 'C • Corresponsal\n';
-    mensajeWhatsapp += 'D • Llave\n';
-    mensajeWhatsapp += 'E • Efectivo\n\n';
-    mensajeWhatsapp += 'Envia tu comprobante a este mis whatsapp y revisa la App que el estado de tus números cambie a Rojo (Reservado)';
-
-    const whatsappUrl = `https://api.whatsapp.com/send?phone=${telefonoWhatsapp}&text=${encodeURIComponent(mensajeWhatsapp)}`;
-    
-    // Abrimos WhatsApp en una nueva pestaña
-    window.open(whatsappUrl, '_blank');
-    
     await batch.commit();
 
-    _modalIngresarDatos.classList.remove('flex');
-    _numerosSeleccionadosPublica.length = 0; 
+    // 5. --- Lógica de WhatsApp (Solo Admin) ---
+    const numerosTexto = nuevoParticipante.numeros.join(', ');
+    const telefonoAdmin = '573205893469';
+
+    // --- Mensaje para el ADMIN ---
+    let mensajeAdmin = `¡Hola! ${nombre} acaba de seleccionar los números ${numerosTexto}...\n\n`;
+    mensajeAdmin += 'Debe estar pendiente para cuando te mande el comprobante de Pago.';
+    const whatsappUrlAdmin = `https://api.whatsapp.com/send?phone=${telefonoAdmin}&text=${encodeURIComponent(mensajeAdmin)}`;
     
+    // 6. Abrir la ventana de WhatsApp del Admin
+    window.open(whatsappUrlAdmin, '_blank');
+
+    // 7. Limpiar UI
+    _modalIngresarDatos.classList.remove('flex');
+    _mostrarToast("¡Números apartados! Sigue las instrucciones.");
+
+    // 8. DEVOLVER datos para el nuevo modal
+    const numerosSeleccionadosCopia = [..._numerosSeleccionadosPublica];
+    _numerosSeleccionadosPublica.length = 0; 
     actualizarSeleccionPublica(); 
     
-    _mostrarToast("¡Números apartados! Te contactaremos pronto.");
+    return {
+        nombre: nombre,
+        numeros: numerosSeleccionadosCopia,
+        telefonoAdmin: telefonoAdmin
+    };
     
   } catch (error) {
     console.error("Error al guardar la compra: ", error);
     _mostrarToast("Error al apartar los números. Intenta de nuevo.", true);
+    return null; // Devuelve null en caso de error
   } finally {
     // Reactivar botón (siempre)
     if (submitButton) {
@@ -326,7 +352,7 @@ export async function handleGuardarCompraUsuario(e) {
     }
   }
 }
-// --- FIN MODIFICACIÓN ---
+// ========= FIN DE LA MODIFICACIÓN (REQUERIMIENTO 1) =========
 
 
 /* =========================================================
@@ -359,8 +385,8 @@ export function renderCuadriculaAdmin(filtro) {
 export function handleFiltroAdmin(e) {
   if (e.target.tagName !== 'BUTTON' || !_filtrosAdminContainer) return;
   const filtro = e.target.dataset.filtro;
-  _filtrosAdminContainer.querySelectorAll('.filtro-btn-admin').forEach(btn => btn.classList.remove('filtro-btn-admin-activo'));
-  e.target.classList.add('filtro-btn-admin-activo');
+  _filtrosAdminContainer.querySelectorAll('.filtro-btn-admin').forEach(btn => btn.classList.remove('filtro-admin-activo'));
+  e.target.classList.add('filtro-admin-activo');
   renderCuadriculaAdmin(filtro);
 }
 
@@ -368,23 +394,28 @@ export function handleFiltroAdmin(e) {
    Tabla participantes
    ========================================================= */
 
-// ========= INICIO DE LA MODIFICACIÓN (REQUERIMIENTO 3) =========
-export function renderTablaParticipantes() {
+// ========= INICIO DE LA MODIFICACIÓN (REQUERIMIENTO 2 - Preparación) =========
+// La función ahora acepta una lista de participantes para renderizar
+export function renderTablaParticipantes(participantesFiltrados = null) {
   if (!_tablaParticipantes) return; 
   _tablaParticipantes.innerHTML = '';
+  
+  // Determina qué lista usar: la filtrada o la global completa
+  const listaParaRenderizar = participantesFiltrados !== null ? participantesFiltrados : _participantes;
 
-  if (_participantes.length === 0) {
+  // Ordenar la lista que se va a renderizar
+  listaParaRenderizar.sort((a, b) => a.nombre.localeCompare(b.nombre));
+
+  if (listaParaRenderizar.length === 0) {
     _tablaParticipantes.innerHTML = `
       <div class="bg-gray-50 dark:bg-gray-900 rounded-lg p-6 text-center text-gray-500 dark:text-gray-400">
-        Aún no hay participantes registrados.
+        ${participantesFiltrados !== null ? 'No se encontraron coincidencias.' : 'Aún no hay participantes registrados.'}
       </div>
     `;
     return;
   }
 
-  _participantes.sort((a, b) => a.nombre.localeCompare(b.nombre));
-
-  _participantes.forEach(p => {
+  listaParaRenderizar.forEach(p => {
     let colorEstado = 'text-gray-700 dark:text-gray-300';
     let bgEstado = 'bg-gray-100 dark:bg-gray-600';
     switch (p.estado) {
@@ -447,14 +478,9 @@ export function renderTablaParticipantes() {
     `;
     
     _tablaParticipantes.appendChild(participanteWrapper);
-
-    // Separador para la vista de escritorio (que ya no usamos)
-    const separator = document.createElement('hr');
-    separator.className = "hidden md:block dark:border-gray-700";
-    // _tablaParticipantes.appendChild(separator); // Opcional si queremos mantenerla
   });
 }
-// ========= FIN DE LA MODIFICACIÓN (REQUERIMIENTO 3) =========
+// ========= FIN DE LA MODIFICACIÓN (REQUERIMIENTO 2) =========
 
 
 /* =========================================================

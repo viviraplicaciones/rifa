@@ -109,7 +109,7 @@
     </a>
     <span class="sidebar-text text-xs text-fuchsia-300 text-center">By VivirApp • 2025 • Colombia</span>
    </div>
-   </aside>
+  </aside>
   
   <button class="fixed z-20 p-2 bg-fuchsia-700 text-white rounded-md toggle-sidebar-btn hidden md:block" id="toggle-sidebar-global"><i class="fa-solid fa-bars"></i></button>
   
@@ -126,7 +126,7 @@
        <img alt="Imagen 5" class="slider-image slider-lightbox-trigger h-full w-full object-cover absolute hidden cursor-pointer" src="images/05.jpg"/>
       </div>
       <div class="md:w-2/5 p-8 md:p-12 text-center">
-      <h1 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white">Fabulosa Rifa de Navidad</h1>
+       <h1 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white">Fabulosa Rifa de Navidad</h1>
        <p class="mt-6 text-lg font-semibold text-gray-800 dark:text-gray-100">Espectaculares Adornos Navideños. <br>9 Esferas Tejidas en crochet estilo Amigurumi.</p>
        <hr>
        <p class="mt-6 text-lg font-semibold text-gray-800 dark:text-gray-100">Juega el 5 de diciembre de 2025 con <a href="https://loteriadelrisaralda.com/resultados/" target="_blank" class="text-orange-500 dark:text-orange-400 font-bold no-underline hover:text-orange-600 dark:hover:text-orange-500">La lotería de Risaralda</a></p>
@@ -195,6 +195,13 @@
     <button class="bg-lime-500 text-white font-bold py-2 px-5 rounded-xl hover:bg-lime-600 transition shadow-lg flex items-center w-full md:w-auto" id="btn-registrar-venta-global"><i class="fa-solid fa-plus mr-2"></i>Registrar Venta</button>
     </div>
     
+    <!-- ========= INICIO DE LA MODIFICACIÓN (REQUERIMIENTO 2) ========= -->
+    <div class="relative mb-4 px-4 md:px-0">
+      <input type="text" id="filtro-participantes" placeholder="Buscar por nombre o teléfono..." class="w-full p-3 pl-10 border border-gray-300 rounded-lg text-gray-900 dark:bg-gray-700 dark:border-gray-600 dark:text-white" />
+      <i class="fa-solid fa-search absolute left-7 md:left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+    </div>
+    <!-- ========= FIN DE LA MODIFICACIÓN (REQUERIMIENTO 2) ========= -->
+
     <div class="bg-white dark:bg-gray-800 md:rounded-2xl shadow-xl overflow-hidden p-4">
     
     <div class="hidden md:grid grid-cols-5 gap-4 bg-gray-50 dark:bg-gray-700 rounded-lg p-4 mb-3 text-left text-xs md:text-sm font-semibold text-gray-600 uppercase dark:text-gray-300">
@@ -392,6 +399,45 @@
   <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">Tu número de suerte</h3>
   <p class="text-6xl font-bold text-fuchsia-600 dark:text-fuchsia-400" id="modal-suerte-numero">--</p>
   </div></div></div>
+
+<!-- ========= INICIO DE LA MODIFICACIÓN (REQUERIMIENTO 1) - NUEVO MODAL ========= -->
+<div class="modal fixed inset-0 z-50 overflow-y-auto bg-black bg-opacity-60" id="modal-confirmacion-pago">
+  <div class="relative p-4 w-full max-w-lg mx-auto my-12">
+  <div class="relative bg-white rounded-2xl shadow-2xl dark:bg-gray-800">
+  <div class="flex justify-between items-center p-5 border-b rounded-t-2xl dark:border-gray-700">
+  <h3 class="text-2xl font-semibold text-gray-900 dark:text-white">¡Números Apartados!</h3>
+  <button class="modal-close text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-2 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-id="modal-confirmacion-pago" type="button">
+  <i class="fa-solid fa-xmark fa-2x"></i><span class="sr-only">Cerrar modal</span></button></div>
+  <div class="p-6 md:p-8 space-y-6">
+    <p class="text-gray-700 dark:text-gray-200">¡Hola! Tus números preseleccionados son:</p>
+    <div class="flex flex-wrap gap-2 mb-4 min-h-[40px] bg-gray-50 p-3 rounded-lg border dark:bg-gray-700 dark:border-gray-600" id="lista-numeros-confirmacion">
+      <!-- Los números se insertarán aquí dinámicamente -->
+    </div>
+    
+    <div class="text-gray-700 dark:text-gray-300 space-y-2">
+      <p class="font-semibold">Escoge tu forma de pago:</p>
+      <ul class="list-disc list-inside ml-4 text-sm">
+        <li>A • Nequi</li>
+        <li>B • Nu</li>
+        <li>C • Corresponsal</li>
+        <li>D • Llave</li>
+        <li>E • Efectivo</li>
+      </ul>
+    </div>
+    
+    <p class="text-sm text-gray-600 dark:text-gray-400">
+      Envía tu comprobante al responsable y revisa la App. El estado de tus números cambiará a <span class="font-bold text-red-500">Pagado (Rojo)</span>.
+    </p>
+
+    <a href="#" id="btn-enviar-comprobante" target="_blank" class="w-full flex items-center justify-center gap-3 bg-green-500 text-white font-bold text-lg py-3 px-6 rounded-xl hover:bg-green-600 transition duration-300 shadow-lg">
+      <i class="fa-brands fa-whatsapp fa-lg"></i>
+      Enviar mensaje al Responsable
+    </a>
+
+  </div>
+  </div></div></div>
+<!-- ========= FIN DE LA MODIFICACIÓN (REQUERIMIENTO 1) ========= -->
+
 <div class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-40 opacity-0 pointer-events-none transition-opacity duration-300 ease-in-out items-center w-full max-w-xs p-4 text-gray-500 bg-white rounded-lg shadow-lg dark:text-gray-400 dark:bg-gray-800" id="toast-notificacion" role="alert">
    <div class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-lime-500 bg-lime-100 rounded-lg dark:bg-lime-800 dark:text-lime-200">
     <i class="fa-solid fa-check"></i>
@@ -419,19 +465,23 @@
   </div>
   <button class="fixed z-20 bottom-2 right-2 p-2 bg-fuchsia-700 text-white rounded-lg shadow-lg md:hidden aspect-square" id="toggle-sidebar-mobile"><i class="fa-solid fa-bars fa-lg"></i></button>
   
-  <div class="modal fixed inset-0 z-[100] bg-gray-900 bg-opacity-90" id="modal-vivirapp">
+  <div class="modal fixed inset-0 z-[100] bg-gray-900 bg-opacity-90 hidden" id="modal-vivirapp"> <!-- Modificado: añadido 'hidden' -->
     <div class="relative w-full h-full p-4 md:p-8">
+      <!-- Botón de cerrar modal -->
       <button class="modal-close absolute top-4 right-4 z-10 text-white bg-fuchsia-600 rounded-full w-12 h-12 flex items-center justify-center hover:bg-fuchsia-700 transition-colors" data-modal-id="modal-vivirapp" type="button">
         <i class="fa-solid fa-xmark fa-2x"></i>
         <span class="sr-only">Cerrar modal</span>
       </button>
       
+      <!-- Contenedor del Iframe -->
       <div class="relative w-full h-full bg-white dark:bg-gray-800 rounded-2xl shadow-2xl overflow-hidden">
         <iframe id="iframe-vivirapp" class="w-full h-full border-0" src="about:blank" title="Acerca de VivirApp">
-          </iframe>
+          <!-- El src se establecerá con JS para cargar 'vivirapp.html' -->
+        </iframe>
       </div>
     </div>
   </div>
+
   <script async src="//www.instagram.com/embed.js"></script>
   <script type="module" src="script.js"></script>
 </body>

@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="es" class="h-full bg-gray-100">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Herramienta de Reinicio (Producción)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="h-full flex items-center justify-center p-8">
+
+    <div class="w-full max-w-2xl bg-white p-8 rounded-2xl shadow-xl">
+        <div class="text-center">
+            <i class="fa-solid fa-database fa-3x text-fuchsia-600"></i>
+            <h1 class="text-3xl font-bold text-gray-900 mt-4">Herramienta de Reinicio de Base de Datos</h1>
+            <p class="text-lg text-gray-600 mt-2">Proyecto: <span class="font-medium text-fuchsia-700">rifanavidad-344f0</span></p>
+        </div>
+        
+        <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded-lg my-8" role="alert">
+            <p class="font-bold">¡ADVERTENCIA!</p>
+            <p>Esta acción es irreversible. Se borrarán todos los documentos de las colecciones <strong class="font-medium">participantes</strong> y <strong class="font-medium">suscripciones</strong>. La colección <strong class="font-medium">boletos</strong> se reiniciará a su estado "disponible".</p>
+        </div>
+
+        <button id="reset-button" class="w-full bg-red-600 text-white font-bold text-lg py-4 px-6 rounded-xl hover:bg-red-700 transition duration-300 shadow-lg focus:outline-none focus:ring-4 focus:ring-red-300 disabled:bg-gray-400">
+            REINICIAR BASE DE DATOS PARA PRODUCCIÓN
+        </button>
+
+        <div class="mt-8 bg-gray-900 text-white font-mono p-4 rounded-lg max-h-64 overflow-y-auto">
+            <h3 class="text-lg font-semibold text-lime-400 border-b border-gray-700 pb-2 mb-2">Registro de Operaciones:</h3>
+            <pre id="log-output" class="text-sm whitespace-pre-wrap">Esperando confirmación...</pre>
+        </div>
+    </div>
+
+    <!-- Importar Font Awesome (para el icono) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/js/all.min.js"></script>
+
+    <!-- Importar Firebase -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getFirestore, collection, doc, writeBatch, query, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+        // =========================================================
+        // TU CONFIGURACIÓN DE FIREBASE (de firebase-init.js)
+        // =========================================================
+        const firebaseConfig = {
+            apiKey: "AIzaSyDQxf7pZpe2st6wrJsVV6Q9EBW2PxWf6o4",
+            authDomain: "rifanavidad-344f0.firebaseapp.com",
+            projectId: "rifanavidad-344f0",
+            storageBucket: "rifanavidad-344f0.firebasestorage.app",
+            messagingSenderId: "719709518329",
+            appId: "1:719709518329:web:e84990017306fecb416528",
+            measurementId: "G-E1XWBTJ00R"
+        };
+        // =========================================================
+
+        // --- Lógica de la Herramienta ---
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        const resetButton = document.getElementById('reset-button');
+        const logOutput = document.getElementById('log-output');
+
+        // Función para mostrar mensajes en el registro
+        function log(message, isError = false) {
+            console.log(message);
+            const color = isError ? 'text-red-400' : 'text-gray-300';
+            logOutput.innerHTML += `<span class="${color}">&gt; ${message}</span>\n`;
+            logOutput.scrollTop = logOutput.scrollHeight;
+        }
+
+        // 1. Función para REINICIAR los boletos (00-99)
+        async function resetBoletos() {
+            log("Iniciando reinicio de 'boletos' (00-99)...");
+            const batch = writeBatch(db);
+            
+            for (let i = 0; i <= 99; i++) {
+                const numeroId = i.toString().padStart(2, '0'); // "00", "01", ..., "99"
+                const docRef = doc(db, "boletos", numeroId);
+                const data = {
+                    numero: numeroId,
+                    estado: "disponible",
+                    participanteId: ""
+                };
+                batch.set(docRef, data);
+            }
+            
+            await batch.commit();
+            log("ÉXITO: Colección 'boletos' reinicializada. Todos 'disponibles'.");
+        }
+
+        // 2. Función para BORRAR todos los documentos de una colección
+        async function deleteCollection(collectionName) {
+            log(`Iniciando borrado de '${collectionName}'...`);
+            const q = query(collection(db, collectionName));
+            const snapshot = await getDocs(q);
+
+            if (snapshot.empty) {
+                log(`Colección '${collectionName}' ya estaba vacía.`);
+                return;
+            }
+
+            const batch = writeBatch(db);
+            snapshot.forEach(doc => {
+                batch.delete(doc.ref);
+            });
+            
+            await batch.commit();
+            log(`ÉXITO: ${snapshot.size} documentos borrados de '${collectionName}'.`);
+        }
+
+        // --- Event Listener Principal ---
+        resetButton.addEventListener('click', async () => {
+            if (!confirm("¿ESTÁS 100% SEGURO?\n\nEsta acción borrará TODOS los participantes y suscripciones de forma PERMANENTE.")) {
+                log("Reinicio cancelado por el usuario.", true);
+                return;
+            }
+
+            resetButton.disabled = true;
+            resetButton.textContent = "PROCESANDO... POR FAVOR ESPERA";
+            logOutput.innerHTML = ""; // Limpiar registro
+            log("Iniciando reinicio para producción...");
+
+            try {
+                // Ejecutar las tareas en orden
+                await resetBoletos();
+                await deleteCollection("participantes");
+                await deleteCollection("suscripciones");
+                
+                log("\n============================================");
+                log("¡REINICIO COMPLETO!");
+                log("La base de datos está lista para producción.");
+                log("============================================");
+                resetButton.textContent = "REINICIO COMPLETADO";
+                resetButton.classList.remove('bg-red-600', 'hover:bg-red-700');
+                resetButton.classList.add('bg-lime-600');
+
+            } catch (error) {
+                console.error("Error durante el reinicio: ", error);
+                log(`ERROR: ${error.message}`, true);
+                resetButton.disabled = false;
+                resetButton.textContent = "REINICIAR BASE DE DATOS PARA PRODUCCIÓN";
+            }
+        });
+
+    </script>
+</body>
+</html>

@@ -305,7 +305,7 @@ export async function handleGuardarCompraUsuario(e) {
 
     // 5. --- Lógica de WhatsApp (Solo Admin) ---
     // const numerosTexto = nuevoParticipante.numeros.join(', '); // Ya no se usa aquí
-    const telefonoAdmin = '573205893469';
+    const telefonoAdmin = '573013811896';
 
     // --- MODIFICACIÓN: Se eliminaron mensajeAdmin y whatsappUrlAdmin ---
     

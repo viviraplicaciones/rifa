@@ -1,0 +1,103 @@
+
+hola, estamos creando una web App PWA, de un sistema de rifa,con su listado, de numeracion para escoger su numero se envia un mensaje a whatsapp, con bd en firebase, su cloud para notificaciones, todo listo, su sw, su firebase sw, functions, etc. me faltan algunas cosas de frontend y algunas de bakend. Le voy a subir los archivos esenciales para que los analice y pueda tener mas contexto de lo que estoy hablando y al mismo tiempo tenga todos los codigos que estamos usando.
+
+
+
+despues de subir todos los archivos requiero un resumen de todo el proyecto, para poder proceder a realizar los cambios necesarios.
+
+perfecto le voy a volver a facilitar los cambios que tenemos pendientes, el script. js ya esta hecho falta hacer el index.html y el tablas-nmericas.js.
+
+
+
+hacemos primero los cambios en index.html, lo genera y luego me pide la autorizacion para realizar el otro archivo.
+
+
+
+como he tenido tiempo para revisar otras cosas de la app, vamos a realizar diferentes arreglos de frontend. todo esto lo vamos a realizar primero en el index y luego arreglaremos el index_01
+
+
+
+
+
+
+
+
+
+
+
+
+
+• en la seccion numeros al  "proceder al pago" despues de ingresar los datos y dar click en apartar mis numeros, la accion que esta haciendo es la siguiente: Envia los datos a la bd (lo normal, para que quede inscrito y pueda recibir las notificaciones) pero el mensaje que esta enviando por whatsapp esta saliendo mal porque se debe de enviar un mensaje al numero que acaban de ingresar diciendo:
+
+¡Hola! tus números preseleccionados son (los numeros que escogio)
+
+Escoge tu forma de pago:
+A • Nequi
+B • Nu
+C • Corresponsal
+D • Llave
+E • Efectivo
+
+Envia tu comprobante al número whatsapp 3205893469 y revisa la App que el estado de tus números cambie a Rojo (Reservado)
+
+y al mismo tiempo un mensaje para 573205893469 diciendo:
+¡Hola! (aqui el nombre del jugador) acaba de seleccionar los números (aqui los numeros)... 
+
+Debe estar pendiente para cuando te mande el comprobante de Pago.
+
+•  en la seccion "Participantes" debajo del boton '+ Registrar venta' poner un input tyext de busqueda para poder buscar por nombre o por numero telefonico a los participantes
+
+• algo muy importante: en la seccion "Numeros" que si algun usuario da click o tap en algun numero que ya este reservado, en revision o seleccionado que se vea el nombre de quien ya tiene ese numero (pero solo el nombre)
+
+•en index_01 el boton "Enviar mensaje directo" que envie un mensaje a el email: viviraplicaciones@gmail.com. los botones de reservar deben enviar el mensaje directamente al numero 573205893469. en este index_01 que parece un"espejo" del index principal tambien debe de tener algunas cosas que funcionan igual, como por ejemplo el link de instagram debe funcionar igual al index principal, tambien el de compartir el de reportar fallos y la imagen de la parte inferior del menula teral (vivirapp.png)
+
+
+
+
+
+
+
+
+
+
+
+antes de seguir vamos a ser MUY CLAROS...
+Los archivos no se cortan, no se resumen, no se fragmentan, no se rompen. Antes de hacer alguna modificacion primero pide autorizacion y se hacen los cambios o correcciones se leen completos y por ejemplo:
+en el index el punto 1, el 3 y el 5 tiene correcciones se realizan de una vez, y luego si en el script tengo que solucionar tambien cosas del 1, el 4 y el 6, se hacen tambien de una vez; porque asi como piensa realizar los cambios y las correcciones le va tocar generar cada archivo mas de una vez y pues eso no es muy practico ni en tiempo ni en recursos y mucho menos para inteligencia artificial.
+
+El archivo index tiene una estructura diferente y especial (no maneja las clasicas estructuras de programacion) dejelas asi y todo lo que deba agregar o modificar alli hagalo de la mimsma forma.
+
+siempre debe de tratar de hacer alguna correccion con un enfoque profesional de programador senior con mas de 15 años de experiencia y con un pensamiento global del proyecto.
+
+todo el tema de base de datos en firebase, mensajes, notificaciones, etc ya esta listo, solo es falta de hacer pruebas.
+
+espero que entienda para poder realizar los cambios que le voy a solicitar.
+
+PD: si algun cambio que le solicite ya esta hecho hacermelo saber y mostrarme el numero de linea donde esta ya realizado
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

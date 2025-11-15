@@ -8,7 +8,7 @@ import { toggleSidebarGlobal, initDarkMode, registerDarkModeHandler } from './co
 
 // --- INICIO: Lógica de WhatsApp ---
 // Modificado: Número de WhatsApp actualizado
-const WHATSAPP_NUMBER = '573205893469';
+const WHATSAPP_NUMBER = '573013811896';
 
 function handleReservarClick(productName) {
   let texto = `Este Amiguruni me encanto, me puedes dar información para poder adquirirlo... Gracias!!`;

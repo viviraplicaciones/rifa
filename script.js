@@ -539,7 +539,7 @@ function handleFiltroParticipantes(e) {
 /* ================================LÓGICA DE NOTIFICACIONES (v3 - Corregido para GitHub Pages)================= */
 
 export async function solicitarYObtenerToken() {
-  if (VAPID_KEY === 'TU_CLAVE_VAPID_DE_FIREBASE_VA_AQUI' || !VAPID_KEY) {
+  if (VAPID_KEY === 'BLKW4ylTSLBySioHx0AOkYi6xZJPDjmQ1XAJAO8girT-ouIIwvdiAyvLlI6stV3M72dGrjnZ01fdr-YI7MmHSb0' || !VAPID_KEY) {
       console.error("Error: Falta la VAPID_KEY en script.js");
       mostrarToast("Error de configuración de notificaciones.", true);
       return null;

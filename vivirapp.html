@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>VivirAplicaciones - Tecnología y Desarrollo</title>
   <style>
+    /* ========= INICIO DE MODIFICACIONES (REQUERIMIENTO 1) ========= */
     body {
       margin: 0;
       font-family: Arial, sans-serif;
@@ -14,15 +15,15 @@
     header {
       background: linear-gradient(135deg, #0a1a2f, #1e3a5f);
       color: #fff;
-      padding: 20px;
+      padding: 15px 20px; /* Reducido de 20px */
       text-align: center;
     }
     header img {
       width: 90px;
-      margin-bottom: 10px;
+      margin-bottom: 5px; /* Reducido de 10px */
     }
     .hero {
-      padding: 70px 20px;
+      padding: 3px 20px; /* Reducido drásticamente (90%) */
       text-align: center;
       background: #ffffff;
     }
@@ -34,7 +35,7 @@
     .hero p {
       font-size: 1.15rem;
       max-width: 600px;
-      margin: 0 auto 25px auto;
+      margin: 0 auto 15px auto; /* Reducido de 25px */
       color: #555;
     }
     .btn {
@@ -48,16 +49,16 @@
       font-weight: bold;
     }
     .services {
-      padding: 60px 20px;
+      padding: 30px 20px; /* Reducido de 60px */
       display: grid;
-      gap: 30px;
+      gap: 20px; /* Reducido de 30px */
       max-width: 1100px;
       margin: auto;
       grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
     }
     .card {
       background: #fff;
-      padding: 25px;
+      padding: 20px; /* Reducido de 25px */
       border-radius: 12px;
       box-shadow: 0 4px 12px rgba(0,0,0,0.08);
       text-align: center;
@@ -70,19 +71,19 @@
     }
     .reviews {
       background: #ffffff;
-      padding: 60px 20px;
+      padding: 30px 20px; /* Reducido de 60px */
     }
     .reviews h2 {
       text-align: center;
       font-size: 2rem;
       color: #1e3a5f;
-      margin-bottom: 40px;
+      margin-bottom: 20px; /* Reducido de 40px */
     }
     .review-box {
       max-width: 900px;
       margin: auto;
       display: grid;
-      gap: 25px;
+      gap: 20px; /* Reducido de 25px */
       grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     }
     .review {
@@ -98,15 +99,48 @@
       padding: 20px;
       background: #0a1a2f;
       color: #fff;
-      margin-top: 40px;
+      margin-top: 20px; /* Reducido de 40px */
       font-size: 0.9rem;
     }
-  .reveal{opacity:0; transform:translateY(30px); transition:all .6s ease;} .show{opacity:1; transform:translateY(0);} </style>
+  .reveal{opacity:0; transform:translateY(30px); transition:all .6s ease;} .show{opacity:1; transform:translateY(0);} 
+  
+  /* Ajuste de sección de contacto */
+  #contacto {
+      padding: 30px 20px; /* Reducido de 60px */
+      background:#eef3f9; 
+      text-align:center;
+  }
+  #contacto h2 {
+      color:#1e3a5f; 
+      font-size:2rem;
+  }
+  #contacto p {
+      max-width:600px; 
+      margin:10px auto 20px; /* Reducido de 30px */
+      color:#555;
+  }
+  #contacto form {
+      max-width:500px; 
+      margin:auto; 
+      display:flex; 
+      flex-direction:column; 
+      gap:10px; /* Reducido de 15px */
+  }
+  #contacto input, #contacto textarea {
+      padding:12px; 
+      border-radius:6px; 
+      border:1px solid #ccc;
+  }
+  /* ========= FIN DE MODIFICACIONES (REQUERIMIENTO 1) ========= */
+  </style>
 </head>
 <body>
   <header><img src="images/vivirapp.png" alt="Logo VivirAplicaciones" /><h2>VivirAplicaciones</h2><p>10 años creando tecnología</p></header>
 
-  <section class="hero"><h1>Soluciones Web y Móviles de Alto Impacto</h1><p>En VivirAplicaciones transformamos ideas en plataformas modernas, rápidas y confiables. Creamos sitios web, aplicaciones móviles y PWA diseñadas para impulsar negocios con tecnología de alto nivel.</p>
+  <section class="hero"><h1>Soluciones Web y Móviles de Alto Impacto</h1>
+    <!-- ========= INICIO DE MODIFICACIÓN (REQUERIMIENTO 3) ========= -->
+    <p>Transformamos tus ideas en plataformas web, apps móviles y PWA modernas, rápidas y confiables. Impulsamos tu negocio con tecnología de alto nivel.</p>
+    <!-- ========= FIN DE MODIFICACIÓN (REQUERIMIENTO 3) ========= -->
     <a class="btn" href="#contacto">Quiero más información</a></section>
 
   <section class="services">
@@ -117,17 +151,20 @@
     <div class="card"><img src="https://picsum.photos/400/250?print" alt="Impresión litográfica" /><h3>Impresión Litográfica</h3><p>Tarjetas, volantes, brochures, pendones, empaques y material corporativo de alta calidad.</p></div>
   </section>
 
-  <section id="contacto" class="reveal" style="padding:60px 20px; background:#eef3f9; text-align:center;">
-    <h2 style="color:#1e3a5f; font-size:2rem;">Contacto</h2><p style="max-width:600px; margin:10px auto 30px; color:#555;">¿Listo para impulsar tu proyecto? Escríbenos y te responderemos en minutos.</p>
-    <form style="max-width:500px; margin:auto; display:flex; flex-direction:column; gap:15px;">
-      <input type="text" placeholder="Tu nombre" style="padding:12px; border-radius:6px; border:1px solid #ccc;">
-      <input type="email" placeholder="Tu email" style="padding:12px; border-radius:6px; border:1px solid #ccc;">
-      <textarea placeholder="Cuéntanos sobre tu proyecto" rows="4" style="padding:12px; border-radius:6px; border:1px solid #ccc;"></textarea>
+  <section id="contacto" class="reveal">
+    <h2>Contacto</h2><p>¿Listo para impulsar tu proyecto? Escríbenos y te responderemos en minutos.</p>
+    
+    <!-- ========= INICIO DE MODIFICACIÓN (REQUERIMIENTO 2) ========= -->
+    <form action="mailto:viviraplicaciones@gmail.com" method="POST" enctype="text/plain">
+      <input type="text" name="Nombre" placeholder="Tu nombre" required>
+      <input type="email" name="Email" placeholder="Tu email" required>
+      <textarea name="Mensaje" placeholder="Cuéntanos sobre tu proyecto" rows="4" required></textarea>
       <button class="btn" type="submit">Enviar mensaje</button>
     </form>
+    <!-- ========= FIN DE MODIFICACIÓN (REQUERIMIENTO 2) ========= -->
   </section>
 
-  <section class="reviews reveal">>
+  <section class="reviews reveal">
     <h2>Opiniones de Nuestros Clientes</h2>
     <div class="review-box">
       <div class="review">⭐ “Excelente servicio. Mi página cargó más rápido y aumentaron mis ventas.” — <b>Ana G.</b></div>

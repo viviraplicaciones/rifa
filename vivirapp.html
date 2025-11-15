@@ -7,35 +7,42 @@
   <style>
     /* ========= INICIO DE MODIFICACIONES (REQUERIMIENTO 1) ========= */
     body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #f2f6fa;
-      color: #333;
-    }
-    header {
-      background: linear-gradient(135deg, #0a1a2f, #1e3a5f);
-      color: #fff;
-      padding: 15px 20px; /* Reducido de 20px */
-      text-align: center;
-    }
+  margin: 0;
+  font-family: Arial, sans-serif; /* Corregido 'font-fy' por 'font-family' */
+  background-image: url('img/fondo.jpg');
+  background-repeat: no-repeat;
+  background-size: cover;
+  /*background-color: #f2f6fa; /* Asegura que haya un color de fondo en caso de que la imagen no se cargue */
+  color: #333;
+}
+/* Estilo para el encabezado */
+header {
+  background-image: url('img/vivir_banner.jpg');
+  background-size: cover; /* Asegura que la imagen de fondo cubra el área del encabezado */
+  background-position: center center; /* Centra la imagen */
+  /*background: linear-gradient(135deg, #0a1a2f, #1e3a5f); /* Superpone un degradado para asegurar contraste con el texto */
+  color: #fff;
+  padding: 10px 15px; /* Reducido de 20px a 10px en el top y bottom, y 15px a los lados */
+  text-align: center;
+}
     header img {
       width: 90px;
-      margin-bottom: 5px; /* Reducido de 10px */
+      margin-bottom: 10px; /* Reducido de 10px */
     }
     .hero {
-      padding: 3px 20px; /* Reducido drásticamente (90%) */
+      padding: 3px 10px; /* Reducido drásticamente (90%) */
       text-align: center;
-      background: #ffffff;
+      /*background: #ffffff;-*/
     }
     .hero h1 {
-      font-size: 2.4rem;
+      font-size: 1.5rem;
       color: #1e3a5f;
-      margin-bottom: 10px;
+      margin-bottom: 5px;
     }
     .hero p {
-      font-size: 1.15rem;
+      font-size: 1.0rem;
       max-width: 600px;
-      margin: 0 auto 15px auto; /* Reducido de 25px */
+      margin: 0 auto 10px auto; /* Reducido de 25px */
       color: #555;
     }
     .btn {
@@ -49,16 +56,17 @@
       font-weight: bold;
     }
     .services {
-      padding: 30px 20px; /* Reducido de 60px */
+      padding: 10px 10px; /* Reducido de 60px */
       display: grid;
-      gap: 20px; /* Reducido de 30px */
+      gap: 10px; /* Reducido de 30px */
       max-width: 1100px;
       margin: auto;
       grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      color:Black;
     }
     .card {
-      background: #fff;
-      padding: 20px; /* Reducido de 25px */
+      background: #f2f6fa;
+      padding: 10px; /* Reducido de 25px */
       border-radius: 12px;
       box-shadow: 0 4px 12px rgba(0,0,0,0.08);
       text-align: center;
@@ -67,56 +75,56 @@
     .card img {
       width: 100%;
       border-radius: 10px;
-      margin-bottom: 15px;
+      margin-bottom: 5px;
     }
     .reviews {
       background: #ffffff;
-      padding: 30px 20px; /* Reducido de 60px */
+      padding: 10px 10px; /* Reducido de 60px */
     }
     .reviews h2 {
       text-align: center;
-      font-size: 2rem;
+      font-size: 1.5rem;
       color: #1e3a5f;
-      margin-bottom: 20px; /* Reducido de 40px */
+      margin-bottom: 10px; /* Reducido de 40px */
     }
     .review-box {
       max-width: 900px;
       margin: auto;
       display: grid;
-      gap: 20px; /* Reducido de 25px */
+      gap: 15px; /* Reducido de 25px */
       grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     }
     .review {
       background: #f7f9fc;
-      padding: 20px;
+      padding: 10px;
       border-radius: 10px;
       box-shadow: 0 3px 8px rgba(0,0,0,0.05);
       border-left: 4px solid #ff7a00;
-      font-size: 0.95rem;
+      font-size: 0.93rem;
     }
     footer {
       text-align: center;
-      padding: 20px;
+      padding: 10px;
       background: #0a1a2f;
       color: #fff;
-      margin-top: 20px; /* Reducido de 40px */
+      margin-top: 10px; /* Reducido de 40px */
       font-size: 0.9rem;
     }
   .reveal{opacity:0; transform:translateY(30px); transition:all .6s ease;} .show{opacity:1; transform:translateY(0);} 
   
   /* Ajuste de sección de contacto */
   #contacto {
-      padding: 30px 20px; /* Reducido de 60px */
+      padding: 10px 10px; /* Reducido de 60px */
       background:#eef3f9; 
       text-align:center;
   }
   #contacto h2 {
       color:#1e3a5f; 
-      font-size:2rem;
+      font-size:1.5rem;
   }
   #contacto p {
       max-width:600px; 
-      margin:10px auto 20px; /* Reducido de 30px */
+      margin:10px auto 10px; /* Reducido de 30px */
       color:#555;
   }
   #contacto form {
@@ -137,22 +145,22 @@
 <body>
   <header><img src="images/vivirapp.png" alt="Logo VivirAplicaciones" /><h2>VivirAplicaciones</h2><p>10 años creando tecnología</p></header>
 
-  <section class="hero"><h1>Soluciones Web y Móviles de Alto Impacto</h1>
+  <section class="hero" style="color: white"><h2>Soluciones Web y Móviles de Alto Impacto</h2>
     <!-- ========= INICIO DE MODIFICACIÓN (REQUERIMIENTO 3) ========= -->
-    <p>Transformamos tus ideas en plataformas web, apps móviles y PWA modernas, rápidas y confiables. Impulsamos tu negocio con tecnología de alto nivel.</p>
+    <p style="color: white">Transformamos tus ideas en plataformas web, apps móviles y PWA modernas, rápidas y confiables. Impulsamos tu negocio con tecnología de alto nivel.</p>
     <!-- ========= FIN DE MODIFICACIÓN (REQUERIMIENTO 3) ========= -->
-    <a class="btn" href="#contacto">Quiero más información</a></section>
+    <!--<a class="btn" href="#contacto">Quiero más información</a></section>-->
 
   <section class="services">
-    <div class="card"><img src="https://picsum.photos/400/250?web" alt="Web" /><h3>Páginas Web</h3><p>Desarrollos profesionales, optimizados para velocidad, SEO y un diseño que cautiva a tus clientes.</p></div>
-    <div class="card"><img src="https://picsum.photos/400/250?app" alt="App" /><h3>Apps Móviles</h3><p>Aplicaciones intuitivas y potentes para Android y iOS, diseñadas para una experiencia fluida.</p></div>
-    <div class="card"><img src="https://picsum.photos/400/250?pwa" alt="PWA" /><h3>PWA</h3><p>Aplicaciones progresivas súper rápidas, seguras y funcionales incluso sin conexión.</p></div>
-    <div class="card"><img src="https://picsum.photos/400/250?design" alt="Diseño gráfico" /><h3>Diseño Gráfico</h3><p>Branding, logos, piezas publicitarias y material visual profesional para tu marca.</p></div>
-    <div class="card"><img src="https://picsum.photos/400/250?print" alt="Impresión litográfica" /><h3>Impresión Litográfica</h3><p>Tarjetas, volantes, brochures, pendones, empaques y material corporativo de alta calidad.</p></div>
+    <div class="card"><img src="img/web.jpg?web" alt="Web" /><h3>Páginas Web</h3><p>Desarrollos profesionales, optimizados para velocidad, SEO y un diseño que cautiva a tus clientes.</p></div>
+    <div class="card"><img src="img/app.png?app" alt="App" /><h3>Apps Móviles</h3><p>Aplicaciones intuitivas y potentes para Android y iOS, diseñadas para una experiencia fluida.</p></div>
+    <div class="card"><img src="img/pwa.png?pwa" alt="PWA" /><h3>PWA</h3><p>Aplicaciones progresivas súper rápidas, seguras y funcionales incluso sin conexión.</p></div>
+    <div class="card"><img src="img/diseno.webp?design" alt="Diseño gráfico" /><h3>Diseño Gráfico</h3><p>Branding, logos, piezas publicitarias y material visual profesional para tu marca.</p></div>
+    <div class="card"><img src="img/lito.webp?print" alt="Impresión litográfica" /><h3>Impresión Litográfica</h3><p>Tarjetas, volantes, brochures, pendones, empaques y material corporativo de alta calidad.</p></div>
   </section>
 
   <section id="contacto" class="reveal">
-    <h2>Contacto</h2><p>¿Listo para impulsar tu proyecto? Escríbenos y te responderemos en minutos.</p>
+    <h2>Contacto</h2><p><strong>¿Listo para impulsar tu proyecto?</strong><br>Escríbenos y te responderemos en minutos.</p>
     
     <!-- ========= INICIO DE MODIFICACIÓN (REQUERIMIENTO 2) ========= -->
     <form action="mailto:viviraplicaciones@gmail.com" method="POST" enctype="text/plain">
@@ -163,7 +171,7 @@
     </form>
     <!-- ========= FIN DE MODIFICACIÓN (REQUERIMIENTO 2) ========= -->
   </section>
-
+<br>
   <section class="reviews reveal">
     <h2>Opiniones de Nuestros Clientes</h2>
     <div class="review-box">

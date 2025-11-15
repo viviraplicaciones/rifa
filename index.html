@@ -170,9 +170,10 @@
      <span class="font-medium text-gray-900 dark:text-white" id="precio-numero">$ 5.000</span>
      </div>
      </div>
-     <button class="w-full bg-lime-500 text-white font-bold text-lg py-3 px-6 rounded-xl hover:bg-lime-600 transition duration-300 shadow-lg disabled:bg-gray-400" id="btn-proceder-pago">Proceder al pago</button>
      <p class="text-xs text-gray-500 mt-4 text-center dark:text-gray-400"><i class="fa-solid fa-circle-info mr-1">
      </i>Selecciona los n&uacute;meros que deseas comprar.</p>
+     <button class="w-full bg-lime-500 text-white font-bold text-lg py-3 px-6 rounded-xl hover:bg-lime-600 transition duration-300 shadow-lg disabled:bg-gray-400" id="btn-proceder-pago">Proceder al pago</button>
+     
      </div></div>
    </div>
    
@@ -262,13 +263,15 @@
    <div>
    <h4 class="text-xl font-bold text-gray-800 mb-3 dark:text-white">Detalles del Premio</h4>
    <p>9 esferas tejidas en lana crochet:</p>
-   <p class="mt-4 text-lg text-gray-600 dark:text-gray-300">• 1 Papá Noel • 1 Mamá Noel<br>• 1 Reno • 1 Rena <br>• 1 Elfo • 1 Elfa<br>• 1 Oveja • 1 Oso Polar<br>• 1 Muñeco de Nieve </p>
+   <p class="mt-4 text-lg text-gray-600 dark:text-gray-300">• 1 Papá Noel • 1 Mamá Noel<br>• 1 Reno • 1 Rena <br>• 1 Elfo • 1 Elfa<br>• 1 Galleta • 1 Oso Polar<br>• 1 Muñeco de Nieve </p>
    </div>
    <div><hr><br>
    <h4 class="text-xl font-bold text-gray-800 mb-3 dark:text-white">Forma de pago</h4>
    <ul class="list-disc list-inside space-y-1">
+   <li>Corresponsal Bancario</li> 
    <li>Pagos por Nequi</li>
    <li>Llave Bre-B</li>
+   <li>NuBank</li>
    <li>Efectivo</li>
    </ul>
    <p class="mt-4 text-sm text-gray-700 dark:text-gray-300">Rifa realizada en Pereira, boletas compradas en otra ciudad el envio del premio corre por cuenta del ganador.</p>
@@ -409,7 +412,7 @@
   <button class="modal-close text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-2 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-id="modal-confirmacion-pago" type="button">
   <i class="fa-solid fa-xmark fa-2x"></i><span class="sr-only">Cerrar modal</span></button></div>
   <div class="p-6 md:p-8 space-y-6">
-    <p class="text-gray-700 dark:text-gray-200">¡Hola! Tus números preseleccionados son:</p>
+    <p class="text-gray-700 dark:text-gray-200">Tus números seleccionados son:</p>
     <div class="flex flex-wrap gap-2 mb-4 min-h-[40px] bg-gray-50 p-3 rounded-lg border dark:bg-gray-700 dark:border-gray-600" id="lista-numeros-confirmacion">
       <!-- Los números se insertarán aquí dinámicamente -->
     </div>
@@ -426,14 +429,11 @@
     </div>
     
     <p class="text-sm text-gray-600 dark:text-gray-400">
-      Envía tu comprobante al responsable y revisa la App. El estado de tus números cambiará a <span class="font-bold text-red-500">Pagado (Rojo)</span>.
-    </p>
+      Envía tu comprobante al responsable y revisa la App. El estado de tus números cambiará a <span class="font-bold text-red-500">Pagado (Rojo)</span>.</p>
 
     <a href="#" id="btn-enviar-comprobante" target="_blank" class="w-full flex items-center justify-center gap-3 bg-green-500 text-white font-bold text-lg py-3 px-6 rounded-xl hover:bg-green-600 transition duration-300 shadow-lg">
       <i class="fa-brands fa-whatsapp fa-lg"></i>
-      Enviar mensaje al Responsable
-    </a>
-
+      Enviar al Amdmin</a>
   </div>
   </div></div></div>
 <!-- ========= FIN DE LA MODIFICACIÓN (REQUERIMIENTO 1) ========= -->

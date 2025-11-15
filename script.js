@@ -1,4 +1,4 @@
-/* ===========================script.js (v36 - Lógica Acordeón, Modal VivirApp y Fix Compartir)=========================== */
+/* ===========================script.js (v37 - Lógica Modal Pago y Filtro Participantes)=========================== */
 // Importar la base de datos (db) y funciones de Firebase
 import { 
     db, 
@@ -24,10 +24,10 @@ import {
   handleSeleccionPublica,
   actualizarSeleccionPublica,
   handleProcederPago,
-  handleGuardarCompraUsuario,
+  handleGuardarCompraUsuario, // Importamos la función que guarda
   renderCuadriculaAdmin,
   handleFiltroAdmin,
-  renderTablaParticipantes,
+  renderTablaParticipantes, // Importamos el render
   abrirModalRegistro,
   handleGuardarVenta,
   anadirCampoNumero,
@@ -40,7 +40,7 @@ const VAPID_KEY = 'BLKW4ylTSLBySioHx0AOkYi6xZJPDjmQ1XAJAO8girT-ouIIwvdiAyvLlI6st
 
 /* -----------Estado Global de la Aplicación----------------------- */
 let boletosRifa = [];
-let participantes = [];
+let participantes = []; // Mantenemos la lista global de participantes
 const PRECIO_BOLETO = 5000; 
 let numerosSeleccionadosPublica = [];
 
@@ -62,6 +62,15 @@ let modalSuerte;
 let modalSuerteNumero;
 let imgSuerte;
 let toggleNotificaciones;
+
+// --- INICIO REQUERIMIENTO 1 (Modal Pago) ---
+let modalConfirmacionPago, listaNumerosConfirmacion, btnEnviarComprobante;
+// --- FIN REQUERIMIENTO 1 ---
+
+// --- INICIO REQUERIMIENTO 2 (Filtro) ---
+let filtroParticipantesInput;
+// --- FIN REQUERIMIENTO 2 ---
+
 // Variables para Modal VivirApp (Req 4)
 let btnVivirAppModal, modalVivirApp, iframeVivirApp;
 
@@ -198,7 +207,16 @@ function escucharParticipantes() {
     });
     participantes.length = 0;
     participantes.push(...participantesTemporales);
-    renderTablaParticipantes();
+    
+    // --- MODIFICACIÓN REQUERIMIENTO 2 ---
+    // Al recibir nuevos participantes, volvemos a renderizar la tabla.
+    // Si hay un filtro activo, lo reaplicamos.
+    if (filtroParticipantesInput && filtroParticipantesInput.value.trim() !== '') {
+        handleFiltroParticipantes({ target: filtroParticipantesInput }); // Simula un evento input
+    } else {
+        renderTablaParticipantes(); // Renderiza la lista completa
+    }
+    // --- FIN MODIFICACIÓN ---
   });
 }
 /* ============================== Cacheo de elementos DOM ================ */
@@ -259,6 +277,16 @@ function cachearElementosDOM() {
   lightboxPrevInicio = document.getElementById('lightbox-prev-inicio');
   lightboxNextInicio = document.getElementById('lightbox-next-inicio');
 
+  // --- INICIO REQUERIMIENTO 1 (Modal Pago) ---
+  modalConfirmacionPago = document.getElementById('modal-confirmacion-pago');
+  listaNumerosConfirmacion = document.getElementById('lista-numeros-confirmacion');
+  btnEnviarComprobante = document.getElementById('btn-enviar-comprobante');
+  // --- FIN REQUERIMIENTO 1 ---
+
+  // --- INICIO REQUERIMIENTO 2 (Filtro) ---
+  filtroParticipantesInput = document.getElementById('filtro-participantes');
+  // --- FIN REQUERIMIENTO 2 ---
+
   // --- Variables Modal VivirApp (Req 4) ---
   btnVivirAppModal = document.getElementById('btn-vivirapp-modal');
   modalVivirApp = document.getElementById('modal-vivirapp');
@@ -291,9 +319,15 @@ function registrarEventListeners() {
   // --- Lógica de Rifa (Eventos delegados a módulos importados) ---
   cuadriculaPublica?.addEventListener('click', handleSeleccionPublica);
   switchOcultarComprados?.addEventListener('change', renderCuadriculaPublica);
-    // --- Flujo de Pago ---
+    
+  // --- Flujo de Pago ---
   btnProcederPago?.addEventListener('click', handleProcederPago);
-  formIngresarDatos?.addEventListener('submit', handleGuardarCompraUsuario);
+  
+  // --- INICIO REQUERIMIENTO 1 (Modal Pago) ---
+  // Se modifica el listener: ahora llama a una función intermediaria
+  formIngresarDatos?.addEventListener('submit', handleFormularioCompraSubmit);
+  // --- FIN REQUERIMIENTO 1 ---
+
   // --- Botón Suerte ---
   btnSuerte?.addEventListener('click', handleBotonSuerte); 
   // --- ADMIN ---
@@ -301,6 +335,10 @@ function registrarEventListeners() {
   btnRegistrarVentaGlobal?.addEventListener('click', () => abrirModalRegistro(null)); 
   formRegistrarVenta?.addEventListener('submit', handleGuardarVenta); 
   btnAnadirNumero?.addEventListener('click', () => anadirCampoNumero(null));
+  
+  // --- INICIO REQUERIMIENTO 2 (Filtro) ---
+  filtroParticipantesInput?.addEventListener('input', handleFiltroParticipantes);
+  // --- FIN REQUERIMIENTO 2 ---
   
   // ========= MODIFICACIÓN (REQUERIMIENTO 3): Lógica Acordeón y Botones =========
   tablaParticipantes?.addEventListener('click', (e) => {
@@ -319,7 +357,7 @@ function registrarEventListeners() {
       e.preventDefault();
       e.stopPropagation(); // Evitar que se abra el acordeón
       const participanteId = deleteBtn.dataset.id;
-      handleBorrarParticipante(participanteId);
+      handleBorrarParticipante(participanteId); // Llama a la función importada
       return;
     }
 
@@ -448,6 +486,70 @@ function registrarEventListeners() {
     }
   });
 }
+
+// --- INICIO REQUERIMIENTO 1 (Modal Pago) ---
+/**
+ * Función intermediaria para manejar el envío del formulario de compra.
+ * Llama a 'handleGuardarCompraUsuario' y luego abre el modal de confirmación.
+ */
+async function handleFormularioCompraSubmit(e) {
+  e.preventDefault(); // Prevenir envío normal
+  
+  // Llama a la función de guardado (que ahora retorna datos)
+  const resultado = await handleGuardarCompraUsuario(e);
+
+  // Si el guardado fue exitoso (resultado no es null)
+  if (resultado && modalConfirmacionPago) {
+    // 1. Poblar la lista de números en el modal de confirmación
+    if (listaNumerosConfirmacion) {
+      listaNumerosConfirmacion.innerHTML = ''; // Limpiar
+      resultado.numeros.forEach(numero => {
+        const tiquet = document.createElement('div');
+        tiquet.className = "bg-blue-600 text-white text-sm font-bold px-3 py-1 rounded-md";
+        tiquet.textContent = numero;
+        listaNumerosConfirmacion.appendChild(tiquet);
+      });
+    }
+
+    // 2. Configurar el botón de WhatsApp para el usuario
+    if (btnEnviarComprobante) {
+      const mensajeUsuario = `¡Hola! Acabo de reservar los números ${resultado.numeros.join(', ')} para la rifa. Adjunto mi comprobante de pago. (Nombre: ${resultado.nombre})`;
+      const whatsappUrlUsuario = `https://api.whatsapp.com/send?phone=${resultado.telefonoAdmin}&text=${encodeURIComponent(mensajeUsuario)}`;
+      btnEnviarComprobante.href = whatsappUrlUsuario;
+    }
+    
+    // 3. Mostrar el modal de confirmación
+    modalConfirmacionPago.classList.add('flex');
+  }
+  // Si 'resultado' es null, la función 'handleGuardarCompraUsuario' ya mostró un toast de error.
+}
+// --- FIN REQUERIMIENTO 1 ---
+
+// --- INICIO REQUERIMIENTO 2 (Filtro) ---
+/**
+ * Maneja el evento 'input' del campo de búsqueda de participantes.
+ * Filtra la lista global de 'participantes' y la renderiza.
+ */
+function handleFiltroParticipantes(e) {
+    const termino = e.target.value.toLowerCase().trim();
+
+    // Si el término está vacío, muestra todos
+    if (termino === '') {
+        renderTablaParticipantes(participantes); // Muestra la lista completa
+        return;
+    }
+
+    // Filtra la lista global
+    const filtrados = participantes.filter(p => 
+        p.nombre.toLowerCase().includes(termino) || 
+        p.telefono.includes(termino)
+    );
+
+    // Llama a la función de renderizado con la lista filtrada
+    renderTablaParticipantes(filtrados);
+}
+// --- FIN REQUERIMIENTO 2 ---
+
 
 /* ================================LÓGICA DE NOTIFICACIONES (v3 - Corregido para GitHub Pages)================= */
 

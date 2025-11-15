@@ -32,14 +32,16 @@
  <span class="sidebar-text text-xl font-bold text-white tracking-wide">RIFA NAVIDEÑA</span>
  </div>
  </div>
- <nav class="flex-1 p-4 space-y-1">
+ <nav class="flex-1 p-4 space-y-1" id="nav-links-container">
  <a class="flex items-center p-2 rounded-lg hover:bg-fuchsia-600 nav-link" href="index.html?view=view-inicio"><i class="fa-solid fa-house fa-lg sidebar-icon"></i><span class="sidebar-text text-lg ml-4">Inicio</span></a>
    <a class="flex items-center p-2 rounded-lg hover:bg-fuchsia-600 nav-link" href="index.html?view=view-comprar-numeros"><i class="fa-solid fa-table-cells fa-lg sidebar-icon"></i><span class="sidebar-text text-lg ml-4">N&uacute;meros</span></a>
    <a class="flex items-center p-2 rounded-lg hover:bg-fuchsia-600 nav-link" href="index.html?view=view-faq"><i class="fa-solid fa-circle-question fa-lg sidebar-icon"></i><span class="sidebar-text text-lg ml-4">Preguntas</span></a>
    <div class="pt-4 mt-4 border-t border-fuchsia-500">
    <p class="sidebar-text text-xs uppercase text-fuchsia-300 px-3 mb-2">Comunidad</p>
-   <a class="flex items-center p-2 rounded-lg hover:bg-fuchsia-600 active bg-fuchsia-600" href="#" id="btn-nuestra-web"><i class="fa-solid fa-globe fa-lg sidebar-icon"></i><span class="sidebar-text text-lg ml-4">Nuestra Web</span></a>
-   <a class="flex items-center p-2 rounded-lg hover:bg-fuchsia-600 nav-link" href="https://www.instagram.com/marianma_crochet/" target="_blank"><i class="fa-brands fa-instagram fa-lg sidebar-icon"></i><span class="sidebar-text text-lg ml-4">Instagram</span></a>
+   <!-- Modificado: active y bg-fuchsia-600 se manejan por JS -->
+   <a class="flex items-center p-2 rounded-lg hover:bg-fuchsia-600 nav-link active bg-fuchsia-600" href="#" id="btn-nuestra-web" data-view="view-landing-page"><i class="fa-solid fa-globe fa-lg sidebar-icon"></i><span class="sidebar-text text-lg ml-4">Nuestra Web</span></a>
+   <!-- Modificado: ID y data-view para lógica JS -->
+   <a class="flex items-center p-2 rounded-lg hover:bg-fuchsia-600 nav-link" href="#" id="btn-instagram-view" data-view="view-instagram"><i class="fa-brands fa-instagram fa-lg sidebar-icon"></i><span class="sidebar-text text-lg ml-4">Instagram</span></a>
    <a class="flex items-center p-2 rounded-lg hover:bg-fuchsia-600" href="#" id="btn-compartir"><i class="fa-solid fa-share-nodes fa-lg sidebar-icon"></i><span class="sidebar-text text-lg ml-4">Compartir</span></a>
    </div>
    <div class="pt-4 mt-4 border-t border-fuchsia-500">
@@ -47,12 +49,16 @@
    </div>
    <div class="pt-4 mt-4 border-t border-fuchsia-500">
    <p class="sidebar-text text-xs uppercase text-fuchsia-300 px-3 mb-2">Soporte</p>
-   <a class="flex items-center p-2 rounded-lg hover:bg-fuchsia-600" href="index.html?modal=reportar"><i class="fa-solid fa-bug fa-lg sidebar-icon"></i><span class="sidebar-text text-lg ml-4">Reportar Fallos</span></a>
+   <!-- Modificado: href e ID para abrir modal local -->
+   <a class="flex items-center p-2 rounded-lg hover:bg-fuchsia-600" href="#" id="btn-reportar-fallo"><i class="fa-solid fa-bug fa-lg sidebar-icon"></i><span class="sidebar-text text-lg ml-4">Reportar Fallos</span></a>
    <a class="flex items-center p-2 rounded-lg hover:bg-fuchsia-600" href="#" id="btn-dark-mode"><i class="fa-solid fa-moon fa-lg sidebar-icon" id="icon-dark-mode"></i><span class="sidebar-text text-lg ml-4">Tema</span></a>
    </div>
    </nav>
    <div class="mt-auto p-4 flex flex-col items-center border-t border-fuchsia-500">
-   <img alt="VivirApp Logo" class="h-8 mb-2" src="images/vivirapp.png"/>
+   <!-- Modificado: Envuelto en <a> para abrir modal local -->
+   <a href="#" id="btn-vivirapp-modal" class="cursor-pointer" title="Acerca de VivirApp">
+     <img alt="VivirApp Logo" class="h-8 mb-2" src="images/vivirapp.png"/>
+   </a>
    <span class="sidebar-text text-xs text-fuchsia-300 text-center">By VivirApp • 2025 • Colombia</span>
    </div></aside>
   
@@ -176,7 +182,8 @@
    <section class="text-center"><i class="fa-solid fa-palette fa-3x text-fuchsia-500"></i>
    <h2 class="text-3xl font-bold text-gray-800 dark:text-white mt-4">&iquest;Quieres algo especial?</h2>
    <p class="text-lg text-gray-600 mt-2 max-w-2xl mx-auto dark:text-gray-300">¡Claro que sí! Me encanta crear piezas únicas. Si tienes una idea para un amigurumi personalizado, contáctame y cuéntame qué tienes en mente.</p>
-  <a class="mt-6 inline-block bg-fuchsia-500 text-white font-bold text-lg py-3 px-8 rounded-xl hover:bg-fuchsia-600 transition duration-300 shadow-lg" href="https://www.instagram.com/marianma_crochet/" target="_blank">Enviar Mensaje Directo</a>
+  <!-- Modificado: href es un mailto: -->
+  <a class="mt-6 inline-block bg-fuchsia-500 text-white font-bold text-lg py-3 px-8 rounded-xl hover:bg-fuchsia-600 transition duration-300 shadow-lg" href="mailto:viviraplicaciones@gmail.com">Enviar Mensaje Directo</a>
   </section>
   <hr class="dark:border-gray-700"/>
   <section class="text-center bg-gray-100 dark:bg-gray-700 p-8 rounded-lg">
@@ -185,6 +192,16 @@
     <a class="mt-6 inline-block bg-lime-500 text-white font-bold text-lg py-3 px-8 rounded-xl hover:bg-lime-600 transition duration-300 shadow-lg" href="index.html?view=view-comprar-numeros">Ver Números Disponibles</a>
   </section>
   </div></div></div>
+   
+   <!-- INICIO: Nueva Vista de Instagram (copiada de index.html) -->
+   <div class="view p-0 md:p-10" id="view-instagram">
+    <div class="w-full max-w-lg mx-auto bg-white md:rounded-2xl shadow-xl p-4 md:p-10 dark:bg-gray-800">
+     <h1 class="text-3xl font-bold text-gray-800 mb-6 dark:text-white"></h1>
+     <blockquote class="instagram-media" data-instgrm-captioned data-instgrm-permalink="https://www.instagram.com/reel/DQ-esw-jEaq/?utm_source=ig_embed&amp;utm_campaign=loading" data-instgrm-version="14" style=" background:#FFF; border:0; border-radius:3px; box-shadow:0 0 1px 0 rgba(0,0,0,0.5),0 1px 10px 0 rgba(0,0,0,0.15); margin: 1px; max-width:540px; min-width:326px; padding:0; width:99.375%; width:-webkit-calc(100% - 2px); width:calc(100% - 2px);"><div style="padding:16px;"> <a href="https://www.instagram.com/reel/DQ-esw-jEaq/?utm_source=ig_embed&amp;utm_campaign=loading" style=" background:#FFFFFF; line-height:0; padding:0 0; text-align:center; text-decoration:none; width:100%;" target="_blank"> <div style=" display: flex; flex-direction: row; align-items: center;"> <div style="background-color: #F4F4F4; border-radius: 50%; flex-grow: 0; height: 40px; margin-right: 14px; width: 40px;"></div> <div style="display: flex; flex-direction: column; flex-grow: 1; justify-content: center;"> <div style=" background-color: #F4F4F4; border-radius: 4px; flex-grow: 0; height: 14px; margin-bottom: 6px; width: 100px;"></div> <div style=" background-color: #F4F4F4; border-radius: 4px; flex-grow: 0; height: 14px; width: 60px;"></div></div></div><div style="padding: 19% 0;"></div> <div style="display:block; height:50px; margin:0 auto 12px; width:50px;"><svg width="50px" height="50px" viewBox="0 0 60 60" version="1.1" xmlns="https://www.w3.org/2000/svg" xmlns:xlink="https://www.w3.org/1999/xlink"><g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"><g transform="translate(-511.000000, -20.000000)" fill="#000000"><g><path d="M556.869,30.41 C554.814,30.41 553.148,32.076 553.148,34.131 C553.148,36.186 554.814,37.852 556.869,37.852 C558.924,37.852 560.59,36.186 560.59,34.131 C560.59,32.076 558.924,30.41 556.869,30.41 M541,60.657 C535.114,60.657 530.342,55.887 530.342,50 C530.342,44.114 535.114,39.342 541,39.342 C546.887,39.342 551.658,44.114 551.658,50 C551.658,55.887 546.887,60.657 541,60.657 M541,33.886 C532.1,33.886 524.886,41.1 524.886,50 C524.886,58.899 532.1,66.113 541,66.113 C549.9,66.113 557.115,58.899 557.115,50 C557.115,41.1 549.9,33.886 541,33.886 M565.378,62.101 C565.244,65.022 564.756,66.606 564.346,67.663 C563.803,69.06 563.154,70.057 562.106,71.106 C561.058,72.155 560.06,72.803 558.662,73.347 C557.607,73.757 556.021,74.244 553.102,74.378 C549.944,74.521 548.997,74.552 541,74.552 C533.003,74.552 532.056,74.521 528.898,74.378 C525.979,74.244 524.393,73.757 523.338,73.347 C521.94,72.803 520.942,72.155 519.894,71.106 C518.846,70.057 518.197,69.06 517.654,67.663 C517.244,66.606 516.755,65.022 516.623,62.101 C516.479,58.943 516.448,57.996 516.448,50 C516.448,42.003 516.479,41.056 516.623,37.899 C516.755,34.978 517.244,33.391 517.654,32.338 C518.197,30.938 518.846,29.942 519.894,28.894 C520.942,27.846 521.94,27.196 523.338,26.654 C524.393,26.244 525.979,25.756 528.898,25.623 C532.057,25.479 533.004,25.448 541,25.448 C548.997,25.448 549.943,25.479 553.102,25.623 C556.021,25.756 557.607,26.244 558.662,26.654 C560.06,27.196 561.058,27.846 562.106,28.894 C563.154,29.942 563.803,30.938 564.346,32.338 C564.756,33.391 565.244,34.978 565.378,37.899 C565.522,41.056 565.552,42.003 565.552,50 C565.552,57.996 565.522,58.943 565.378,62.101 M570.82,37.631 C570.674,34.438 570.167,32.258 569.425,30.349 C568.659,28.377 567.633,26.702 565.965,25.035 C564.297,23.368 562.623,22.342 560.652,21.575 C558.743,20.834 556.562,20.326 553.369,20.18 C550.169,20.033 549.148,20 541,20 C532.853,20 531.831,20.033 528.631,20.18 C525.438,20.326 523.257,20.834 521.349,21.575 C519.376,22.342 517.703,23.368 516.035,25.035 C514.368,26.702 513.342,28.377 512.574,30.349 C511.834,32.258 511.326,34.438 511.181,37.631 C511.035,40.831 511,41.851 511,50 C511,58.147 511.035,59.17 511.181,62.369 C511.326,65.562 511.834,67.743 512.574,69.651 C513.342,71.625 514.368,73.296 516.035,74.965 C517.703,76.634 519.376,77.658 521.349,78.425 C523.257,79.167 525.438,79.673 528.631,79.82 C531.831,79.965 532.853,80.001 541,80.001 C549.148,80.001 550.169,79.965 553.369,79.82 C556.562,79.673 558.743,79.167 560.652,78.425 C562.623,77.658 564.297,76.634 565.965,74.965 C567.633,73.296 568.659,71.625 569.425,69.651 C570.167,67.743 570.674,65.562 570.82,62.369 C570.966,59.17 571,58.147 571,50 C571,41.851 570.966,40.831 570.82,37.631"></path></g></g></g></svg></div><div style="padding-top: 8px;"> <div style=" color:#3897f0; font-family:Arial,sans-serif; font-size:14px; font-style:normal; font-weight:550; line-height:18px;">Ver esta publicación en Instagram</div></div><div style="padding: 12.5% 0;"></div> <div style="display: flex; flex-direction: row; margin-bottom: 14px; align-items: center;"><div> <div style="background-color: #F4F4F4; border-radius: 50%; height: 12.5px; width: 12.5px; transform: translateX(0px) translateY(7px);"></div> <div style="background-color: #F4F4F4; height: 12.5px; transform: rotate(-45deg) translateX(3px) translateY(1px); width: 12.5px; flex-grow: 0; margin-right: 14px; margin-left: 2px;"></div> <div style="background-color: #F4F4F4; border-radius: 50%; height: 12.5px; width: 12.5px; transform: translateX(9px) translateY(-18px);"></div></div><div style="margin-left: 8px;"> <div style=" background-color: #F4F4F4; border-radius: 50%; flex-grow: 0; height: 20px; width: 20px;"></div> <div style=" width: 0; height: 0; border-top: 2px solid transparent; border-left: 6px solid #f4f4f4; border-bottom: 2px solid transparent; transform: translateX(16px) translateY(-4px) rotate(30deg)"></div></div><div style="margin-left: auto;"> <div style=" width: 0px; border-top: 8px solid #F4F4F4; border-right: 8px solid transparent; transform: translateY(16px);"></div> <div style=" background-color: #F4F4F4; flex-grow: 0; height: 12px; width: 16px; transform: translateY(-4px);"></div> <div style=" width: 0; height: 0; border-top: 8px solid #F4F4F4; border-left: 8px solid transparent; transform: translateY(-4px) translateX(8px);"></div></div></div> <div style="display: flex; flex-direction: column; flex-grow: 1; justify-content: center; margin-bottom: 24px;"> <div style=" background-color: #F4F4F4; border-radius: 4px; flex-grow: 0; height: 14px; margin-bottom: 6px; width: 224px;"></div> <div style=" background-color: #F4F4F4; border-radius: 4px; flex-grow: 0; height: 14px; width: 144px;"></div></div></a><p style=" color:#c9c8cd; font-family:Arial,sans-serif; font-size:14px; line-height:17px; margin-bottom:0; margin-top:8px; overflow:hidden; padding:8px 0 7px; text-align:center; text-overflow:ellipsis; white-space:nowrap;"><a href="https://www.instagram.com/reel/DQ-esw-jEaq/?utm_source=ig_embed&amp;utm_campaign=loading" style=" color:#c9c8cd; font-family:Arial,sans-serif; font-size:14px; font-style:normal; font-weight:normal; line-height:17px; text-decoration:none;" target="_blank">Una publicación compartida de Creaciones crochet 🧶 (@marianma_crochet)</a></p></div></blockquote>
+    </div>
+   </div>
+   <!-- FIN: Nueva Vista de Instagram -->
+
   </main>
   
   <div id="lightbox-modal" class="fixed inset-0 z-50 bg-black bg-opacity-80 backdrop-blur-sm flex items-center justify-center p-4 hidden">
@@ -211,168 +228,58 @@
   </div>
   <button class="fixed z-20 bottom-4 right-4 p-3 bg-fuchsia-700 text-white rounded-lg shadow-lg md:hidden aspect-square" id="toggle-sidebar-mobile"><i class="fa-solid fa-bars fa-lg"></i></button>
 
-<script type="module">
-// Importar la lógica de UI común
-import { toggleSidebarGlobal, initDarkMode, registerDarkModeHandler } from './common-ui.js';
+  <!-- INICIO: Modales copiados de index.html -->
 
-// --- INICIO: Lógica de WhatsApp ---
-// ⚠️ ¡IMPORTANTE! REEMPLAZA '573205893469' con tu número (ej: 573101234567)
-const WHATSAPP_NUMBER = 'TU_NUMERO_DE_WHATSAPP';
+  <!-- Modal Reportar Fallo -->
+  <div class="modal fixed inset-0 z-50 overflow-y-auto bg-black bg-opacity-60" id="modal-reportar-fallo">
+   <div class="relative p-4 w-full max-w-lg mx-auto my-12">
+   <div class="relative bg-white rounded-2xl shadow-2xl dark:bg-gray-800">
+   <div class="flex justify-between items-center p-5 border-b rounded-t-2xl dark:border-gray-700">
+   <h3 class="text-2xl font-semibold text-gray-900 dark:text-white">Reportar un Fallo</h3>
+   <button class="modal-close text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-2 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-id="modal-reportar-fallo" type="button"><i class="fa-solid fa-xmark fa-2x"></i><span class="sr-only">Cerrar modal</span></button>
+   </div>
+   <form class="p-6 md:p-8 space-y-6" id="form-reportar-fallo">
+   <p class="text-gray-600 dark:text-gray-300">¿Encontraste un error o algo que no funciona bien? Por favor, descríbelo aquí para que podamos arreglarlo. ¡Gracias!</p>
+   <div>
+   <textarea class="w-full p-3 border border-gray-300 rounded-lg text-gray-900 dark:bg-gray-700 dark:border-gray-600 dark:text-white" id="reporte-textarea" placeholder="Describe el fallo aquí..." required="" rows="5"></textarea>
+   </div>
+   <div class="flex items-center justify-end space-x-4 pt-4 border-t dark:border-gray-700">
+   <button class="modal-close text-gray-700 bg-gray-100 hover:bg-gray-200 font-medium rounded-lg px-5 py-2.5 dark:bg-gray-600 dark:text-gray-300 dark:hover:bg-gray-500" data-modal-id="modal-reportar-fallo" type="button">Cancelar</button>
+   <button class="text-white bg-lime-500 hover:bg-lime-600 font-medium rounded-lg px-6 py-2.5" id="btn-reportar-enviar" type="submit">Enviar Reporte</button></div>
+   </form>
+   </div></div></div>
 
-function handleReservarClick(productName) {
-  let texto = `Este Amiguruni me encanto, me puedes dar información para poder adquirirlo... Gracias!!`;
-  
-  // Personalizar el mensaje si tenemos un nombre de producto
-  if (productName && productName !== 'Producto') {
-    texto = `¡Hola! Me encantó el producto "${productName}". Me puedes dar información para poder adquirirlo... ¡Gracias!`;
-  }
-  
-  if (WHATSAPP_NUMBER === '573205893469') {
-    alert('Error: El número de WhatsApp no está configurado en el archivo index_01.html.');
-    return;
-  }
-  
-  const whatsappUrl = `https://api.whatsapp.com/send?phone=${WHATSAPP_NUMBER}&text=${encodeURIComponent(texto)}`;
-  window.open(whatsappUrl, '_blank');
-}
-// --- FIN: Lógica de WhatsApp ---
+  <!-- Modal VivirApp -->
+  <div class="modal fixed inset-0 z-[100] bg-gray-900 bg-opacity-90 hidden" id="modal-vivirapp">
+    <div class="relative w-full h-full p-4 md:p-8">
+      <button class="modal-close absolute top-4 right-4 z-10 text-white bg-fuchsia-600 rounded-full w-12 h-12 flex items-center justify-center hover:bg-fuchsia-700 transition-colors" data-modal-id="modal-vivirapp" type="button">
+        <i class="fa-solid fa-xmark fa-2x"></i>
+        <span class="sr-only">Cerrar modal</span>
+      </button>
+      <div class="relative w-full h-full bg-white dark:bg-gray-800 rounded-2xl shadow-2xl overflow-hidden">
+        <iframe id="iframe-vivirapp" class="w-full h-full border-0" src="about:blank" title="Acerca de VivirApp">
+        </iframe>
+      </div>
+    </div>
+  </div>
 
-document.addEventListener('DOMContentLoaded', () => {
-// ===== CAMBIO 4: Scroll al Top =====
-const mainContent = document.getElementById('main-content');
-if (mainContent) mainContent.scrollTop = 0;
-      
-// Cachear elementos de esta página
-const sidebar = document.getElementById('sidebar');
-const toggleBtn = document.getElementById('toggle-sidebar-global');
-const toggleBtnMobile = document.getElementById('toggle-sidebar-mobile');
-const btnDarkMode = document.getElementById('btn-dark-mode');
-const iconDarkMode = document.getElementById('icon-dark-mode');
-const btnCompartir = document.getElementById('btn-compartir');
-      
-// ===== CAMBIO 1: Menú colapsado en móvil =====
-if (window.innerWidth < 768) {
-sidebar?.classList.add('collapsed');
-}
-    
-// --- Lógica importada de common-ui.js ---
-initDarkMode(iconDarkMode);
-toggleBtn?.addEventListener('click', () => toggleSidebarGlobal(sidebar, toggleBtn, null));
-toggleBtnMobile?.addEventListener('click', () => toggleSidebarGlobal(sidebar, toggleBtn, null));
-registerDarkModeHandler(btnDarkMode, iconDarkMode);
-// --- Fin de lógica importada ---
+  <!-- Toast Notificación -->
+  <div class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-40 opacity-0 pointer-events-none transition-opacity duration-300 ease-in-out items-center w-full max-w-xs p-4 text-gray-500 bg-white rounded-lg shadow-lg dark:text-gray-400 dark:bg-gray-800" id="toast-notificacion" role="alert">
+   <div class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-lime-500 bg-lime-100 rounded-lg dark:bg-lime-800 dark:text-lime-200">
+    <i class="fa-solid fa-check"></i>
+   </div>
+   <div class="ml-3 text-sm font-normal" id="toast-mensaje">Item guardado.</div>
+   <button aria-label="Close" class="ml-auto -mx-1.5 -my-1.5 bg-white text-gray-400 hover:text-gray-900 rounded-lg p-1.5 hover:bg-gray-100 inline-flex h-8 w-8 dark:bg-gray-800 dark:text-gray-500 dark:hover:text-white dark:hover:bg-gray-700" id="toast-close" type="button"><span class="sr-only">Close</span><i class="fa-solid fa-xmark"></i></button>
+  </div>
+  <!-- FIN: Modales copiados -->
 
-// Lógica de Links Especiales (Específica de esta página)
-const btnNuestraWeb = document.getElementById('btn-nuestra-web');
-btnNuestraWeb?.addEventListener('click', (e) => e.preventDefault());
-    
-// Lógica de "Compartir" (Versión simple con alert)
-btnCompartir?.addEventListener('click', (e) => {
-e.preventDefault();
-navigator.clipboard.writeText(window.location.href);
-alert('Enlace de nuestra web copiado al portapapeles.');
-});
-    
-// Lógica para links que van al index.html
-const mainLinks = document.querySelectorAll('a[href^="index.html"]');
-mainLinks.forEach(link => {
-link.addEventListener('click', () => {
-// Ocultar menú en móvil al hacer clic
-if (window.innerWidth < 768 && sidebar && !sidebar.classList.contains('collapsed')) {
-sidebar.classList.add('collapsed');
-}
-});
-});
 
-// --- INICIO: Lógica del Carrusel/Lightbox ---
-const galeria = document.getElementById('galeria-productos');
-const lightbox = document.getElementById('lightbox-modal');
-const lightboxImage = document.getElementById('lightbox-image');
-const lightboxClose = document.getElementById('lightbox-close');
-const lightboxPrev = document.getElementById('lightbox-prev');
-const lightboxNext = document.getElementById('lightbox-next');
-const lightboxReservar = document.getElementById('lightbox-reservar-btn');
+<script async src="//www.instagram.com/embed.js"></script>
 
-let galleryItems = [];
-let currentIndex = 0;
+<!-- INICIO: Lógica movida a script_01.js -->
+<!-- Se ha eliminado el script inline masivo -->
+<script type="module" src="script_01.js"></script>
+<!-- FIN: Lógica movida -->
 
-// 1. Recopilar todos los ítems de la galería
-const galleryCards = document.querySelectorAll('.gallery-item-card');
-galleryCards.forEach(card => {
-  const img = card.querySelector('.gallery-image');
-  const title = card.querySelector('.product-title');
-  if (img && title) {
-    galleryItems.push({
-      src: img.src,
-      title: title.textContent.trim()
-    });
-  }
-});
-
-// 2. Función para mostrar el Lightbox
-function showLightbox(index) {
-  if (index < 0 || index >= galleryItems.length) return;
-  
-  currentIndex = index;
-  const item = galleryItems[index];
-  
-  lightboxImage.src = item.src;
-  lightboxReservar.dataset.productName = item.title; // Guardar el nombre para el botón
-  
-  lightbox.classList.remove('hidden');
-  
-  // Mostrar/ocultar flechas
-  lightboxPrev.style.display = (index === 0) ? 'none' : 'flex';
-  lightboxNext.style.display = (index === galleryItems.length - 1) ? 'none' : 'flex';
-}
-
-// 3. Función para cerrar el Lightbox
-function closeLightbox() {
-  lightbox.classList.add('hidden');
-  lightboxImage.src = ""; // Limpiar para evitar flashes
-}
-
-// 4. Event Listeners para el Lightbox
-if (galeria) {
-  galeria.addEventListener('click', (e) => {
-    // Clic en una imagen de la galería
-    const clickedImage = e.target.closest('.gallery-image');
-    if (clickedImage) {
-      const card = clickedImage.closest('.gallery-item-card');
-      const index = Array.from(galleryCards).indexOf(card);
-      if (index > -1) {
-        showLightbox(index);
-      }
-    }
-    
-    // Clic en un botón "Reservar" DENTRO de la tarjeta
-    const clickedReservar = e.target.closest('.btn-reservar-amigurumi');
-    if (clickedReservar) {
-      const card = clickedReservar.closest('.gallery-item-card');
-      const title = card.querySelector('.product-title')?.textContent.trim() || 'Producto';
-      handleReservarClick(title);
-    }
-  });
-}
-
-lightboxClose?.addEventListener('click', closeLightbox);
-lightboxPrev?.addEventListener('click', () => showLightbox(currentIndex - 1));
-lightboxNext?.addEventListener('click', () => showLightbox(currentIndex + 1));
-
-// Clic en el botón "Reservar" DENTRO del lightbox
-lightboxReservar?.addEventListener('click', () => {
-  handleReservarClick(lightboxReservar.dataset.productName);
-});
-
-// Cerrar con clic fuera de la imagen (en el fondo)
-lightbox?.addEventListener('click', (e) => {
-  if (e.target === lightbox) {
-    closeLightbox();
-  }
-});
-// --- FIN: Lógica del Carrusel/Lightbox ---
-      
-});
-</script>
 </body>
 </html>

@@ -1,4 +1,4 @@
-/* ==============tablas-numericas.js (v32 - Modal Pago, Tooltip Nombre, Filtro)=============================== */
+/* ==============tablas-numericas.js (v33 - Mensaje Admin y Filtro)=============================== */
 
 // Importar la base de datos (db) y funciones de Firestore
 import { 
@@ -253,7 +253,9 @@ export function handleProcederPago() {
 
 // ========= INICIO DE LA MODIFICACIÓN (REQUERIMIENTO 1) - Lógica Modal Pago =========
 export async function handleGuardarCompraUsuario(e) {
-  e.preventDefault();
+  // NOTA: Esta función ahora es llamada por un intermediario en script.js
+  // y ya no es un event listener directo.
+  e.preventDefault(); 
   if (!_formIngresarDatos || _numerosSeleccionadosPublica.length === 0) return null;
 
   // Estado de Carga
@@ -317,9 +319,8 @@ export async function handleGuardarCompraUsuario(e) {
     const numerosTexto = nuevoParticipante.numeros.join(', ');
     const telefonoAdmin = '573205893469';
 
-    // --- Mensaje para el ADMIN ---
-    let mensajeAdmin = `¡Hola! ${nombre} acaba de seleccionar los números ${numerosTexto}...\n\n`;
-    mensajeAdmin += 'Debe estar pendiente para cuando te mande el comprobante de Pago.';
+    // --- Mensaje para el ADMIN (MODIFICADO) ---
+    const mensajeAdmin = `¡Hola! ${nombre} acaba de seleccionar los números ${numerosTexto}... El pago esta pendiente.`;
     const whatsappUrlAdmin = `https://api.whatsapp.com/send?phone=${telefonoAdmin}&text=${encodeURIComponent(mensajeAdmin)}`;
     
     // 6. Abrir la ventana de WhatsApp del Admin
@@ -337,7 +338,7 @@ export async function handleGuardarCompraUsuario(e) {
     return {
         nombre: nombre,
         numeros: numerosSeleccionadosCopia,
-        telefonoAdmin: telefonoAdmin
+        telefonoAdmin: telefonoAdmin // Devolvemos el teléfono para el botón del usuario
     };
     
   } catch (error) {
@@ -719,6 +720,8 @@ export async function handleBorrarParticipante(participanteId) {
       return;
   }
   
+  // Utiliza un confirm simple (ya que el index.html no tiene un modal de confirmación genérico)
+  // Si tuvieras un modal de confirmación personalizado, lo llamaríamos aquí.
   if (!confirm(`¿Estás seguro de que quieres borrar a ${participante.nombre}? \nSus números (${participante.numeros.join(', ')}) volverán a estar disponibles.`)) {
     return;
   }

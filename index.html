@@ -97,6 +97,11 @@
 <a class="flex items-center p-2 rounded-lg hover:bg-fuchsia-600" href="#" id="btn-reportar-fallo">
       <i class="fa-solid fa-bug fa-lg sidebar-icon"></i>
       <span class="sidebar-text text-lg ml-4">Reportar Fallos</span></a>
+      
+     <a class="flex items-center p-2 rounded-lg hover:bg-fuchsia-600" href="#" id="btn-toggle-music">
+      <i class="fa-solid fa-volume-off fa-lg sidebar-icon" id="icon-music-mode"></i>
+      <span class="sidebar-text text-lg ml-4">M&uacute;sica</span>
+     </a>
      <a class="flex items-center p-2 rounded-lg hover:bg-fuchsia-600" href="#" id="btn-dark-mode">
       <i class="fa-solid fa-moon fa-lg sidebar-icon" id="icon-dark-mode"></i>
       <span class="sidebar-text text-lg ml-4">Tema</span></a>
@@ -133,7 +138,11 @@
        <hr>
        <div class="mt-8">
         <button class="w-full bg-lime-500 text-white font-bold text-lg py-3 px-6 rounded-xl hover:bg-lime-600 transition duration-300 shadow-lg" id="btn-mas-info">M&aacute;s Informaci&oacute;n</button>
-   </div></div>
+        
+        <button class="w-full bg-fuchsia-600 text-white font-bold text-lg py-3 px-6 rounded-xl hover:bg-fuchsia-700 transition duration-300 shadow-lg mt-4" id="btn-ver-video">
+          <i class="fa-solid fa-circle-play mr-2"></i>C&oacute;mo usar la App
+        </button>
+        </div></div>
    </div></div>
    </div>
    
@@ -170,10 +179,9 @@
      <span class="font-medium text-gray-900 dark:text-white" id="precio-numero">$ 5.000</span>
      </div>
      </div>
+     <button class="w-full bg-lime-500 text-white font-bold text-lg py-3 px-6 rounded-xl hover:bg-lime-600 transition duration-300 shadow-lg disabled:bg-gray-400" id="btn-proceder-pago">Proceder al pago</button>
      <p class="text-xs text-gray-500 mt-4 text-center dark:text-gray-400"><i class="fa-solid fa-circle-info mr-1">
      </i>Selecciona los n&uacute;meros que deseas comprar.</p>
-     <button class="w-full bg-lime-500 text-white font-bold text-lg py-3 px-6 rounded-xl hover:bg-lime-600 transition duration-300 shadow-lg disabled:bg-gray-400" id="btn-proceder-pago">Proceder al pago</button>
-     
      </div></div>
    </div>
    
@@ -196,13 +204,10 @@
     <button class="bg-lime-500 text-white font-bold py-2 px-5 rounded-xl hover:bg-lime-600 transition shadow-lg flex items-center w-full md:w-auto" id="btn-registrar-venta-global"><i class="fa-solid fa-plus mr-2"></i>Registrar Venta</button>
     </div>
     
-    <!-- ========= INICIO DE LA MODIFICACIÓN (REQUERIMIENTO 2) ========= -->
     <div class="relative mb-4 px-4 md:px-0">
       <input type="text" id="filtro-participantes" placeholder="Buscar por nombre o teléfono..." class="w-full p-3 pl-10 border border-gray-300 rounded-lg text-gray-900 dark:bg-gray-700 dark:border-gray-600 dark:text-white" />
       <i class="fa-solid fa-search absolute left-7 md:left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
     </div>
-    <!-- ========= FIN DE LA MODIFICACIÓN (REQUERIMIENTO 2) ========= -->
-
     <div class="bg-white dark:bg-gray-800 md:rounded-2xl shadow-xl overflow-hidden p-4">
     
     <div class="hidden md:grid grid-cols-5 gap-4 bg-gray-50 dark:bg-gray-700 rounded-lg p-4 mb-3 text-left text-xs md:text-sm font-semibold text-gray-600 uppercase dark:text-gray-300">
@@ -237,20 +242,8 @@
     <hr class="dark:border-gray-700"/>
     <div>
     <h5 class="text-lg font-semibold text-gray-800 dark:text-white">3. &iquest;D&oacute;nde veo mis n&uacute;meros?</h5>
-    <p class="text-gray-600 mt-1 dark:text-gray-300">Al finalizar la compra, recibirás un mensaje a Whatsapp con el listado de tu(s) número(s) registrado(s). Si tocas tu número seleccionado ses verá tu nombre</p>
-    </div>
-  <hr class="dark:border-gray-700"/>
-    <div>
-    <h5 class="text-lg font-semibold text-gray-800 dark:text-white">4.&iquest;C&oacute;mo pago mi(s) Boleto(s)?</h5>
-    <p class="text-gray-600 mt-1 dark:text-gray-300">Tenemos varias opciones por medios digitales.
-    <br><strong>• Nequi (recomendado) 3013811896</strong>.
-    <br>• Corresponsal Bancario (El mismo número de Nequi).
-    <br>• Llave Bre-B <strong>3013811896</strong>.
-    <br>• Efectivo
-    </p>
-    </div>
-
-  </div>
+    <p class="text-gray-600 mt-1 dark:text-gray-300">Al finalizar la compra, recibirás un mensaje a Whatsapp con el listado de tu(s) número(s) registrado(s).</p>
+    </div></div>
     </div></div>
 
    <div class="view p-0 md:p-10" id="view-instagram">
@@ -275,13 +268,12 @@
    <div>
    <h4 class="text-xl font-bold text-gray-800 mb-3 dark:text-white">Detalles del Premio</h4>
    <p>9 esferas tejidas en lana crochet:</p>
-   <p class="mt-4 text-lg text-gray-600 dark:text-gray-300">• 1 Papá Noel • 1 Mamá Noel<br>• 1 Reno • 1 Rena <br>• 1 Elfo • 1 Elfa<br>• 1 Galleta • 1 Oso Polar<br>• 1 Muñeco de Nieve </p>
+   <p class="mt-4 text-lg text-gray-600 dark:text-gray-300">• 1 Papá Noel • 1 Mamá Noel<br>• 1 Reno • 1 Rena <br>• 1 Elfo • 1 Elfa<br>• 1 Oveja • 1 Oso Polar<br>• 1 Muñeco de Nieve </p>
    </div>
    <div><hr><br>
    <h4 class="text-xl font-bold text-gray-800 mb-3 dark:text-white">Forma de pago</h4>
    <ul class="list-disc list-inside space-y-1">
-   <li>Corresponsal Bancario</li> 
-   <li><strong>Nequi (*Recomendado*) 3013811896</strong></li>
+   <li>Pagos por Nequi</li>
    <li>Llave Bre-B</li>
    <li>Efectivo</li>
    </ul>
@@ -414,7 +406,6 @@
   <p class="text-6xl font-bold text-fuchsia-600 dark:text-fuchsia-400" id="modal-suerte-numero">--</p>
   </div></div></div>
 
-<!-- ========= INICIO DE LA MODIFICACIÓN (REQUERIMIENTO 1) - NUEVO MODAL ========= -->
 <div class="modal fixed inset-0 z-50 overflow-y-auto bg-black bg-opacity-60" id="modal-confirmacion-pago">
   <div class="relative p-4 w-full max-w-lg mx-auto my-12">
   <div class="relative bg-white rounded-2xl shadow-2xl dark:bg-gray-800">
@@ -423,31 +414,48 @@
   <button class="modal-close text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-2 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-id="modal-confirmacion-pago" type="button">
   <i class="fa-solid fa-xmark fa-2x"></i><span class="sr-only">Cerrar modal</span></button></div>
   <div class="p-6 md:p-8 space-y-6">
-    <p class="text-gray-700 dark:text-gray-200">Tus números seleccionados son:</p>
+    <p class="text-gray-700 dark:text-gray-200">¡Hola! Tus números preseleccionados son:</p>
     <div class="flex flex-wrap gap-2 mb-4 min-h-[40px] bg-gray-50 p-3 rounded-lg border dark:bg-gray-700 dark:border-gray-600" id="lista-numeros-confirmacion">
-      <!-- Los números se insertarán aquí dinámicamente -->
-    </div>
+      </div>
     
     <div class="text-gray-700 dark:text-gray-300 space-y-2">
       <p class="font-semibold">Escoge tu forma de pago:</p>
       <ul class="list-disc list-inside ml-4 text-sm">
-        <li>A • <strong>Nequi (*Recomendado*): 3013811896</strong></li>
-        <li>B • Corresponsal</li>
-        <li>C • Llave Bre-B 3013811896</li>
-        <li>D • Efectivo</li>
+        <li>A • Nequi</li>
+        <li>B • Nu</li>
+        <li>C • Corresponsal</li>
+        <li>D • Llave</li>
+        <li>E • Efectivo</li>
       </ul>
     </div>
     
     <p class="text-sm text-gray-600 dark:text-gray-400">
-      Envía tu comprobante al responsable y revisa la App. El estado de tus números cambiará a <span class="font-bold text-red-500">Pagado (Rojo)</span>.</p>
+      Envía tu comprobante al responsable y revisa la App. El estado de tus números cambiará a <span class="font-bold text-red-500">Pagado (Rojo)</span>.
+    </p>
 
     <a href="#" id="btn-enviar-comprobante" target="_blank" class="w-full flex items-center justify-center gap-3 bg-green-500 text-white font-bold text-lg py-3 px-6 rounded-xl hover:bg-green-600 transition duration-300 shadow-lg">
       <i class="fa-brands fa-whatsapp fa-lg"></i>
-      Enviar al Amdmin</a>
+      Enviar mensaje al Responsable
+    </a>
+
   </div>
   </div></div></div>
-<!-- ========= FIN DE LA MODIFICACIÓN (REQUERIMIENTO 1) ========= -->
-
+<div class="modal fixed inset-0 z-50 overflow-y-auto bg-black bg-opacity-60" id="modal-video-demo">
+   <div class="relative p-4 w-full max-w-4xl mx-auto my-12">
+   <div class="relative bg-white rounded-2xl shadow-2xl dark:bg-gray-800">
+   <div class="flex justify-between items-center p-5 border-b rounded-t-2xl dark:border-gray-700">
+   <h3 class="text-2xl font-semibold text-gray-900 dark:text-white">C&oacute;mo Usar la App</h3>
+   <button class="modal-close text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-2 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-id="modal-video-demo" type="button"><i class="fa-solid fa-xmark fa-2x"></i><span class="sr-only">Cerrar modal</span></button>
+   </div>
+   <div class="p-6 bg-black rounded-b-2xl">
+    <video id="video-player-demo" class="w-full rounded-lg" controls>
+      <source src="https://raw.githubusercontent.com/viviraplicaciones/rifa/refs/heads/main/media/funciona.mp4" type="video/mp4">
+      Tu navegador no soporta el video.
+    </video>
+   </div>
+   </div>
+   </div>
+</div>
 <div class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-40 opacity-0 pointer-events-none transition-opacity duration-300 ease-in-out items-center w-full max-w-xs p-4 text-gray-500 bg-white rounded-lg shadow-lg dark:text-gray-400 dark:bg-gray-800" id="toast-notificacion" role="alert">
    <div class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-lime-500 bg-lime-100 rounded-lg dark:bg-lime-800 dark:text-lime-200">
     <i class="fa-solid fa-check"></i>
@@ -475,23 +483,22 @@
   </div>
   <button class="fixed z-20 bottom-2 right-2 p-2 bg-fuchsia-700 text-white rounded-lg shadow-lg md:hidden aspect-square" id="toggle-sidebar-mobile"><i class="fa-solid fa-bars fa-lg"></i></button>
   
-  <div class="modal fixed inset-0 z-[100] bg-gray-900 bg-opacity-90 hidden" id="modal-vivirapp"> <!-- Modificado: añadido 'hidden' -->
-    <div class="relative w-full h-full p-4 md:p-8">
-      <!-- Botón de cerrar modal -->
+  <div class="modal fixed inset-0 z-[100] bg-gray-900 bg-opacity-90 hidden" id="modal-vivirapp"> <div class="relative w-full h-full p-4 md:p-8">
       <button class="modal-close absolute top-4 right-4 z-10 text-white bg-fuchsia-600 rounded-full w-12 h-12 flex items-center justify-center hover:bg-fuchsia-700 transition-colors" data-modal-id="modal-vivirapp" type="button">
         <i class="fa-solid fa-xmark fa-2x"></i>
         <span class="sr-only">Cerrar modal</span>
       </button>
       
-      <!-- Contenedor del Iframe -->
       <div class="relative w-full h-full bg-white dark:bg-gray-800 rounded-2xl shadow-2xl overflow-hidden">
         <iframe id="iframe-vivirapp" class="w-full h-full border-0" src="about:blank" title="Acerca de VivirApp">
-          <!-- El src se establecerá con JS para cargar 'vivirapp.html' -->
-        </iframe>
+          </iframe>
       </div>
     </div>
   </div>
 
+  <audio id="background-music" loop>
+      <source src="https://raw.githubusercontent.com/viviraplicaciones/rifa/refs/heads/main/media/navidad.mp3" type="audio/mpeg">
+  </audio>
   <script async src="//www.instagram.com/embed.js"></script>
   <script type="module" src="script.js"></script>
 </body>

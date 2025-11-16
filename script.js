@@ -63,6 +63,14 @@ let modalSuerteNumero;
 let imgSuerte;
 let toggleNotificaciones;
 
+// --- INICIO DE LA MODIFICACIÓN (Video Demo) ---
+let btnVerVideo, modalVideoDemo, videoPlayerDemo;
+// --- FIN DE LA MODIFICACIÓN ---
+
+// --- INICIO DE LA MODIFICACIÓN (Audio) ---
+let btnToggleMusic, iconMusicMode, backgroundMusic;
+// --- FIN DE LA MODIFICACIÓN ---
+
 // --- INICIO REQUERIMIENTO 1 (Modal Pago) ---
 let modalConfirmacionPago, listaNumerosConfirmacion, btnEnviarComprobante;
 // --- FIN REQUERIMIENTO 1 ---
@@ -258,6 +266,28 @@ function cachearElementosDOM() {
   adminLinksContainer = document.getElementById('admin-links-container');
   btnDarkMode = document.getElementById('btn-dark-mode');
   iconDarkMode = document.getElementById('icon-dark-mode');
+
+  // --- INICIO DE LA MODIFICACIÓN (Video Demo) ---
+  btnVerVideo = document.getElementById('btn-ver-video');
+  modalVideoDemo = document.getElementById('modal-video-demo');
+  videoPlayerDemo = document.getElementById('video-player-demo');
+  // --- INICIO DE LA MODIFICACIÓN (Video no loop) ---
+  if (videoPlayerDemo) {
+    videoPlayerDemo.loop = false; // Asegurar que el video no se repita
+  }
+  // --- FIN DE LA MODIFICACIÓN ---
+  // --- FIN DE LA MODIFICACIÓN ---
+
+  // --- INICIO DE LA MODIFICACIÓN (Audio) ---
+  btnToggleMusic = document.getElementById('btn-toggle-music');
+  iconMusicMode = document.getElementById('icon-music-mode');
+  backgroundMusic = document.getElementById('background-music');
+  // --- INICIO DE LA MODIFICACIÓN (Volumen 25%) ---
+  if (backgroundMusic) {
+    backgroundMusic.volume = 0.25; // Poner el volumen al 25%
+  }
+  // --- FIN DE LA MODIFICACIÓN ---
+  // --- FIN DE LA MODIFICACIÓN ---
   
   modalIngresarDatos = document.getElementById('modal-ingresar-datos');
   formIngresarDatos = document.getElementById('form-ingresar-datos');
@@ -389,6 +419,19 @@ function registrarEventListeners() {
     actualizarVistaActiva('view-comprar-numeros');
   });
   
+  // --- INICIO DE LA MODIFICACIÓN (Video Demo + Autoplay) ---
+  btnVerVideo?.addEventListener('click', () => {
+    modalVideoDemo?.classList.add('flex');
+    if (videoPlayerDemo) {
+      // Reproducir automáticamente al abrir
+      videoPlayerDemo.play().catch(error => {
+        console.warn("Autoplay del video fue bloqueado por el navegador:", error);
+        // El video se mostrará, pero el usuario deberá darle play manualmente.
+      });
+    }
+  });
+  // --- FIN DE LA MODIFICACIÓN ---
+
   btnVivirAppModal?.addEventListener('click', (e) => {
     e.preventDefault();
     if (modalVivirApp && iframeVivirApp) {
@@ -409,6 +452,13 @@ function registrarEventListeners() {
           if (modalId === 'modal-vivirapp') {
              modal.classList.add('hidden'); 
           }
+          
+          // --- INICIO DE LA MODIFICACIÓN (Pausar video al cerrar) ---
+          if (modalId === 'modal-video-demo' && videoPlayerDemo) {
+              videoPlayerDemo.pause();
+              videoPlayerDemo.currentTime = 0; // Opcional: rebobinar
+          }
+          // --- FIN DE LA MODIFICACIÓN ---
       }
     });
   });
@@ -419,6 +469,13 @@ function registrarEventListeners() {
       if (event.target.id === 'modal-vivirapp') {
           event.target.classList.add('hidden');
       }
+
+      // --- INICIO DE LA MODIFICACIÓN (Pausar video al cerrar) ---
+      if (event.target.id === 'modal-video-demo' && videoPlayerDemo) {
+          videoPlayerDemo.pause();
+          videoPlayerDemo.currentTime = 0; // Opcional: rebobinar
+      }
+      // --- FIN DE LA MODIFICACIÓN ---
     }
   });
 
@@ -453,6 +510,24 @@ function registrarEventListeners() {
     e.preventDefault();
     handleCompartir();
   });
+
+  // --- INICIO DE LA MODIFICACIÓN (Audio) ---
+  btnToggleMusic?.addEventListener('click', (e) => {
+      e.preventDefault();
+      if (!backgroundMusic) return;
+      
+      if (backgroundMusic.paused) {
+          backgroundMusic.play().catch(err => console.log("Reproducción automática bloqueada por el navegador."));
+          iconMusicMode?.classList.remove('fa-volume-off');
+          iconMusicMode?.classList.add('fa-volume-high');
+      } else {
+          backgroundMusic.pause();
+          iconMusicMode?.classList.remove('fa-volume-high');
+          iconMusicMode?.classList.add('fa-volume-off');
+      }
+  });
+  // --- FIN DE LA MODIFICACIÓN ---
+
   btnReportarFallo?.addEventListener('click', (e) => {
     e.preventDefault();
     modalReportarFallo?.classList.add('flex');
@@ -760,7 +835,7 @@ function closeLightboxInicio() {
 
 /* =========================================================
    Estilo dinámico (Función sin cambios)
-   ================================S========================= */
+   ========================================================= */
 (function insertarEstiloFiltroAdmin() {
   const style = document.createElement('style');
   style.innerHTML = `

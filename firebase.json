@@ -16,7 +16,10 @@
         "firebase-debug.log",
         "firebase-debug.*.log",
         "*.local"
-      ]
+      ],
+      "engines": {
+        "node": "18"
+      }
     }
   ]
 }

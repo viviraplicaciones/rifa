@@ -325,6 +325,25 @@ function registrarEventListeners() {
   formIngresarDatos?.addEventListener('submit', handleFormularioCompraSubmit);
   // --- FIN REQUERIMIENTO 1 ---
 
+  // --- INICIO DE LA MODIFICACIÓN (Cerrar modal de pago al hacer click) ---
+  btnEnviarComprobante?.addEventListener('click', (e) => {
+      e.preventDefault(); // Prevenir que el enlace se abra por defecto
+      
+      // Obtener la URL de WhatsApp del propio botón
+      const whatsappUrl = btnEnviarComprobante.href;
+
+      // Cerrar el modal de confirmación
+      if (modalConfirmacionPago) {
+          modalConfirmacionPago.classList.remove('flex');
+      }
+
+      // Abrir WhatsApp en una nueva pestaña/app
+      if (whatsappUrl && whatsappUrl !== '#') {
+          window.open(whatsappUrl, '_blank');
+      }
+  });
+  // --- FIN DE LA MODIFICACIÓN ---
+
   // --- Botón Suerte ---
   btnSuerte?.addEventListener('click', handleBotonSuerte); 
   // --- ADMIN ---
@@ -539,7 +558,7 @@ function handleFiltroParticipantes(e) {
 /* ================================LÓGICA DE NOTIFICACIONES (v3 - Corregido para GitHub Pages)================= */
 
 export async function solicitarYObtenerToken() {
-  if (VAPID_KEY === 'BLKW4ylTSLBySioHx0AOkYi6xZJPDjmQ1XAJAO8girT-ouIIwvdiAyvLlI6stV3M72dGrjnZ01fdr-YI7MmHSb0' || !VAPID_KEY) {
+  if (VAPID_KEY === 'TU_CLAVE_VAPID_DE_FIREBASE_VA_AQUI' || !VAPID_KEY) {
       console.error("Error: Falta la VAPID_KEY en script.js");
       mostrarToast("Error de configuración de notificaciones.", true);
       return null;
@@ -741,7 +760,7 @@ function closeLightboxInicio() {
 
 /* =========================================================
    Estilo dinámico (Función sin cambios)
-   ========================================================= */
+   ================================S========================= */
 (function insertarEstiloFiltroAdmin() {
   const style = document.createElement('style');
   style.innerHTML = `

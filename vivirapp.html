@@ -13,7 +13,7 @@
   background-repeat: no-repeat;
   background-size: cover;
   /*background-color: #f2f6fa; /* Asegura que haya un color de fondo en caso de que la imagen no se cargue */
-  color: #333;
+  color: #333; /* <-- Color de texto general (gris oscuro) */
 }
 /* Estilo para el encabezado */
 header {
@@ -21,7 +21,7 @@ header {
   background-size: cover; /* Asegura que la imagen de fondo cubra el área del encabezado */
   background-position: center center; /* Centra la imagen */
   /*background: linear-gradient(135deg, #0a1a2f, #1e3a5f); /* Superpone un degradado para asegurar contraste con el texto */
-  color: #fff;
+  color: #fff; /* <-- Texto del header blanco. Correcto. */
   padding: 10px 15px; /* Reducido de 20px a 10px en el top y bottom, y 15px a los lados */
   text-align: center;
 }
@@ -32,7 +32,7 @@ header {
     .hero {
       padding: 3px 10px; /* Reducido drásticamente (90%) */
       text-align: center;
-      /*background: #ffffff;-*/
+      color: white; /* <-- (MODIFICADO) Estilo movido desde el HTML */
     }
     .hero h1 {
       font-size: 1.5rem;
@@ -43,7 +43,7 @@ header {
       font-size: 1.0rem;
       max-width: 600px;
       margin: 0 auto 10px auto; /* Reducido de 25px */
-      color: #555;
+      color: white; /* <-- (MODIFICADO) Estilo movido desde el HTML */
     }
     .btn {
       display: inline-block;
@@ -62,7 +62,7 @@ header {
       max-width: 1100px;
       margin: auto;
       grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      color:Black;
+      /* color:Black; <-- (ELIMINADO) */
     }
     .card {
       background: #f2f6fa;
@@ -77,9 +77,21 @@ header {
       border-radius: 10px;
       margin-bottom: 5px;
     }
+    
+    /* ========= INICIO DE LA CORRECCIÓN DE COLOR ========= */
+    /* Reglas específicas para forzar el color en los textos de las tarjetas */
+    .card h3 {
+      color: #1e3a5f; /* Azul oscuro para los títulos de tarjeta */
+    }
+    .card p {
+      color: #333; /* Gris oscuro para el texto de tarjeta */
+    }
+    /* ========= FIN DE LA CORRECCIÓN DE COLOR ========= */
+
     .reviews {
       background: #ffffff;
       padding: 10px 10px; /* Reducido de 60px */
+      /* color: black; <-- (ELIMINADO) */
     }
     .reviews h2 {
       text-align: center;
@@ -93,6 +105,7 @@ header {
       display: grid;
       gap: 15px; /* Reducido de 25px */
       grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      /* color: black; <-- (ELIMINADO) */
     }
     .review {
       background: #f7f9fc;
@@ -101,7 +114,10 @@ header {
       box-shadow: 0 3px 8px rgba(0,0,0,0.05);
       border-left: 4px solid #ff7a00;
       font-size: 0.93rem;
+      color: #333; /* <-- (MODIFICADO) Forzamos el color gris oscuro aquí */
     }
+    /* ========= FIN DE LA CORRECCIÓN ========= */
+
     footer {
       text-align: center;
       padding: 10px;
@@ -145,11 +161,12 @@ header {
 <body>
   <header><img src="images/vivirapp.png" alt="Logo VivirAplicaciones" /><h2>VivirAplicaciones</h2><p>10 años creando tecnología</p></header>
 
-  <section class="hero" style="color: white"><h2>Soluciones Web y Móviles de Alto Impacto</h2>
-    <!-- ========= INICIO DE MODIFICACIÓN (REQUERIMIENTO 3) ========= -->
-    <p style="color: white">Transformamos tus ideas en plataformas web, apps móviles y PWA modernas, rápidas y confiables. Impulsamos tu negocio con tecnología de alto nivel.</p>
-    <!-- ========= FIN DE MODIFICACIÓN (REQUERIMIENTO 3) ========= -->
-    <!--<a class="btn" href="#contacto">Quiero más información</a></section>-->
+  <!-- (MODIFICADO) Se quitó el style="color: white" de aquí -->
+  <section class="hero">
+    <h2>Soluciones Web y Móviles de Alto Impacto</h2>
+    <!-- (MODIFICADO) Se quitó el style="color: white" de aquí -->
+    <p>Transformamos tus ideas en plataformas web, apps móviles y PWA modernas, rápidas y confiables. Impulsamos tu negocio con tecnología de alto nivel.</p>
+  </section>
 
   <section class="services">
     <div class="card"><img src="img/web.jpg?web" alt="Web" /><h3>Páginas Web</h3><p>Desarrollos profesionales, optimizados para velocidad, SEO y un diseño que cautiva a tus clientes.</p></div>

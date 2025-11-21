@@ -142,10 +142,13 @@
        <p class="mt-6 text-lg font-semibold text-gray-800 dark:text-gray-100">Espectaculares Adornos Navideños. <br>9 Esferas Tejidas en crochet estilo Amigurumi.</p>
        <hr>
        <p class="mt-6 text-lg font-semibold text-gray-800 dark:text-gray-100">Juega el 5 de diciembre de 2025 con <a href="https://loteriadelrisaralda.com/resultados/" target="_blank" class="text-orange-500 dark:text-orange-400 font-bold no-underline hover:text-orange-600 dark:hover:text-orange-500">La lotería de Risaralda</a></p>
-       <hr>
+       
        <div class="mt-8">
         <button class="w-full bg-lime-500 text-white font-bold text-lg py-3 px-6 rounded-xl hover:bg-lime-600 transition duration-300 shadow-lg" id="btn-mas-info">M&aacute;s Informaci&oacute;n</button>
-        
+
+<button class="w-full bg-blue-600 text-white font-bold text-lg py-3 px-6 rounded-xl hover:bg-blue-700 transition duration-300 shadow-lg mt-4 nav-link" data-view="view-comprar-numeros">
+<i class="fa-solid fa-ticket mr-2"></i>Escoge tu n&uacute;mero</button>
+
         <button class="w-full bg-fuchsia-600 text-white font-bold text-lg py-3 px-6 rounded-xl hover:bg-fuchsia-700 transition duration-300 shadow-lg mt-4" id="btn-ver-video">
           <i class="fa-solid fa-circle-play mr-2"></i>C&oacute;mo usar la App
         </button>
@@ -158,7 +161,7 @@
      <div class="flex-1 bg-white p-4 md:p-6 md:rounded-2xl shadow-xl dark:bg-gray-800">
      <div class="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
      <div class="flex flex-wrap gap-x-4 gap-y-2 text-sm text-gray-600 dark:text-gray-300">
-     <span class="flex items-center"><span class="w-4 h-4 rounded-full bg-red-500 mr-2 border"></span>Reservado</span>
+     <span class="flex items-center"><span class="w-4 h-4 rounded-full bg-red-500 mr-2 border"></span>PAGADO</span>
      <span class="flex items-center"><span class="w-4 h-4 rounded-full bg-amber-500 mr-2 border"></span>En revisi&oacute;n</span>
      <span class="flex items-center"><span class="w-4 h-4 rounded-full bg-white border mr-2 dark:bg-gray-700"></span>Disponible</span>
      <span class="flex items-center"><span class="w-4 h-4 rounded-full bg-blue-600 mr-2 border"></span>Seleccionado</span>
@@ -482,7 +485,9 @@
       <img id="lightbox-image-inicio" src="" alt="Imagen de la Rifa" class="max-w-full max-h-[85vh] object-contain rounded-lg shadow-2xl"/>
     </div>
   </div>
-  <button class="fixed z-20 bottom-2 right-2 p-2 bg-fuchsia-700 text-white rounded-lg shadow-lg md:hidden aspect-square" id="toggle-sidebar-mobile"><i class="fa-solid fa-bars fa-lg"></i></button>
+  <!-- ========= INICIO DE LA MODIFICACIÓN (Botón Menú Texto) ========= -->
+<button class="fixed z-20 bottom-2 right-2 px-3 py-1 bg-fuchsia-700 text-white font-bold rounded-lg shadow-lg md:hidden transition-transform hover:scale-105" id="toggle-sidebar-mobile">Menú</button>
+  <!-- ========= FIN DE LA MODIFICACIÓN ========= -->
   
   <div class="modal fixed inset-0 z-[100] bg-gray-900 bg-opacity-90 hidden" id="modal-vivirapp"> <div class="relative w-full h-full p-4 md:p-8">
       <button class="modal-close absolute top-4 right-4 z-10 text-white bg-fuchsia-600 rounded-full w-12 h-12 flex items-center justify-center hover:bg-fuchsia-700 transition-colors" data-modal-id="modal-vivirapp" type="button">

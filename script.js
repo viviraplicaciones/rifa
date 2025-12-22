@@ -1,4 +1,4 @@
-/* ===========================script.js (v38 - Delay WhatsApp Admin)=========================== */
+/* ===========================script.js (v39 - Error Handling Update)=========================== */
 // Importar la base de datos (db) y funciones de Firebase
 import { 
     db, 
@@ -63,21 +63,17 @@ let modalSuerteNumero;
 let imgSuerte;
 let toggleNotificaciones;
 
-// --- INICIO DE LA MODIFICACIÓN (Video Demo) ---
+// --- Video Demo ---
 let btnVerVideo, modalVideoDemo, videoPlayerDemo;
-// --- FIN DE LA MODIFICACIÓN ---
 
-// --- INICIO DE LA MODIFICACIÓN (Audio) ---
+// --- Audio ---
 let btnToggleMusic, iconMusicMode, backgroundMusic;
-// --- FIN DE LA MODIFICACIÓN ---
 
-// --- INICIO REQUERIMIENTO 1 (Modal Pago) ---
+// --- Modal Pago ---
 let modalConfirmacionPago, listaNumerosConfirmacion, btnEnviarComprobante;
-// --- FIN REQUERIMIENTO 1 ---
 
-// --- INICIO REQUERIMIENTO 2 (Filtro) ---
+// --- Filtro ---
 let filtroParticipantesInput;
-// --- FIN REQUERIMIENTO 2 ---
 
 // Variables para Modal VivirApp (Req 4)
 let btnVivirAppModal, modalVivirApp, iframeVivirApp;
@@ -203,6 +199,9 @@ function escucharBoletos() {
         const disponibles = boletosRifa.filter(b => b.estado === 'disponible').map(b => b.numero);
         modalLista.textContent = `Disponibles: ${disponibles.join(', ')}`;
     }
+  }, (error) => {
+    console.error("Error escuchando boletos:", error);
+    mostrarToast("Error al cargar la rifa. Verifique su conexión o permisos.", true);
   });
 }
 
@@ -216,13 +215,14 @@ function escucharParticipantes() {
     participantes.length = 0;
     participantes.push(...participantesTemporales);
     
-    // --- MODIFICACIÓN REQUERIMIENTO 2 ---
     if (filtroParticipantesInput && filtroParticipantesInput.value.trim() !== '') {
         handleFiltroParticipantes({ target: filtroParticipantesInput }); 
     } else {
         renderTablaParticipantes(); 
     }
-    // --- FIN MODIFICACIÓN ---
+  }, (error) => {
+    console.error("Error escuchando participantes:", error);
+    // Opcional: mostrar toast solo si es admin
   });
 }
 /* ============================== Cacheo de elementos DOM ================ */
@@ -271,22 +271,18 @@ function cachearElementosDOM() {
   btnVerVideo = document.getElementById('btn-ver-video');
   modalVideoDemo = document.getElementById('modal-video-demo');
   videoPlayerDemo = document.getElementById('video-player-demo');
-  // --- INICIO DE LA MODIFICACIÓN (Video no loop) ---
   if (videoPlayerDemo) {
     videoPlayerDemo.loop = false; // Asegurar que el video no se repita
   }
-  // --- FIN DE LA MODIFICACIÓN ---
   // --- FIN DE LA MODIFICACIÓN ---
 
   // --- INICIO DE LA MODIFICACIÓN (Audio) ---
   btnToggleMusic = document.getElementById('btn-toggle-music');
   iconMusicMode = document.getElementById('icon-music-mode');
   backgroundMusic = document.getElementById('background-music');
-  // --- INICIO DE LA MODIFICACIÓN (Volumen 25%) ---
   if (backgroundMusic) {
     backgroundMusic.volume = 0.25; // Poner el volumen al 25%
   }
-  // --- FIN DE LA MODIFICACIÓN ---
   // --- FIN DE LA MODIFICACIÓN ---
   
   modalIngresarDatos = document.getElementById('modal-ingresar-datos');
@@ -426,7 +422,6 @@ function registrarEventListeners() {
       // Reproducir automáticamente al abrir
       videoPlayerDemo.play().catch(error => {
         console.warn("Autoplay del video fue bloqueado por el navegador:", error);
-        // El video se mostrará, pero el usuario deberá darle play manualmente.
       });
     }
   });
@@ -456,7 +451,7 @@ function registrarEventListeners() {
           // --- INICIO DE LA MODIFICACIÓN (Pausar video al cerrar) ---
           if (modalId === 'modal-video-demo' && videoPlayerDemo) {
               videoPlayerDemo.pause();
-              videoPlayerDemo.currentTime = 0; // Opcional: rebobinar
+              videoPlayerDemo.currentTime = 0; 
           }
           // --- FIN DE LA MODIFICACIÓN ---
       }
@@ -473,7 +468,7 @@ function registrarEventListeners() {
       // --- INICIO DE LA MODIFICACIÓN (Pausar video al cerrar) ---
       if (event.target.id === 'modal-video-demo' && videoPlayerDemo) {
           videoPlayerDemo.pause();
-          videoPlayerDemo.currentTime = 0; // Opcional: rebobinar
+          videoPlayerDemo.currentTime = 0; 
       }
       // --- FIN DE LA MODIFICACIÓN ---
     }

@@ -1,7 +1,7 @@
 /* =========================================================
    firebase-init.js
    Inicialización y exportación de la base de datos.
-   (AHORA INCLUYE FIRESTORE CRUD COMPLETO Y MESSAGING)
+   (Usa versión fija 10.12.2 para estabilidad)
    ========================================================= */
 
 // Importa las funciones que necesitas de los SDK de Firebase
@@ -16,8 +16,8 @@ import {
     addDoc,
     writeBatch,
     setDoc,
-    updateDoc,  // <-- AÑADIDO
-    deleteDoc   // <-- AÑADIDO
+    updateDoc,
+    deleteDoc
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 import { 
     getMessaging, 
@@ -26,7 +26,7 @@ import {
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-messaging.js"; 
 
 // =========================================================
-// TUS CREDENCIALES (Están correctas)
+// TUS CREDENCIALES
 // =========================================================
 const firebaseConfig = {
   apiKey: "AIzaSyDQxf7pZpe2st6wrJsVV6Q9EBW2PxWf6o4",
@@ -58,8 +58,8 @@ export {
     addDoc,
     writeBatch,
     setDoc,
-    updateDoc,  // <-- AÑADIDO
-    deleteDoc   // <-- AÑADIDO
+    updateDoc,
+    deleteDoc
 };
 
 // Exportar todas las funciones de Messaging que usaremos

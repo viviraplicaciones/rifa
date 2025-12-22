@@ -1,7 +1,7 @@
 /* =========================================================
    firebase-init.js
    Inicialización y exportación de la base de datos.
-   (Versión Modular v11+ Optimizada)
+   (Versión Modular v11+ Optimizada y Estable)
    ========================================================= */
 
 // Importaciones modulares directas (más ligeras y modernas)
@@ -52,7 +52,7 @@ try {
 export const db = getFirestore(app);
 
 // Exportar la instancia de mensajería (Messaging)
-// Nota: getMessaging puede fallar en entornos sin Service Worker (ej. incógnito estricto)
+// Nota: getMessaging puede fallar en entornos sin Service Worker o incógnito
 let messagingInstance;
 try {
     messagingInstance = getMessaging(app);

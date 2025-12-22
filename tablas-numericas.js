@@ -1,4 +1,4 @@
-/* ==============tablas-numericas.js (v34 - Delay WhatsApp Admin)=============================== */
+/* ==============tablas-numericas.js (v39 - Empty State)=============================== */
 
 // Importar la base de datos (db) y funciones de Firestore
 import { 
@@ -77,6 +77,11 @@ export function renderCuadriculaPublica() {
   if (!_cuadriculaPublica) return;
   const ocultar = _switchOcultarComprados?.checked;
   _cuadriculaPublica.innerHTML = '';
+
+  if (_boletosRifa.length === 0) {
+      _cuadriculaPublica.innerHTML = '<p class="col-span-full text-center p-4 text-gray-500">Cargando números o conexión fallida...</p>';
+      return;
+  }
 
   _boletosRifa.forEach(boleto => {
     let claseEstado = '';
@@ -305,7 +310,7 @@ export async function handleGuardarCompraUsuario(e) {
 
     // 5. --- Lógica de WhatsApp (Solo Admin) ---
     // const numerosTexto = nuevoParticipante.numeros.join(', '); // Ya no se usa aquí
-    const telefonoAdmin = '573013811896';
+    const telefonoAdmin = '573205893469';
 
     // --- MODIFICACIÓN: Se eliminaron mensajeAdmin y whatsappUrlAdmin ---
     

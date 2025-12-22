@@ -1,11 +1,11 @@
 /* =========================================================
    firebase-init.js
    Inicialización y exportación de la base de datos.
-   (Usa versión fija 10.12.2 para estabilidad)
+   (Versión Modular v11+ Optimizada)
    ========================================================= */
 
-// Importa las funciones que necesitas de los SDK de Firebase
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+// Importaciones modulares directas (más ligeras y modernas)
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js";
 import { 
     getFirestore, 
     collection, 
@@ -18,12 +18,12 @@ import {
     setDoc,
     updateDoc,
     deleteDoc
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+} from "https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore.js";
 import { 
     getMessaging, 
     getToken, 
     onMessage 
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-messaging.js"; 
+} from "https://www.gstatic.com/firebasejs/11.0.2/firebase-messaging.js"; 
 
 // =========================================================
 // TUS CREDENCIALES
@@ -40,13 +40,27 @@ const firebaseConfig = {
 // =========================================================
 
 // Inicializar Firebase
-const app = initializeApp(firebaseConfig);
+let app;
+try {
+    app = initializeApp(firebaseConfig);
+    console.log("Firebase (v11) inicializado correctamente.");
+} catch (error) {
+    console.error("Error crítico al inicializar Firebase:", error);
+}
 
 // Exportar la instancia de la base de datos (Firestore)
 export const db = getFirestore(app);
 
 // Exportar la instancia de mensajería (Messaging)
-export const messaging = getMessaging(app); 
+// Nota: getMessaging puede fallar en entornos sin Service Worker (ej. incógnito estricto)
+let messagingInstance;
+try {
+    messagingInstance = getMessaging(app);
+} catch (e) {
+    console.warn("Messaging no soportado en este entorno:", e);
+    messagingInstance = null;
+}
+export const messaging = messagingInstance;
 
 // Exportar todas las funciones de Firestore que usaremos
 export { 

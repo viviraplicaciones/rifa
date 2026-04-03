@@ -1,11 +1,11 @@
 {
-  "name": "Rifa Navideña",
-  "short_name": "Rifa",
-  "description": "Participa en la Fabulosa Rifa de Navidad Amigurumi.",
+  "name": "Rifa Día de Madres",
+  "short_name": "Rifa Madres",
+  "description": "Participa y gana una espectacular Freidora Airfrasyer.",
   "start_url": "./index.html",
   "display": "fullscreen",
-  "background_color": "#FEF6FF",
-  "theme_color": "#C026D3",
+  "background_color": "#184059",
+  "theme_color": "#BF7B3F",
   "icons": [
     {
       "src": "images/logo.png",

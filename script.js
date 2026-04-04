@@ -41,7 +41,7 @@ const VAPID_KEY = 'BLKW4ylTSLBySioHx0AOkYi6xZJPDjmQ1XAJAO8girT-ouIIwvdiAyvLlI6st
 /* -----------Estado Global de la Aplicación----------------------- */
 let boletosRifa = [];
 let participantes = []; // Mantenemos la lista global de participantes
-const PRECIO_BOLETO = 5000; 
+const PRECIO_BOLETO = 10000; 
 let numerosSeleccionadosPublica = [];
 
 /* -----------------------Variables DOM (Caché)---------------------------------- */

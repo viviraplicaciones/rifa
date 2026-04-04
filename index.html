@@ -57,11 +57,12 @@
     
     <div class="pt-4 mt-4 border-t border-[#5D8AA6]">
      <p class="sidebar-text text-xs uppercase text-gray-300 px-3 mb-2">Comunidad</p>
-     <!--<a class="flex items-center p-2 rounded-lg hover:bg-[#5D8AA6] nav-link" href="index_01.html">
-      <i class="fa-solid fa-globe fa-lg sidebar-icon text-[#D4AF37]"></i>
-      <span class="sidebar-text text-lg ml-4">Nuestra Web</span></a>
+     <a class="nav-link flex items-center p-4 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors cursor-pointer" data-view="view-recetas">
+    <i class="fa-solid fa-utensils sidebar-icon w-6 text-center"></i>
+    <span class="ml-4 sidebar-text">Recetas Gourmet</span>
+</a>
      
-     <a class="flex items-center p-2 rounded-lg hover:bg-[#5D8AA6] nav-link" data-view="view-instagram" href="#"><i class="fa-brands fa-instagram fa-lg sidebar-icon text-[#D4AF37]"></i>
+    <!-- <a class="flex items-center p-2 rounded-lg hover:bg-[#5D8AA6] nav-link" data-view="view-instagram" href="#"><i class="fa-brands fa-instagram fa-lg sidebar-icon text-[#D4AF37]"></i>
       <span class="sidebar-text text-lg ml-4">Instagram</span></a>-->
      <a class="flex items-center p-2 rounded-lg hover:bg-[#5D8AA6]" href="#" id="btn-compartir">
       <i class="fa-solid fa-share-nodes fa-lg sidebar-icon text-[#D4AF37]"></i>
@@ -188,7 +189,118 @@
      
      </div></div>
    </div>
-   
+   <!--- INICIO WEB GOUERMET -->
+<div class="view" id="view-recetas">
+    <div class="max-w-6xl mx-auto p-4 md:p-8 space-y-10">
+        <header class="text-center">
+            <h2 class="gourmet-title text-4xl text-accent">Directorio Gourmet Airfryer</h2>
+            <p class="text-gray-500 dark:text-gray-400 mt-2">Recetarios externos seleccionados para tu Freidora de Aire</p>
+        </header>
+
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div class="bg-card rounded-3xl shadow-xl overflow-hidden flex flex-col border border-sidebar-sep transition-transform hover:scale-[1.02]">
+                <div class="h-48 bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1584269600464-37b1b58a9fe7?q=80&w=500')"></div>
+                <div class="p-6 flex-1 flex flex-col justify-between">
+                    <div>
+                        <h3 class="gourmet-title text-xl mb-3 text-main">Top 10 IMUSA</h3>
+                        <p class="text-sm text-gray-600 dark:text-gray-400 mb-6">Trucos de la marca líder en Colombia para lograr resultados profesionales en casa.</p>
+                    </div>
+                    <a href="https://blog.imusa.com.co/blog/imusa/recetas/top-10-recetas-freidora-aire/" target="_blank" class="btn-premium text-center py-3 rounded-xl font-bold text-sm">Visitar Sitio</a>
+                </div>
+            </div>
+
+            <div class="bg-card rounded-3xl shadow-xl overflow-hidden flex flex-col border border-sidebar-sep transition-transform hover:scale-[1.02]">
+                <div class="h-48 bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1546069901-ba9599a7e63c?q=80&w=500')"></div>
+                <div class="p-6 flex-1 flex flex-col justify-between">
+                    <div>
+                        <h3 class="gourmet-title text-xl mb-3 text-main">Recetas Nestlé</h3>
+                        <p class="text-sm text-gray-600 dark:text-gray-400 mb-6">Cientos de ideas equilibradas y creativas para alimentar a toda la familia.</p>
+                    </div>
+                    <a href="https://www.recetasnestle.com.co/categorias/recetas-en-la-air-fryer" target="_blank" class="btn-premium text-center py-3 rounded-xl font-bold text-sm">Visitar Sitio</a>
+                </div>
+            </div>
+
+            <div class="bg-card rounded-3xl shadow-xl overflow-hidden flex flex-col border border-sidebar-sep transition-transform hover:scale-[1.02]">
+    <div class="h-48 bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1578916171728-46686eac8d58?q=80&w=500')"></div>
+    <div class="p-6 flex-1 flex flex-col justify-between">
+        <div>
+            <h3 class="gourmet-title text-xl mb-3 text-main">Oster Colombia</h3>
+            <p class="text-sm text-gray-600 dark:text-gray-400 mb-6">Recetas de alta cocina diseñadas para maximizar la potencia de los equipos Oster.</p>
+        </div>
+        <a href="https://recetas.ostercolombia.com/collections/fc82e1f6-9bd5-4ea3-be48-db54f3d35559" target="_blank" class="btn-premium text-center py-3 rounded-xl font-bold text-sm">Visitar Sitio</a>
+    </div>
+</div>
+
+            <div class="bg-card rounded-3xl shadow-xl overflow-hidden flex flex-col border border-sidebar-sep transition-transform hover:scale-[1.02]">
+                <div class="h-48 bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1626700051175-6818013e1d4f?q=80&w=500')"></div>
+                <div class="p-6 flex-1 flex flex-col justify-between">
+                    <div>
+                        <h3 class="gourmet-title text-xl mb-3 text-main">Tulio Recomienda</h3>
+                        <p class="text-sm text-gray-600 dark:text-gray-400 mb-6">Experiencias gastronómicas fáciles con el estilo inconfundible de Tulio.</p>
+                    </div>
+                    <a href="https://tuliorecomienda.com/tag/freidora-de-aire/" target="_blank" class="btn-premium text-center py-3 rounded-xl font-bold text-sm">Visitar Sitio</a>
+                </div>
+            </div>
+
+            <div class="bg-card rounded-3xl shadow-xl overflow-hidden flex flex-col border border-sidebar-sep transition-transform hover:scale-[1.02]">
+                <div class="h-48 bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1599487488170-d11ec9c172f0?q=80&w=500')"></div>
+                <div class="p-6 flex-1 flex flex-col justify-between">
+                    <div>
+                        <h3 class="gourmet-title text-xl mb-3 text-main">Sabor Tradicional</h3>
+                        <p class="text-sm text-gray-600 dark:text-gray-400 mb-6">El portal número uno de comida típica colombiana en versión saludable.</p>
+                    </div>
+                    <a href="https://www.mycolombianrecipes.com/es/" target="_blank" class="btn-premium text-center py-3 rounded-xl font-bold text-sm">Visitar Sitio</a>
+                </div>
+            </div>
+
+            <div class="bg-card rounded-3xl shadow-xl overflow-hidden flex flex-col border border-sidebar-sep transition-transform hover:scale-[1.02]">
+                <div class="h-48 bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1512621776951-a57141f2eefd?q=80&w=500')"></div>
+                <div class="p-6 flex-1 flex flex-col justify-between">
+                    <div>
+                        <h3 class="gourmet-title text-xl mb-3 text-main">Philips NutriU</h3>
+                        <p class="text-sm text-gray-600 dark:text-gray-400 mb-6">Inspiración nutricional de los pioneros en la tecnología Airfryer mundial.</p>
+                    </div>
+                    <a href="https://www.philips.com.co/c-m-ho/cocina/recetas-airfryer" target="_blank" class="btn-premium text-center py-3 rounded-xl font-bold text-sm">Visitar Sitio</a>
+                </div>
+            </div>
+
+            <div class="bg-card rounded-3xl shadow-xl overflow-hidden flex flex-col border border-sidebar-sep transition-transform hover:scale-[1.02]">
+    <div class="h-48 bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1532336414038-cf19250c5757?q=80&w=500')"></div>
+    <div class="p-6 flex-1 flex flex-col justify-between">
+        <div>
+            <h3 class="gourmet-title text-xl mb-3 text-main">Just Spices</h3>
+            <p class="text-sm text-gray-600 dark:text-gray-400 mb-6">Secretos para sazonar y dar vida a tus platos sin exceso de sal o grasas.</p>
+        </div>
+        <a href="https://www.justspices.es/colecciones-recetas/recetas-con-airfryer" target="_blank" class="btn-premium text-center py-3 rounded-xl font-bold text-sm">Visitar Sitio</a>
+    </div>
+</div>
+
+            <div class="bg-card rounded-3xl shadow-xl overflow-hidden flex flex-col border border-sidebar-sep transition-transform hover:scale-[1.02]">
+                <div class="h-48 bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1490645935967-10de6ba17061?q=80&w=500')"></div>
+                <div class="p-6 flex-1 flex flex-col justify-between">
+                    <div>
+                        <h3 class="gourmet-title text-xl mb-3 text-main">Cocina Ligera</h3>
+                        <p class="text-sm text-gray-600 dark:text-gray-400 mb-6">Recetas fitness y ligeras para quienes cuidan su salud sin sacrificar el gusto.</p>
+                    </div>
+                    <a href="https://www.clara.es/recetas/cenas/cenas-freidora-aire-rapidas-saludables_24853" target="_blank" class="btn-premium text-center py-3 rounded-xl font-bold text-sm">Visitar Sitio</a>
+                </div>
+            </div>
+
+            <div class="bg-card rounded-3xl shadow-xl overflow-hidden flex flex-col border border-sidebar-sep transition-transform hover:scale-[1.02]">
+                <div class="h-48 bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?q=80&w=500')"></div>
+                <div class="p-6 flex-1 flex flex-col justify-between">
+                    <div>
+                        <h3 class="gourmet-title text-xl mb-3 text-main">Directo al Paladar</h3>
+                        <p class="text-sm text-gray-600 dark:text-gray-400 mb-6">Análisis detallado de técnicas para lograr texturas crujientes perfectas.</p>
+                    </div>
+                    <a href="https://www.directoalpaladar.com/recetario/seis-mejores-recetas-para-freidora-aire-directo-al-paladar-aceite-bien-crujientes" target="_blank" class="btn-premium text-center py-3 rounded-xl font-bold text-sm">Visitar Sitio</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- FIN WEB GOURMET -->
+
    <div class="view p-0 md:p-6" id="view-rifas-pv">
     <div class="bg-white p-4 md:p-6 md:rounded-2xl shadow-xl dark:bg-gray-800">
     <h1 class="text-3xl font-bold text-gray-800 mb-6 dark:text-white">Punto de Venta (Admin)</h1>
@@ -467,8 +579,16 @@
    <div class="ml-3 text-sm font-normal" id="toast-mensaje">Item guardado.</div>
    <button aria-label="Close" class="ml-auto -mx-1.5 -my-1.5 bg-white text-gray-400 hover:text-gray-900 rounded-lg p-1.5 hover:bg-gray-100 inline-flex h-8 w-8 dark:bg-gray-800 dark:text-gray-500 dark:hover:text-white dark:hover:bg-gray-700" id="toast-close" type="button"><span class="sr-only">Close</span><i class="fa-solid fa-xmark"></i></button>
   </div>
-  <button class="fixed bottom-0 left-1/2 -translate-x-1/2 translate-y-1/3 z-30 w-16 h-16 bg-white dark:bg-gray-900 rounded-full flex items-center justify-center shadow-lg border-2 border-[#D4AF37] hidden transition-transform hover:translate-y-[25%]" id="btn-suerte"><img alt="Botón de la suerte" class="w-12 h-12 rounded-full" id="img-suerte" src="images/dado.png"/></button>
   
+  <button class="tooltip-suerte fixed bottom-0 left-1/2 -translate-x-1/2 translate-y-1/3 z-30 w-16 h-16 bg-white dark:bg-gray-900 rounded-full flex items-center justify-center shadow-lg border-2 border-[#D4AF37] hidden transition-transform hover:translate-y-[25%]" 
+        id="btn-suerte" 
+        data-tooltip="¡Prueba tu suerte aquí!">
+    <img alt="Botón de la suerte" class="w-12 h-12 rounded-full" id="img-suerte" src="images/dado.png"/>
+</button>
+  
+
+
+
   <div id="lightbox-modal-inicio" class="fixed inset-0 z-50 bg-black bg-opacity-80 backdrop-blur-sm flex items-center justify-center p-4 hidden">
     <button id="lightbox-close-inicio" class="absolute top-4 right-4 z-[60] text-white bg-gray-800 bg-opacity-50 rounded-full w-12 h-12 flex items-center justify-center hover:bg-opacity-75">
       <i class="fa-solid fa-xmark fa-2x"></i>

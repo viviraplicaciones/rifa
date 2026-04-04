@@ -753,6 +753,13 @@ function actualizarVistaActiva(viewId, isInitialLoad = false) {
   }
 }
 
+// Dentro de actualizarVistaActiva, cuando viewId === 'view-comprar-numeros'
+if (viewId === 'view-comprar-numeros') {
+    btnSuerte?.classList.remove('hidden');
+    // Esto fuerza a que se vea el tooltip solo en esta pantalla
+    btnSuerte?.style.setProperty('--tooltip-opacity', '1'); 
+}
+
 function mostrarToast(mensaje, esError = false) {
   if (!toastEl || !toastMsg) return;
 

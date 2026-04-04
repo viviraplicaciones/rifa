@@ -90,22 +90,31 @@ body {
 .bg-card-num { background-color: var(--bg-card-num); }
 .bg-selection { background-color: var(--selection); }
 
-/* Estados de los números */
-.status-disponible {background-color: var(--bg-card-num); color: var(--text-main); border-color: var(--bg-botones);}
-.status-apartado {background-color: #5D8AA6; color: white; border-color: #184059;}
-.status-revisando {background-color: var(--bg-botones); color: white; border-color: var(--bg-botones);}
-.status-pagado {background-color: #8C2F1B; color: white; border-color: #8C2F1B;}
+/* CORRECCIÓN: Estados de los números vinculados al Script */
+.numero-rifa-publico {
+    transition: all 0.2s ease-in-out; 
+    transform: scale(1);
+    cursor: pointer;
+    border-width: 2px;
+}
 
-.numero-rifa-publico {transition: all 0.2s ease-in-out; transform: scale(1);}
-.numero-rifa-publico:hover:not(.ocupado):not(.seleccionado) {box-shadow: 0 4px 14px 0 rgba(0, 0, 0, 0.2); transform: scale(1.05);}
+.numero-rifa-publico.disponible {
+    background-color: var(--bg-card-num); 
+    color: var(--text-main); 
+    border-color: var(--bg-botones);
+}
 
 .numero-rifa-publico.seleccionado {
-    background-color: var(--selection);
-    color: white;
-    border-color: var(--bg-botones);
+    background-color: var(--selection) !important;
+    color: white !important;
+    border-color: var(--bg-botones) !important;
     transform: scale(1.1);
-    box-shadow: 0 4px 14px rgba(0,0,0,0.3);
+    box-shadow: 0 0 12px var(--selection);
 }
+
+.numero-rifa-publico.apartado { background-color: #5D8AA6; color: white; border-color: #184059; }
+.numero-rifa-publico.revisando { background-color: var(--bg-botones); color: white; border-color: var(--bg-botones); }
+.numero-rifa-publico.pagado { background-color: #8C2F1B; color: white; border-color: #8C2F1B; cursor: not-allowed; opacity: 0.8; }
 
 .slider-image {transition: opacity 1s ease-in-out;}
 #image-slider { position: relative; overflow: hidden;}
@@ -157,7 +166,6 @@ body {
     padding-right: 0;
 }
 #sidebar.collapsed .sidebar-icon {font-size: 1.25rem;}
-#sidebar.collapsed #admin-links-container {display: none !important;}
 
 .participante-card.abierto .participante-body { max-height: 200px; }
 .participante-card.abierto .chevron-icon { transform: rotate(180deg); }

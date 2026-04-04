@@ -178,41 +178,38 @@ body {
     letter-spacing: 1px;
 }
 
-/* boton suerte-----------------------------------------------------------*/
-/* Tooltip Permanente para el Botón de Suerte */
+/* BOTÓN SUERTE REUBICADO Y TOOLTIP PERMANENTE */
 .tooltip-suerte {
     position: fixed;
 }
 
-/* El globo de texto (Visible por defecto) */
+/* El globo de texto alineado para la posición izquierda */
 .tooltip-suerte::after {
     content: attr(data-tooltip);
     position: absolute;
-    bottom: 125%; /* Un poco más arriba para que no tape el dado */
-    left: 50%;
-    transform: translateX(-50%);
+    bottom: 125%; 
+    left: 0; /* Cambiado de 50% para que no se salga de la pantalla */
     background-color: var(--bg-botones);
     color: #fff;
     padding: 6px 12px;
-    border-radius: 20px; /* Más redondeado, estilo burbuja */
+    border-radius: 20px;
     font-size: 11px;
     font-weight: bold;
     white-space: nowrap;
     box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-    opacity: 1; /* Siempre visible */
+    opacity: 1; 
     visibility: visible;
     z-index: 40;
-    pointer-events: none; /* No interfiere con clics */
+    pointer-events: none;
     animation: flotarPermanente 3s infinite ease-in-out;
 }
 
-/* El triángulo indicador */
+/* El triángulo indicador alineado al centro del botón */
 .tooltip-suerte::before {
     content: "";
     position: absolute;
     bottom: 110%;
-    left: 50%;
-    transform: translateX(-50%);
+    left: 24px; /* Posición centrada respecto al dado en left-6 */
     border-width: 6px 6px 0 6px;
     border-style: solid;
     border-color: var(--bg-botones) transparent transparent transparent;
@@ -221,14 +218,18 @@ body {
     z-index: 40;
 }
 
-/* Animación de levitación sutil para llamar la atención */
 @keyframes flotarPermanente {
-    0%, 100% { transform: translateX(-50%) translateY(0); }
-    50% { transform: translateX(-50%) translateY(-6px); }
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-6px); }
 }
 
-/* Ajuste: Cuando el botón se oculta por JS, el tooltip también debe desaparecer */
+/* Ajuste: Cuando el botón se oculta por JS */
 #btn-suerte.hidden::after,
 #btn-suerte.hidden::before {
     display: none;
+}
+
+/* Espaciado extra en el panel de selección para no tapar contenido */
+#view-comprar-numeros .lg\:w-96 {
+    margin-bottom: 80px;
 }

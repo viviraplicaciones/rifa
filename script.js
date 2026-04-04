@@ -742,11 +742,12 @@ function actualizarVistaActiva(viewId, isInitialLoad = false) {
   });
 
   if (viewId === 'view-comprar-numeros') {
-    btnSuerte?.classList.remove('hidden');
-    setTimeout(() => {
-        btnSuerte?.classList.remove('translate-y-1/2');
-        btnSuerte?.classList.add('-translate-y-1/2', 'hover:-translate-y-[55%]');
-    }, 50);
+      btnSuerte?.classList.remove('hidden');
+      setTimeout(() => {
+          // Solo animamos la subida en Y, no tocamos X
+          btnSuerte?.classList.remove('translate-y-1/3');
+          btnSuerte?.classList.add('bottom-6'); 
+      }, 50);
   } else {
     btnSuerte?.classList.add('hidden', 'translate-y-1/2');
     btnSuerte?.classList.remove('-translate-y-1/2', 'hover:-translate-y-[55%]');
@@ -754,7 +755,7 @@ function actualizarVistaActiva(viewId, isInitialLoad = false) {
 }
 
 // Dentro de actualizarVistaActiva, cuando viewId === 'view-comprar-numeros'
-if (viewId === 'view-comprar-numeros') {
+if (window.viewId === 'view-comprar-numeros') {
     btnSuerte?.classList.remove('hidden');
     // Esto fuerza a que se vea el tooltip solo en esta pantalla
     btnSuerte?.style.setProperty('--tooltip-opacity', '1'); 

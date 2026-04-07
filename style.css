@@ -91,6 +91,7 @@ body {
 .bg-selection { background-color: var(--selection); }
 
 /* CORRECCIÓN: Estados de los números vinculados al Script */
+/* Estas reglas ahora aplican tanto a la tabla pública como a la de administración */
 .numero-rifa-publico {
     transition: all 0.2s ease-in-out; 
     transform: scale(1);
@@ -99,9 +100,9 @@ body {
 }
 
 .numero-rifa-publico.disponible {
-    background-color: var(--bg-card-num); 
-    color: var(--text-main); 
-    border-color: var(--bg-botones);
+    background-color: var(--bg-card-num) !important; 
+    color: var(--text-main) !important; 
+    border-color: var(--bg-botones) !important;
 }
 
 .numero-rifa-publico.seleccionado {
@@ -112,9 +113,25 @@ body {
     box-shadow: 0 0 12px var(--selection);
 }
 
-.numero-rifa-publico.apartado { background-color: #5D8AA6; color: white; border-color: #184059; }
-.numero-rifa-publico.revisando { background-color: var(--bg-botones); color: white; border-color: var(--bg-botones); }
-.numero-rifa-publico.pagado { background-color: #8C2F1B; color: white; border-color: #8C2F1B; cursor: not-allowed; opacity: 0.8; }
+.numero-rifa-publico.apartado { 
+    background-color: #5D8AA6 !important; 
+    color: white !important; 
+    border-color: #184059 !important; 
+}
+
+.numero-rifa-publico.revisando { 
+    background-color: var(--bg-botones) !important; 
+    color: white !important; 
+    border-color: var(--bg-botones) !important; 
+}
+
+.numero-rifa-publico.pagado { 
+    background-color: #8C2F1B !important; 
+    color: white !important; 
+    border-color: #8C2F1B !important; 
+    cursor: not-allowed; 
+    opacity: 0.9; 
+}
 
 .slider-image {transition: opacity 1s ease-in-out;}
 #image-slider { position: relative; overflow: hidden;}
@@ -188,7 +205,7 @@ body {
     content: attr(data-tooltip);
     position: absolute;
     bottom: 125%; 
-    left: 0; /* Cambiado de 50% para que no se salga de la pantalla */
+    left: 0; /* Alineado para que no se corte en el borde izquierdo */
     background-color: var(--bg-botones);
     color: #fff;
     padding: 6px 12px;
@@ -204,12 +221,12 @@ body {
     animation: flotarPermanente 3s infinite ease-in-out;
 }
 
-/* El triángulo indicador alineado al centro del botón */
+/* El triángulo indicador alineado al centro del botón reubicado */
 .tooltip-suerte::before {
     content: "";
     position: absolute;
     bottom: 110%;
-    left: 24px; /* Posición centrada respecto al dado en left-6 */
+    left: 24px; /* Centrado respecto al dado en su posición 'left-6' */
     border-width: 6px 6px 0 6px;
     border-style: solid;
     border-color: var(--bg-botones) transparent transparent transparent;
@@ -218,18 +235,19 @@ body {
     z-index: 40;
 }
 
+/* Animación de levitación sutil */
 @keyframes flotarPermanente {
     0%, 100% { transform: translateY(0); }
     50% { transform: translateY(-6px); }
 }
 
-/* Ajuste: Cuando el botón se oculta por JS */
+/* Ajuste: Cuando el botón se oculta por JS, el tooltip también desaparece */
 #btn-suerte.hidden::after,
 #btn-suerte.hidden::before {
     display: none;
 }
 
-/* Espaciado extra en el panel de selección para no tapar contenido */
+/* Espaciado extra en el panel de selección para no tapar contenido central */
 #view-comprar-numeros .lg\:w-96 {
     margin-bottom: 80px;
 }

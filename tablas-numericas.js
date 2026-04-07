@@ -1,4 +1,4 @@
-/* ==============tablas-numericas.js (v39 - Empty State)=============================== */
+/* ==============tablas-numericas.js (v41 - Full Color Sync Update)=============================== */
 
 // Importar la base de datos (db) y funciones de Firestore
 import { 
@@ -71,7 +71,7 @@ export function initRifa(config) {
 }
 
 /* =========================================================
-   Rifas (cuadrícula pública)
+   Rifas (cuadrícula pública) - ACTUALIZADO CON COLORES
    ========================================================= */
 export function renderCuadriculaPublica() {
   if (!_cuadriculaPublica) return;
@@ -84,18 +84,15 @@ export function renderCuadriculaPublica() {
   }
 
   _boletosRifa.forEach(boleto => {
-    let claseEstado = '';
-    let esOcupado = false;
+    // INTEGRACIÓN: Usamos el estado directamente para que el CSS aplique los colores (pagado, apartado, revisando)
+    let claseEstado = boleto.estado; 
+    let esOcupado = (boleto.estado !== 'disponible');
     let title = 'Número disponible';
+
     switch (boleto.estado) {
-      case 'apartado':
-      case 'pagado':
-        claseEstado = 'ocupado'; esOcupado = true; title = 'No disponible'; break;
-      case 'revisando':
-        claseEstado = 'revisando'; esOcupado = true; title = 'En revisión'; break;
-      case 'disponible':
-      default:
-        claseEstado = ''; break;
+      case 'apartado': title = 'Apartado'; break;
+      case 'pagado': title = 'Vendido / Pagado'; break;
+      case 'revisando': title = 'En proceso de revisión'; break;
     }
 
     if (ocultar && esOcupado) return;
@@ -107,12 +104,13 @@ export function renderCuadriculaPublica() {
     }
 
     const divBoleto = document.createElement('div');
+    // Usamos la clase base 'numero-rifa-publico' + el estado dinámico
     divBoleto.className = `numero-rifa-publico w-full aspect-square flex items-center justify-center font-bold text-xs border-2 rounded-xl p-0 cursor-pointer ${claseEstado}`;
     divBoleto.textContent = boleto.numero;
     divBoleto.dataset.numero = boleto.numero;
     divBoleto.dataset.estado = boleto.estado;
     divBoleto.dataset.participanteId = boleto.participanteId || '';
-    divBoleto.title = title; // Tooltip básico
+    divBoleto.title = title; 
     _cuadriculaPublica.appendChild(divBoleto);
   });
 }
@@ -309,13 +307,7 @@ export async function handleGuardarCompraUsuario(e) {
     await batch.commit();
 
     // 5. --- Lógica de WhatsApp (Solo Admin) ---
-    // const numerosTexto = nuevoParticipante.numeros.join(', '); // Ya no se usa aquí
     const telefonoAdmin = '573205893469';
-
-    // --- MODIFICACIÓN: Se eliminaron mensajeAdmin y whatsappUrlAdmin ---
-    
-    // 6. --- MODIFICACIÓN: Ya no abrimos la ventana aquí ---
-    // window.open(whatsappUrlAdmin, '_blank'); // <--- LÍNEA ELIMINADA
 
     // 7. Limpiar UI
     _modalIngresarDatos.classList.remove('flex');
@@ -330,14 +322,13 @@ export async function handleGuardarCompraUsuario(e) {
     return {
         nombre: nombre,
         numeros: numerosSeleccionadosCopia,
-        telefonoAdmin: telefonoAdmin // Para el botón del usuario
+        telefonoAdmin: telefonoAdmin 
     };
-    // --- FIN DE LA MODIFICACIÓN ---
     
   } catch (error) {
     console.error("Error al guardar la compra: ", error);
     _mostrarToast("Error al apartar los números. Intenta de nuevo.", true);
-    return null; // Devuelve null en caso de error
+    return null;
   } finally {
     if (submitButton) {
         submitButton.disabled = false;
@@ -348,9 +339,9 @@ export async function handleGuardarCompraUsuario(e) {
 
 
 /* =========================================================
-   Admin: cuadricula admin y filtros
+   Admin: cuadricula admin y filtros - ACTUALIZADO CON COLORES
    ========================================================= */
-export function renderCuadriculaAdmin(filtro) {
+export function renderCuadriculaAdmin(filtro = 'todos') {
   if (!_cuadriculaAdmin) return;
   _cuadriculaAdmin.innerHTML = '';
 
@@ -360,16 +351,21 @@ export function renderCuadriculaAdmin(filtro) {
   });
 
   boletosFiltrados.forEach(boleto => {
-    let claseColor = 'status-disponible';
-    switch (boleto.estado) {
-      case 'apartado': claseColor = 'status-apartado'; break;
-      case 'revisando': claseColor = 'status-revisando'; break;
-      case 'pagado': claseColor = 'status-pagado'; break;
-    }
-
     const divBoleto = document.createElement('div');
-    divBoleto.className = `w-full aspect-square flex items-center justify-center font-medium text-xs border rounded-md p-0 ${claseColor}`;
+    // INTEGRACIÓN: Agregamos clases para que se vea igual que la pública y respete el estado visual
+    divBoleto.className = `numero-rifa-publico w-full aspect-square flex items-center justify-center font-bold text-xs border-2 rounded-xl p-0 cursor-pointer ${boleto.estado}`;
     divBoleto.textContent = boleto.numero;
+    
+    // Permitir editar el número al tocarlo
+    divBoleto.onclick = () => {
+        if (boleto.participanteId) {
+            abrirModalRegistro(boleto.participanteId);
+        } else {
+            // Si está disponible, permite registro manual de todas formas
+            abrirModalRegistro(null); 
+        }
+    };
+
     _cuadriculaAdmin.appendChild(divBoleto);
   });
 }
@@ -537,8 +533,7 @@ export function anadirCampoNumero(numeroSeleccionado, numerosPropios = []) {
     .map(select => select.value)
     .filter(val => val !== '');
 
-  const numerosDisponibles = getNumerosDisponibles();
-  const numerosPropiosFiltrados = numerosPropios.filter(num => num !== numeroSeleccionado);
+  const disponiblesGlobales = getNumerosDisponibles();
   
   const divCampo = document.createElement('div');
   divCampo.className = 'flex items-center gap-2';
@@ -552,14 +547,14 @@ export function anadirCampoNumero(numeroSeleccionado, numerosPropios = []) {
     optionsHTML += `<option value="${numeroSeleccionado}" selected>${numeroSeleccionado}</option>`;
   }
   
-  numerosDisponibles.forEach(num => {
+  disponiblesGlobales.forEach(num => {
     if (!numerosYaSeleccionadosEnModal.includes(num) || num === numeroSeleccionado) {
       optionsHTML += `<option value="${num}">${num}</option>`;
     }
   });
   
   numerosPropios.forEach(num => {
-      if (num !== numeroSeleccionado && !numerosDisponibles.includes(num) && !numerosYaSeleccionadosEnModal.includes(num)) {
+      if (num !== numeroSeleccionado && !disponiblesGlobales.includes(num) && !numerosYaSeleccionadosEnModal.includes(num)) {
           optionsHTML += `<option value="${num}" class="text-blue-500">(Propio) ${num}</option>`;
       }
   });
@@ -590,7 +585,7 @@ function actualizarSelectsDinamicos() {
 
   const selects = _camposNumerosDinamicos.querySelectorAll('.select-numero-dinamico');
   const valoresSeleccionados = Array.from(selects).map(s => s.value).filter(v => v !== '');
-  const numerosDisponibles = getNumerosDisponibles();
+  const disponiblesGlobales = getNumerosDisponibles();
 
   selects.forEach(select => {
     const valorActual = select.value;
@@ -598,14 +593,14 @@ function actualizarSelectsDinamicos() {
     let optionsHTML = '<option value="" disabled>Selecciona un número</option>';
     if (valorActual) optionsHTML += `<option value="${valorActual}" selected>${valorActual}</option>`;
 
-    numerosDisponibles.forEach(num => {
+    disponiblesGlobales.forEach(num => {
       if (!valoresSeleccionados.includes(num) || num === valorActual) {
         if (num !== valorActual) optionsHTML += `<option value="${num}">${num}</option>`;
       }
     });
     
     numerosPropios.forEach(num => {
-        if (!numerosDisponibles.includes(num) && (!valoresSeleccionados.includes(num) || num === valorActual)) {
+        if (!disponiblesGlobales.includes(num) && (!valoresSeleccionados.includes(num) || num === valorActual)) {
              if (num !== valorActual) optionsHTML += `<option value="${num}" class="text-blue-500">(Propio) ${num}</option>`;
         }
     });

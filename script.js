@@ -741,6 +741,7 @@ function actualizarVistaActiva(viewId, isInitialLoad = false) {
     }
   });
 
+  // Integración de lógica para botón suerte reubicado
   if (viewId === 'view-comprar-numeros') {
       btnSuerte?.classList.remove('hidden');
       setTimeout(() => {

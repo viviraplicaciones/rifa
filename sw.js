@@ -1,9 +1,10 @@
-/* =======================sw.js (Service Worker - versión corregida para GitHub Pages)================== */
-// Cambia la versión cuando actualices archivos (v2, v3, etc.)
-const CACHE_NAME = 'rifa-navidena-v2';
+/* =======================sw.js (v3 - Auto-Update Force)================== */
+// INCREMENTA ESTA VERSIÓN CADA VEZ QUE SUBAS CAMBIOS (v3, v4, v5...)
+const CACHE_NAME = 'rifa-navidena-v3';
+
 // Archivos esenciales para el funcionamiento offline
 const FILES_TO_CACHE = [
-  './', // la raíz del proyecto (./ en lugar de /)
+  './', 
   './index.html',
   './index_01.html',
   './manifest.json',
@@ -28,22 +29,25 @@ const FILES_TO_CACHE = [
   './images/04.jpg',
   './images/05.jpg'
 ];
+
 /* ======================Evento: install=========================== */
 self.addEventListener('install', (event) => {
-  console.log('[ServiceWorker] Instalando...');
+  console.log('[ServiceWorker] Instalando v3...');
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then((cache) => {
-        console.log('[ServiceWorker] Archivos almacenados en caché');
+        console.log('[ServiceWorker] Almacenando archivos en caché...');
         return cache.addAll(FILES_TO_CACHE);
       })
       .catch(err => console.error('[ServiceWorker] Error en instalación:', err))
   );
+  // Fuerza al Service Worker recién instalado a convertirse en el activo
   self.skipWaiting();
 });
+
 /* =========================Evento: activate======================= */
 self.addEventListener('activate', (event) => {
-  console.log('[ServiceWorker] Activando...');
+  console.log('[ServiceWorker] Activando y reclamando clientes...');
   event.waitUntil(
     caches.keys().then((keyList) => {
       return Promise.all(keyList.map((key) => {
@@ -54,8 +58,10 @@ self.addEventListener('activate', (event) => {
       }));
     })
   );
+  // Permite que el SW controle las pestañas abiertas inmediatamente
   self.clients.claim();
 });
+
 /* =======================Evento: fetch=============================== */
 self.addEventListener('fetch', (event) => {
   if (event.request.method !== 'GET') return;
@@ -63,16 +69,23 @@ self.addEventListener('fetch', (event) => {
   event.respondWith(
     caches.match(event.request)
       .then((response) => {
+        // Retorna desde caché si existe
         if (response) return response;
+        
+        // Si no está en caché, va a la red
         return fetch(event.request)
           .then((networkResponse) => {
-            if (networkResponse && networkResponse.status === 200 && networkResponse.type === 'basic') {
-              const responseToCache = networkResponse.clone();
-              caches.open(CACHE_NAME)
-                .then((cache) => {
-                  cache.put(event.request, responseToCache);
-                });
+            // No cacheamos respuestas que no sean exitosas o sean de otras fuentes (APIs externas)
+            if (!networkResponse || networkResponse.status !== 200 || networkResponse.type !== 'basic') {
+              return networkResponse;
             }
+
+            const responseToCache = networkResponse.clone();
+            caches.open(CACHE_NAME)
+              .then((cache) => {
+                cache.put(event.request, responseToCache);
+              });
+
             return networkResponse;
           })
           .catch((error) => {

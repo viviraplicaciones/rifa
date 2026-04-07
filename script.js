@@ -864,3 +864,26 @@ function closeLightboxInicio() {
   `;
   document.head.appendChild(style);
 })();
+
+/* =========================================================
+   REGISTRO DEL SERVICE WORKER (v3 con Detección de Cambios)
+   ========================================================= */
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.worker = navigator.serviceWorker.register('./sw.js').then(reg => {
+      // Revisa si hay una actualización pendiente cada vez que se carga la página
+      reg.onupdatefound = () => {
+        const installingWorker = reg.installing;
+        installingWorker.onstatechange = () => {
+          if (installingWorker.state === 'installed' && navigator.serviceWorker.controller) {
+            // SE DETECTÓ NUEVA VERSIÓN:
+            // Forzamos la recarga de la página para que el usuario vea los cambios al instante
+            console.log('Nueva versión detectada. Aplicando cambios y recargando...');
+            window.location.reload();
+          }
+        };
+      };
+      console.log('Service Worker registrado con éxito.');
+    }).catch(err => console.error('Error al registrar Service Worker:', err));
+  });
+}

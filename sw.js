@@ -1,6 +1,6 @@
 /* =======================sw.js (v3 - Auto-Update Force)================== */
 // INCREMENTA ESTA VERSIÓN CADA VEZ QUE SUBAS CAMBIOS (v3, v4, v5...)
-const CACHE_NAME = 'rifa-navidena-v3';
+const CACHE_NAME = 'rifa-navidena-v4';
 
 // Archivos esenciales para el funcionamiento offline
 const FILES_TO_CACHE = [

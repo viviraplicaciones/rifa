@@ -267,23 +267,21 @@ function cachearElementosDOM() {
   btnDarkMode = document.getElementById('btn-dark-mode');
   iconDarkMode = document.getElementById('icon-dark-mode');
 
-  // --- INICIO DE LA MODIFICACIÓN (Video Demo) ---
+  // --- Video Demo ---
   btnVerVideo = document.getElementById('btn-ver-video');
   modalVideoDemo = document.getElementById('modal-video-demo');
   videoPlayerDemo = document.getElementById('video-player-demo');
   if (videoPlayerDemo) {
     videoPlayerDemo.loop = false; // Asegurar que el video no se repita
   }
-  // --- FIN DE LA MODIFICACIÓN ---
 
-  // --- INICIO DE LA MODIFICACIÓN (Audio) ---
+  // --- Audio ---
   btnToggleMusic = document.getElementById('btn-toggle-music');
   iconMusicMode = document.getElementById('icon-music-mode');
   backgroundMusic = document.getElementById('background-music');
   if (backgroundMusic) {
     backgroundMusic.volume = 0.25; // Poner el volumen al 25%
   }
-  // --- FIN DE LA MODIFICACIÓN ---
   
   modalIngresarDatos = document.getElementById('modal-ingresar-datos');
   formIngresarDatos = document.getElementById('form-ingresar-datos');
@@ -301,17 +299,15 @@ function cachearElementosDOM() {
   lightboxPrevInicio = document.getElementById('lightbox-prev-inicio');
   lightboxNextInicio = document.getElementById('lightbox-next-inicio');
 
-  // --- INICIO REQUERIMIENTO 1 (Modal Pago) ---
+  // --- Modal Pago ---
   modalConfirmacionPago = document.getElementById('modal-confirmacion-pago');
   listaNumerosConfirmacion = document.getElementById('lista-numeros-confirmacion');
   btnEnviarComprobante = document.getElementById('btn-enviar-comprobante');
-  // --- FIN REQUERIMIENTO 1 ---
 
-  // --- INICIO REQUERIMIENTO 2 (Filtro) ---
+  // --- Filtro ---
   filtroParticipantesInput = document.getElementById('filtro-participantes');
-  // --- FIN REQUERIMIENTO 2 ---
 
-  // --- Variables Modal VivirApp (Req 4) ---
+  // Variables para Modal VivirApp (Req 4)
   btnVivirAppModal = document.getElementById('btn-vivirapp-modal');
   modalVivirApp = document.getElementById('modal-vivirapp');
   iframeVivirApp = document.getElementById('iframe-vivirapp');
@@ -347,11 +343,9 @@ function registrarEventListeners() {
   // --- Flujo de Pago ---
   btnProcederPago?.addEventListener('click', handleProcederPago);
   
-  // --- INICIO REQUERIMIENTO 1 (Modal Pago) ---
   formIngresarDatos?.addEventListener('submit', handleFormularioCompraSubmit);
-  // --- FIN REQUERIMIENTO 1 ---
 
-  // --- INICIO DE LA MODIFICACIÓN (Cerrar modal de pago al hacer click) ---
+  // --- Cerrar modal de pago al hacer click ---
   btnEnviarComprobante?.addEventListener('click', (e) => {
       e.preventDefault(); // Prevenir que el enlace se abra por defecto
       
@@ -368,7 +362,6 @@ function registrarEventListeners() {
           window.open(whatsappUrl, '_blank');
       }
   });
-  // --- FIN DE LA MODIFICACIÓN ---
 
   // --- Botón Suerte ---
   btnSuerte?.addEventListener('click', handleBotonSuerte); 
@@ -378,9 +371,7 @@ function registrarEventListeners() {
   formRegistrarVenta?.addEventListener('submit', handleGuardarVenta); 
   btnAnadirNumero?.addEventListener('click', () => anadirCampoNumero(null));
   
-  // --- INICIO REQUERIMIENTO 2 (Filtro) ---
   filtroParticipantesInput?.addEventListener('input', handleFiltroParticipantes);
-  // --- FIN REQUERIMIENTO 2 ---
   
   tablaParticipantes?.addEventListener('click', (e) => {
     const editBtn = e.target.closest('.btn-editar-participante');
@@ -415,7 +406,7 @@ function registrarEventListeners() {
     actualizarVistaActiva('view-comprar-numeros');
   });
   
-  // --- INICIO DE LA MODIFICACIÓN (Video Demo + Autoplay) ---
+  // --- Video Demo + Autoplay ---
   btnVerVideo?.addEventListener('click', () => {
     modalVideoDemo?.classList.add('flex');
     if (videoPlayerDemo) {
@@ -425,7 +416,6 @@ function registrarEventListeners() {
       });
     }
   });
-  // --- FIN DE LA MODIFICACIÓN ---
 
   btnVivirAppModal?.addEventListener('click', (e) => {
     e.preventDefault();
@@ -448,12 +438,11 @@ function registrarEventListeners() {
              modal.classList.add('hidden'); 
           }
           
-          // --- INICIO DE LA MODIFICACIÓN (Pausar video al cerrar) ---
+          // --- Pausar video al cerrar ---
           if (modalId === 'modal-video-demo' && videoPlayerDemo) {
               videoPlayerDemo.pause();
               videoPlayerDemo.currentTime = 0; 
           }
-          // --- FIN DE LA MODIFICACIÓN ---
       }
     });
   });
@@ -465,12 +454,11 @@ function registrarEventListeners() {
           event.target.classList.add('hidden');
       }
 
-      // --- INICIO DE LA MODIFICACIÓN (Pausar video al cerrar) ---
+      // --- Pausar video al cerrar ---
       if (event.target.id === 'modal-video-demo' && videoPlayerDemo) {
           videoPlayerDemo.pause();
           videoPlayerDemo.currentTime = 0; 
       }
-      // --- FIN DE LA MODIFICACIÓN ---
     }
   });
 
@@ -506,7 +494,7 @@ function registrarEventListeners() {
     handleCompartir();
   });
 
-  // --- INICIO DE LA MODIFICACIÓN (Audio) ---
+  // --- Audio ---
   btnToggleMusic?.addEventListener('click', (e) => {
       e.preventDefault();
       if (!backgroundMusic) return;
@@ -521,7 +509,6 @@ function registrarEventListeners() {
           iconMusicMode?.classList.add('fa-volume-off');
       }
   });
-  // --- FIN DE LA MODIFICACIÓN ---
 
   btnReportarFallo?.addEventListener('click', (e) => {
     e.preventDefault();
@@ -565,7 +552,7 @@ function registrarEventListeners() {
   });
 }
 
-// --- INICIO REQUERIMIENTO 1 (Delay WhatsApp Admin) ---
+// --- Delay WhatsApp Admin ---
 /**
  * Función intermediaria para manejar el envío del formulario de compra.
  * Llama a 'handleGuardarCompraUsuario' y luego abre el modal de confirmación.
@@ -590,9 +577,7 @@ async function handleFormularioCompraSubmit(e) {
 
     // 2. Configurar el botón de WhatsApp para el usuario (CON EL NUEVO MENSAJE)
     if (btnEnviarComprobante) {
-      // --- INICIO DE LA MODIFICACIÓN (Nuevo Mensaje) ---
       const mensajeUsuario = `¡Hola! ${resultado.nombre} acaba de seleccionar los números ${resultado.numeros.join(', ')}... El pago esta pendiente.`;
-      // --- FIN DE LA MODIFICACIÓN ---
       
       const whatsappUrlUsuario = `https://api.whatsapp.com/send?phone=${resultado.telefonoAdmin}&text=${encodeURIComponent(mensajeUsuario)}`;
       btnEnviarComprobante.href = whatsappUrlUsuario;
@@ -601,12 +586,10 @@ async function handleFormularioCompraSubmit(e) {
     // 3. Mostrar el modal de confirmación (Inmediatamente)
     modalConfirmacionPago.classList.add('flex');
 
-    // --- MODIFICACIÓN: Se eliminó el bloque completo de setTimeout ---
   }
 }
-// --- FIN REQUERIMIENTO 1 ---
 
-// --- INICIO REQUERIMIENTO 2 (Filtro) ---
+// --- Filtro ---
 function handleFiltroParticipantes(e) {
     const termino = e.target.value.toLowerCase().trim();
 
@@ -622,7 +605,6 @@ function handleFiltroParticipantes(e) {
 
     renderTablaParticipantes(filtrados);
 }
-// --- FIN REQUERIMIENTO 2 ---
 
 
 /* ================================LÓGICA DE NOTIFICACIONES (v3 - Corregido para GitHub Pages)================= */
@@ -741,25 +723,16 @@ function actualizarVistaActiva(viewId, isInitialLoad = false) {
     }
   });
 
-  // Integración de lógica para botón suerte reubicado
   if (viewId === 'view-comprar-numeros') {
       btnSuerte?.classList.remove('hidden');
       setTimeout(() => {
-          // Solo animamos la subida en Y, no tocamos X
-          btnSuerte?.classList.remove('translate-y-1/3');
-          btnSuerte?.classList.add('bottom-6'); 
+          btnSuerte?.classList.remove('translate-y-1/2');
+          btnSuerte?.classList.add('-translate-y-1/2', 'hover:-translate-y-[55%]');
       }, 50);
   } else {
     btnSuerte?.classList.add('hidden', 'translate-y-1/2');
     btnSuerte?.classList.remove('-translate-y-1/2', 'hover:-translate-y-[55%]');
   }
-}
-
-// Dentro de actualizarVistaActiva, cuando viewId === 'view-comprar-numeros'
-if (window.viewId === 'view-comprar-numeros') {
-    btnSuerte?.classList.remove('hidden');
-    // Esto fuerza a que se vea el tooltip solo en esta pantalla
-    btnSuerte?.style.setProperty('--tooltip-opacity', '1'); 
 }
 
 function mostrarToast(mensaje, esError = false) {
@@ -860,7 +833,7 @@ function closeLightboxInicio() {
     .dark .filtro-btn-admin[data-filtro="todos"] { border-color: #9CA3AF; color: #E5E7EB; }
     .dark .filtro-btn-admin[data-filtro="disponible"] { border-color: #4B5563; color: #D1D5DB; }
     .dark .filtro-btn-admin.filtro-btn-admin-activo[data-filtro="todos"], .dark .filtro-btn-admin:hover[data-filtro="todos"] { background-color: #9CA3AF; color: white !important; }
-    .dark .filtro-btn-admin.filtro-btn-admin-activo[data-filtro="disponible"], .dark .filtro-btn-admin:hover[data-filtro="disponible"] { background-color: #6B7280; color: white !importa; }
+    .dark .filtro-btn-admin.filtro-btn-admin-activo[data-filtro="disponible"], .dark .filtro-btn-admin:hover[data-filtro="disponible"] { background-color: #6B7280; color: white !important; }
   `;
   document.head.appendChild(style);
 })();
